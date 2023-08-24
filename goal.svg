@@ -1,0 +1,6 @@
+<svg id="svg" width="200" height="200" viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <circle r="90" cx="100" cy="100" fill="#BBD" stroke-dasharray="565.48" stroke-dashoffset="0"></circle>
+  <circle id="bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" stroke="#FF9F1E" stroke-width="0.9em" fill="transparent" stroke-dasharray="565.48" stroke-linecap="round" stroke-dashoffset="480"></circle>
+  <text fill="#306856" stroke="#000" stroke-width="0" x="100" y="100" id="svg_4" font-size="42" font-family="'Consolas'" text-anchor="middle" xml:space="preserve" font-weight="bold">666</text>
+  <text fill="#306856" stroke="#000" stroke-width="0" x="100" y="140" id="svg_8" font-size="20" font-family="'Consolas'" text-anchor="middle" xml:space="preserve" font-weight="bold">words</text>
+</svg>

@@ -1,0 +1,22 @@
+#writing-goals-container > h3 {
+    color: var(--color-text-title);
+    font-size: 1.5em;
+    text-align: center;
+}
+
+.note-goal {
+    color: var(--text-accent);
+}
+
+#writing-goals > #bar {
+    stroke: var(--interactive-accent);
+    transition: stroke-dashoffset 1s linear;
+}
+
+#writing-goals > #background {
+    fill: var(--background-primary);
+}
+
+#writing-goals > text {
+    fill: var(--text-normal);
+}

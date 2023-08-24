@@ -1,0 +1,9 @@
+{
+  "id": "writing-goals",
+  "name": "Writing Goals",
+  "version": "0.1",
+  "description": "A plugin to help you hit your writing goals",
+  "isDesktopOnly": false,
+  "js": "main.js",
+  "css": "style.css"
+}
