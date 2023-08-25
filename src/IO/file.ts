@@ -1,6 +1,6 @@
 import type { App, CachedMetadata, MetadataCache, TFile, Vault } from "obsidian";
 
-export class File {
+export class FileHelper {
 
     async countWords(fileContents:string, metadata: CachedMetadata) {
         const meaningfulContent = this.getMeaningfulContent(fileContents, metadata);

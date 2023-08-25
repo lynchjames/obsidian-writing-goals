@@ -1,9 +1,4 @@
 import { writable } from 'svelte/store';
+import { Notes } from './note-goal';
 
-export const currentPath = writable('');
-
-export const noteTitle = writable('');
-
-export const wordCount = writable(0);
-
-export const goalCount = writable(0);
+export const noteGoals = writable(new Notes())
