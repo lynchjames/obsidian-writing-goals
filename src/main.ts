@@ -170,15 +170,19 @@ export default class WritingGoals extends Plugin {
     resetFileLabels(fileItems:any) {
       for (let key in fileItems) {
         const item = fileItems[key];
+        const isFolder = item.selfEl != null;
         const itemEl = (item.titleEl ?? item.selfEl);
-        if(itemEl.children[1] && this.containsLabel(itemEl)) {
-          itemEl.removeChild(itemEl.children[1]);
+        for (let i = 0; i < itemEl.children.child; i++) {
+          const child = itemEl.children[i];
+          if(child && this.containsLabel(child)){
+            itemEl.removeChild(child);
+          }
         }
       }
     }
 
-    containsLabel(itemEl: any) {
-      return itemEl.children[1]?.className?.contains('writing-goals-simple-container')
+    containsLabel(el: any) {
+      return el?.className?.contains('writing-goals-simple-container')
     }
     
     onunload() {
