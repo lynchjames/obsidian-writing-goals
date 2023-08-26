@@ -43,15 +43,15 @@ export default class GoalView extends ItemView {
         }
         this.path = path; 
         this.setGoal();
+        
+    }
+
+    async onOpen() {
         this.addAction(GOAL_ICON, "Update goal", (evt:MouseEvent) => {
             const modal = new GoalModal(this.app);
             modal.init(this.plugin, this.app.vault.getAbstractFileByPath(this.path));
             modal.open();
         });
-    }
-
-    async onOpen() {
-        
     }
 
     async updatePath(path:string) {

@@ -4,14 +4,18 @@ import {
     Setting
 } from 'obsidian';
 import type WritingGoals from '../main';
+import { FileLabels } from '../goal/file-labels';
   
   export class WritingGoalsSettingsTab extends PluginSettingTab {
     plugin: WritingGoals;
+    fileLabels: FileLabels;
+    
     constructor(app: App, plugin: WritingGoals) {
       super(app, plugin);
       this.plugin = plugin;
-  }
-  
+      this.fileLabels = new FileLabels(this.app, this.plugin.settings);
+    }
+
     display(): void {
       const { containerEl } = this;
   
@@ -26,7 +30,7 @@ import type WritingGoals from '../main';
             .onChange(async (value:boolean) => {
               this.plugin.settings.showInFileExplorer = value;
               await this.plugin.saveData(this.plugin.settings);
-              this.plugin.initFileLabels();
+              this.fileLabels.initFileLabels();
             }));
     }
 

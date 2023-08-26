@@ -11,20 +11,16 @@ import GoalView from './goal/goal-view';
 import { WritingGoalsSettingsTab } from './settings/settings-tab';
 import { SettingsHelper } from './settings/settings-helper';
 import { createGoal, Notes } from './stores/note-goal';
-import Goal from './goal/goal.svelte';
 import { FileHelper } from './IO/file';
 import { noteGoals } from './stores/goal-store';
 import GoalTargetModal from './modals/goal-target-modal';
 import GoalModal from './modals/goal-modal';
-
-interface FileItem {
-	titleEl?: HTMLElement;
-	selfEl: HTMLElement;
-}
+import { FileLabels } from './goal/file-labels';
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
   goalView: GoalView | undefined;
+  fileLabels: FileLabels;
   fileHelper: FileHelper = new FileHelper();
   settingsHelper: SettingsHelper = new SettingsHelper();
   goalLeaves: string[];
@@ -32,6 +28,7 @@ export default class WritingGoals extends Plugin {
   async onload() {
     this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
+    this.fileLabels = new FileLabels(this.app, this.settings)
     this.setupCommands();
     this.registerView(
       VIEW_TYPE_GOAL,
@@ -194,49 +191,7 @@ export default class WritingGoals extends Plugin {
         notes[folderGoal.path] = goal;
       }
       noteGoals.set(notes);
-      this.initFileLabels();
-    }
-
-    initFileLabels() {
-        const fileExplorer = this.app.workspace.getLeavesOfType(VIEW_TYPE_FILE_EXPLORER)[0];
-        const fileItems: { [path: string]: FileItem } = (
-          fileExplorer.view as any
-        ).fileItems;
-        this.resetFileLabels(fileItems);
-        if(!this.settings.showInFileExplorer) {
-          return;
-        }
-        const combinedGoals = this.settings.noteGoals.concat(this.settings.folderGoals.map(fg => fg.path));
-        combinedGoals.forEach(path => {
-            const item = fileItems[path];
-            const itemEl = item ? (item.titleEl ?? item.selfEl) : undefined;
-            if(item && itemEl && !this.containsLabel(itemEl)) {
-                    new Goal({
-                        target: itemEl,
-                        props: {
-                        path: path,
-                        mode: 'simple',
-                        },
-                    });
-                }
-            });
-        }
-
-    resetFileLabels(fileItems:any) {
-      for (let key in fileItems) {
-        const item = fileItems[key];
-        const itemEl = (item.titleEl ?? item.selfEl);
-        for (let i = 0; i < itemEl.children.length; i++) {
-          const child = itemEl.children[i];
-          if(child && this.containsLabel(child)){
-            itemEl.removeChild(child);
-          }
-        }
-      }
-    }
-
-    containsLabel(el: any) {
-      return el?.className?.contains('writing-goals-simple-container')
+      await this.fileLabels.initFileLabels();
     }
     
     onunload() {
