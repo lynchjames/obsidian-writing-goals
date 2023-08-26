@@ -24,8 +24,16 @@
 }
 
 .writing-goals #bar, .writing-goals-simple #bar {
-    stroke: var(--interactive-accent);
+    /* stroke: var(--interactive-accent); */
     transition: stroke-dashoffset 1s linear;
+}
+
+.svg-gradient-start {
+    stop-color: transparent;
+}
+
+.svg-gradient-stop {
+    stop-color: var(--interactive-accent);
 }
 
 .writing-goals #background {
