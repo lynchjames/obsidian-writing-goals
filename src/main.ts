@@ -111,12 +111,12 @@ export default class WritingGoals extends Plugin {
     }
 
     async initLeaf(path) {
-      await this.app.workspace.getRightLeaf(false).setViewState({
+      const goalLeaf = await this.app.workspace.getRightLeaf(false);
+      await goalLeaf.setViewState({
         type: VIEW_TYPE_GOAL,
         active: true
       });
-      const goalLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
-      const view = goalLeaves[goalLeaves.length-1].view as GoalView;
+      const view = goalLeaf.view as GoalView;
       view.updatePath(path);
     }
 
@@ -141,13 +141,14 @@ export default class WritingGoals extends Plugin {
     initFileLabels() {
         const fileExplorer = this.app.workspace.getLeavesOfType(VIEW_TYPE_FILE_EXPLORER)[0];
         const fileItems: { [path: string]: FileItem } = (
-			fileExplorer.view as any
-		).fileItems;
+          fileExplorer.view as any
+        ).fileItems;
+        this.resetFileLabels(fileItems);
         const combinedGoals = this.settings.noteGoals.concat(this.settings.folderGoals.map(fg => fg.path));
         combinedGoals.forEach(path => {
             const item = fileItems[path];
-            if(item) {
-                const itemEl = (item.titleEl ?? item.selfEl);
+            const itemEl = item ? (item.titleEl ?? item.selfEl) : undefined;
+            if(item && itemEl && !this.containsLabel(itemEl)) {
                     new Goal({
                         target: itemEl,
                         props: {
@@ -158,6 +159,21 @@ export default class WritingGoals extends Plugin {
                 }
             });
         }
+
+    resetFileLabels(fileItems:any) {
+      for (let key in fileItems) {
+        const item = fileItems[key];
+        const itemEl = (item.titleEl ?? item.selfEl);
+        console.log(itemEl);
+        if(itemEl.children[1] && this.containsLabel(itemEl)) {
+          itemEl.removeChild(itemEl.children[1]);
+        }
+      }
+    }
+
+    containsLabel(itemEl: any) {
+      return itemEl.children[1]?.className?.contains('writing-goals-simple-container')
+    }
     
     onunload() {
       this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL);

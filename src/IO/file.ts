@@ -13,7 +13,7 @@ export class FileHelper {
     ): string {
         let meaningfulContent = content;
 
-        const hasFrontmatter = !!metadata.frontmatter;
+        const hasFrontmatter = metadata && !!metadata.frontmatter;
         if (hasFrontmatter) {
             const frontmatterPos =
                 (metadata as any).frontmatterPosition || metadata.frontmatter.position;
