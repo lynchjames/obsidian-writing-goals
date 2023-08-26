@@ -1,21 +1,24 @@
-import { ItemView, TFile, WorkspaceLeaf } from 'obsidian';
+import { ItemView, TAbstractFile, TFile, WorkspaceLeaf } from 'obsidian';
 import Goal from './goal.svelte';
 import type { WritingGoalsSettings } from '../settings/settings';
-import { GOAL_ICON, VIEW_TYPE_FILE_EXPLORER, VIEW_TYPE_GOAL } from '../constants';
+import { GOAL_ICON, VIEW_TYPE_GOAL } from '../constants';
 import { FileHelper } from '../IO/file';
-import { noteGoals } from '../stores/goal-store';
-import { onDestroy } from 'svelte';
+import type WritingGoals from '../main';
+import GoalModal from '../modals/goal-modal';
+
 
 export default class GoalView extends ItemView {
    
-    file: TFile;
     fileHelper: FileHelper;
     settings: WritingGoalsSettings;
+    path:string;
+    plugin: WritingGoals;
+    goal: any;
 
-    constructor(leaf: WorkspaceLeaf, settings: WritingGoalsSettings){
+    constructor(leaf: WorkspaceLeaf, plugin: WritingGoals){
         super(leaf);
-        this.settings = settings;
         this.fileHelper = new FileHelper;
+        this.plugin = plugin;
     }
 
     getViewType(): string {
@@ -29,20 +32,55 @@ export default class GoalView extends ItemView {
     getIcon() {
         return GOAL_ICON;
     }
-
-    updatePath(path: string) {
-        this.setGoal(path);
+    
+    onload(): void {
+        console.log("onOpen");
+        console.log(this.goal);
+        if(this.goal != undefined){
+            return;
+        }
+        console.log(this.plugin.goalLeaves);
+        const path = this.plugin.goalLeaves.pop();
+        if(!path){
+            return;
+        }
+        this.path = path; 
+        this.setGoal();
+        this.addAction(GOAL_ICON, "Update goal", (evt:MouseEvent) => {
+            const modal = new GoalModal(this.app);
+            modal.init(this.plugin, this.app.vault.getAbstractFileByPath(this.path));
+            modal.open();
+        });
     }
 
-    setGoal(path: any) {
-        new Goal({
+    async onOpen() {
+        
+    }
+
+    async updatePath(path) {
+        console.log("Update path");
+        this.plugin.settings.goalLeaves.push(path);
+        this.plugin.saveData(this.plugin.settings);
+        this.path = path;
+        this.setGoal();
+    }
+
+    async onClose() {
+        console.log("onClose");
+        this.plugin.settings.goalLeaves.remove(this.path);
+        this.plugin.saveData(this.plugin.settings);
+    }
+
+    setGoal() {
+        this.goal = new Goal({
             target: (this as any).contentEl,
             props: {
-                path: path,
+                path: this.path,
                 mode: 'full',
                 rootEl: this.containerEl
             },
-        });    }
+        });    
+    }
 }
 
 

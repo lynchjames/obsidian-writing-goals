@@ -28,14 +28,16 @@ export default class WritingGoals extends Plugin {
   goalView: GoalView | undefined;
   fileHelper: FileHelper = new FileHelper();
   settingsHelper: SettingsHelper = new SettingsHelper();
+  goalLeaves: string[];
   
   async onload() {
     this.vault = this.app.vault;
     this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
+    this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.setupCommands();
     this.registerView(
       VIEW_TYPE_GOAL,
-      (leaf) => this.goalView = new GoalView(leaf, this.settings)
+      (leaf) => this.goalView = new GoalView(leaf, this)
     );
     this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
 
@@ -118,12 +120,15 @@ export default class WritingGoals extends Plugin {
     }
 
     async initLeaf(path:string) {
-      const goalLeaf = await this.app.workspace.getRightLeaf(false);
+      const goalLeaf = await this.app.workspace.getRightLeaf(true);
       await goalLeaf.setViewState({
         type: VIEW_TYPE_GOAL,
         active: true
       });
-      const view = goalLeaf.view as GoalView;
+      const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
+      console.log("Leaf count", leaves.length);
+      console.log((leaves[0].view as GoalView).goal);
+      const view = leaves.filter(l => (l.view as GoalView).goal == undefined)[0].view as GoalView;
       view.updatePath(path);
     }
 
@@ -188,7 +193,7 @@ export default class WritingGoals extends Plugin {
     }
     
     onunload() {
-      this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL);
+      // this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL);
     }
     
   }
