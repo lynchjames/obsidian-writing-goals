@@ -26,7 +26,7 @@ export default class GoalView extends ItemView {
     }
 
     getDisplayText(): string {
-        return 'Writing Goal';
+        return 'Goal';
     }
 
     getIcon() {
@@ -67,8 +67,8 @@ export default class GoalView extends ItemView {
 
     async onClose() {
         console.log("onClose");
-        this.plugin.settings.goalLeaves.remove(this.path);
-        this.plugin.saveData(this.plugin.settings);
+        // this.plugin.settings.goalLeaves.remove(this.path);
+        // await this.plugin.saveData(this.plugin.settings);
     }
 
     setGoal() {

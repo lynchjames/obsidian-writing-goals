@@ -113,6 +113,14 @@ export default class WritingGoals extends Plugin {
               });
           })
         );
+
+        this.registerInterval(
+          window.setInterval(() => {
+            const goalLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
+            this.settings.goalLeaves = goalLeaves.map(gl => (gl.view as GoalView).path);
+            this.saveData(this.settings);
+          }, 10000)
+        );
       
         this.app.workspace.onLayoutReady(async () => {
           await this.loadNoteGoalData();
@@ -193,7 +201,8 @@ export default class WritingGoals extends Plugin {
     }
     
     onunload() {
-      // this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL);
+      console.log("Onunload plugin");
+      this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL);
     }
     
   }
