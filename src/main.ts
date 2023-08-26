@@ -155,9 +155,17 @@ export default class WritingGoals extends Plugin {
 
         this.registerEvent(
           this.app.workspace.on("layout-change", (async () => {
-            this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
+            this.goalLeaves = this.settings.goalLeaves.map(x => x);
             await this.loadNoteGoalData();
           }))
+        );
+        
+        this.registerInterval(
+          window.setInterval(() => {
+            const goalLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
+            this.settings.goalLeaves = goalLeaves.map(gl => (gl.view as GoalView).path);
+            this.saveData(this.settings);
+          }, 5000)
         );
     }
 
@@ -167,13 +175,15 @@ export default class WritingGoals extends Plugin {
         type: VIEW_TYPE_GOAL,
         active: true
       });
-      try {
+      // try {
+        console.log('init leaf', path);
         const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
-        const view = leaves.filter(l => (l.view as GoalView).goal == undefined)[0].view as GoalView;
-        view.updatePath(path); 
-      } catch (error) {
+        console.log(leaves);
+        const view = leaves.last().view as GoalView;
+        await view.updatePath(path); 
+      // } catch (error) {
         
-      }
+      // }
     }
 
     async loadNoteGoalData() {

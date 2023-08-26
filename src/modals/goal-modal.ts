@@ -37,7 +37,7 @@ export default class GoalModal extends Modal {
         new Setting(contentEl)
           .addButton((btn) =>
             btn
-              .setButtonText("Submit")
+              .setButtonText("Set goal")
               .setCta()
               .onClick(() => {
                 this.close();
@@ -67,7 +67,6 @@ export default class GoalModal extends Modal {
             });
             await plugin.saveData(settings);
         }
-        await plugin.loadNoteGoalData();
     }
 
 }
