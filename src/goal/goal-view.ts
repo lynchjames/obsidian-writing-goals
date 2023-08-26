@@ -8,10 +8,13 @@ import { onDestroy } from 'svelte';
 
 export default class GoalView extends ItemView {
    
+    file: TFile;
     fileHelper: FileHelper;
+    settings: WritingGoalsSettings;
 
     constructor(leaf: WorkspaceLeaf, settings: WritingGoalsSettings){
         super(leaf);
+        this.settings = settings;
         this.fileHelper = new FileHelper;
     }
 
@@ -26,12 +29,12 @@ export default class GoalView extends ItemView {
     getIcon() {
         return GOAL_ICON;
     }
- 
-    async updatePath(path:string) {
-        this.setGoalSvelte(path);
+
+    updatePath(path: string) {
+        this.setGoal(path);
     }
 
-    setGoalSvelte(path:string) {
+    setGoal(path: any) {
         new Goal({
             target: (this as any).contentEl,
             props: {
@@ -39,8 +42,7 @@ export default class GoalView extends ItemView {
                 mode: 'full',
                 rootEl: this.containerEl
             },
-        });    
-    }
+        });    }
 }
 
 

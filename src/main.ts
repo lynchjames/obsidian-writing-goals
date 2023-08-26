@@ -74,9 +74,10 @@ export default class WritingGoals extends Plugin {
 
         this.registerEvent(
           this.app.workspace.on("file-menu", (menu, file) => {
+            const prefix = this.settings.noGoal(file.path) ? "Add" : "Update"
             menu.addItem((item) => {
               item
-                .setTitle("Add/update writing goal")
+                .setTitle(prefix + " writing goal")
                 .setIcon(GOAL_ICON)
                 .onClick(async () => {
                   const modal = new GoalModal(this.app);
@@ -89,17 +90,17 @@ export default class WritingGoals extends Plugin {
 
         this.registerEvent(
           this.app.workspace.on("file-menu", (menu, file) => {
-            // if(!this.settings.hasGoal(file.path)) {
-            //   return
-            // }
-            menu.addItem((item) => {
-              item
-                .setTitle("Show writing goal")
-                .setIcon(GOAL_ICON)
-                .onClick(async () => {
-                  this.initLeaf(file.path);
-                });
-            });
+            if(this.settings.noGoal(file.path)) { 
+              return;
+            }  
+              menu.addItem((item) => {
+                item
+                  .setTitle("Show writing goal")
+                  .setIcon(GOAL_ICON)
+                  .onClick(async () => {
+                    this.initLeaf(file.path);
+                  });
+              });
           })
         );
       
@@ -143,7 +144,6 @@ export default class WritingGoals extends Plugin {
 			fileExplorer.view as any
 		).fileItems;
         const combinedGoals = this.settings.noteGoals.concat(this.settings.folderGoals.map(fg => fg.path));
-        console.log(JSON.stringify(combinedGoals));
         combinedGoals.forEach(path => {
             const item = fileItems[path];
             if(item) {

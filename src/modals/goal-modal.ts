@@ -57,16 +57,16 @@ export default class GoalModal extends Modal {
         if(target instanceof TFolder){
             settings.folderGoals = settings.folderGoals.filter(fg => fg.path != target.path);
             settings.folderGoals.push({path:target.path, goalCount:goalCount as any as number});
-            plugin.saveData(settings);
+            await plugin.saveData(settings);
         }
         if(target instanceof TFile){
             settings.noteGoals.push(target.path);
             await plugin.app.fileManager.processFrontMatter(target as TFile, (frontMatter) => {
                 frontMatter[GOAL_FRONTMATTER_KEY] = goalCount as any as number;
             });
-            plugin.saveData(settings);
+            await plugin.saveData(settings);
         }
-        plugin.loadNoteGoalData();
+        await plugin.loadNoteGoalData();
     }
 
 }
