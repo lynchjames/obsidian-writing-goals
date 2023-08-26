@@ -44,8 +44,8 @@ export default class WritingGoals extends Plugin {
   
     setupCommands() {
       this.addCommand({
-        id: 'app:show-writing-goal-for-note',
-        name: 'Show the writing goal for the current note',
+        id: 'app:view-writing-goal-for-note',
+        name: 'View the writing goal for the current note',
         callback: async () => {
           await this.settingsHelper.updateNoteGoalsInSettings(this, this.app.workspace.getActiveFile());
           this.initLeaf(this.app.workspace.getActiveFile().path);
@@ -82,6 +82,22 @@ export default class WritingGoals extends Plugin {
 
         this.registerEvent(
           this.app.workspace.on("file-menu", (menu, file) => {
+            if(this.settings.noGoal(file.path)) { 
+              return;
+            }  
+              menu.addItem((item) => {
+                item
+                  .setTitle("View writing goal")
+                  .setIcon(GOAL_ICON)
+                  .onClick(async () => {
+                    this.initLeaf(file.path);
+                  });
+              });
+          })
+        );
+
+        this.registerEvent(
+          this.app.workspace.on("file-menu", (menu, file) => {
             const prefix = this.settings.noGoal(file.path) ? "Add" : "Update"
             menu.addItem((item) => {
               item
@@ -93,22 +109,6 @@ export default class WritingGoals extends Plugin {
                   modal.open();
                 });
             });
-          })
-        );
-
-        this.registerEvent(
-          this.app.workspace.on("file-menu", (menu, file) => {
-            if(this.settings.noGoal(file.path)) { 
-              return;
-            }  
-              menu.addItem((item) => {
-                item
-                  .setTitle("Show writing goal")
-                  .setIcon(GOAL_ICON)
-                  .onClick(async () => {
-                    this.initLeaf(file.path);
-                  });
-              });
           })
         );
 
