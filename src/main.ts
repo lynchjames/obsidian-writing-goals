@@ -48,7 +48,7 @@ export default class WritingGoals extends Plugin {
         name: 'Show the writing goal for the current note',
         callback: async () => {
           await this.settingsHelper.updateNoteGoalsInSettings(this, this.app.workspace.getActiveFile());
-          this.initLeaf(this.app.workspace.getActiveFile());
+          this.initLeaf(this.app.workspace.getActiveFile().path);
         },
         hotkeys: []
       });  
@@ -117,7 +117,7 @@ export default class WritingGoals extends Plugin {
         });  
     }
 
-    async initLeaf(path) {
+    async initLeaf(path:string) {
       const goalLeaf = await this.app.workspace.getRightLeaf(false);
       await goalLeaf.setViewState({
         type: VIEW_TYPE_GOAL,
@@ -171,7 +171,6 @@ export default class WritingGoals extends Plugin {
       for (let key in fileItems) {
         const item = fileItems[key];
         const itemEl = (item.titleEl ?? item.selfEl);
-        console.log(itemEl);
         if(itemEl.children[1] && this.containsLabel(itemEl)) {
           itemEl.removeChild(itemEl.children[1]);
         }
