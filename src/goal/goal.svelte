@@ -62,7 +62,7 @@
     {/if}
     {#if mode == 'simple'}
       <div class="writing-goals-simple-container">
-        <svg class="writing-goals" id="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <svg class="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <circle id="background" r="100" cx="100" cy="100"></circle>
           <circle id="bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" stroke-width="2.2em" fill="transparent" stroke-dasharray="565.48" stroke-linecap="round" stroke-dashoffset="{progress}"></circle>
         </svg>

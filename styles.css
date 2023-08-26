@@ -1,4 +1,4 @@
-.writing-goals-container > h3 {
+.writing-goals-container h3 {
     color: var(--color-text-title);
     font-size: 1.6em;
     text-align: center;
@@ -15,20 +15,24 @@
     color: var(--text-accent);
 }
 
-.writing-goals > #bar {
+.writing-goals #bar, .writing-goals-simple #bar {
     stroke: var(--interactive-accent);
     transition: stroke-dashoffset 1s linear;
 }
 
-.writing-goals > #background {
+.writing-goals #background {
     fill: var(--background-primary);
 }
 
-.writing-goals > text {
+.workspace-split.mod-root .writing-goals #background {
+    fill: var(--background-secondary-alt);
+}
+
+.writing-goals text {
     fill: var(--text-normal);
 }
 
-#writing-goals-simple {
-    
+.writing-goals-simple {
+    fill: var(--background-primary);
     max-width: 50px;
 }
