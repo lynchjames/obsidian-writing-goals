@@ -149,6 +149,7 @@ export default class WritingGoals extends Plugin {
               this.settings.goalLeaves.remove(file.path);
             }
             this.saveData(this.settings);
+            this.loadNoteGoalData();
           })
         );
 
