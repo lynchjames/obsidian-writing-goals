@@ -151,6 +151,9 @@ export default class WritingGoals extends Plugin {
           fileExplorer.view as any
         ).fileItems;
         this.resetFileLabels(fileItems);
+        if(!this.settings.showInFileExplorer) {
+          return;
+        }
         const combinedGoals = this.settings.noteGoals.concat(this.settings.folderGoals.map(fg => fg.path));
         combinedGoals.forEach(path => {
             const item = fileItems[path];
@@ -170,9 +173,8 @@ export default class WritingGoals extends Plugin {
     resetFileLabels(fileItems:any) {
       for (let key in fileItems) {
         const item = fileItems[key];
-        const isFolder = item.selfEl != null;
         const itemEl = (item.titleEl ?? item.selfEl);
-        for (let i = 0; i < itemEl.children.child; i++) {
+        for (let i = 0; i < itemEl.children.length; i++) {
           const child = itemEl.children[i];
           if(child && this.containsLabel(child)){
             itemEl.removeChild(child);

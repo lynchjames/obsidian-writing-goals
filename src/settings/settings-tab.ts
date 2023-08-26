@@ -18,14 +18,15 @@ import type WritingGoals from '../main';
       containerEl.empty();
 
       new Setting(containerEl)
-        .setName('Show goals in file explorer')
+        .setName('Show goal indicators in file explorer')
         .setDesc('The plugin will display folder and note writing goals in the file explorer')
         .addToggle(toggle => 
           toggle
             .setValue(this.plugin.settings.showInFileExplorer)
-            .onChange((value:boolean) => {
+            .onChange(async (value:boolean) => {
               this.plugin.settings.showInFileExplorer = value;
-              this.plugin.saveData(this.plugin.settings);
+              await this.plugin.saveData(this.plugin.settings);
+              this.plugin.initFileLabels();
             }));
     }
 

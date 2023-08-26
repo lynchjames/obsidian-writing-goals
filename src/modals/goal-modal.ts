@@ -31,7 +31,8 @@ export default class GoalModal extends Modal {
             text.onChange((value) => {
               this.userSubmittedGoalCount = value
             })
-            .inputEl.value = getGoalCount(this.app, this.target));
+            .inputEl.value = this.target instanceof TFolder ? 
+              this.plugin.settings.getFolderGoal(this.target.path).goalCount : getGoalCount(this.app, this.target));
     
         new Setting(contentEl)
           .addButton((btn) =>
