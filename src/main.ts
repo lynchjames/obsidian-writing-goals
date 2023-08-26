@@ -24,14 +24,12 @@ interface FileItem {
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
-  vault: Vault | undefined;
   goalView: GoalView | undefined;
   fileHelper: FileHelper = new FileHelper();
   settingsHelper: SettingsHelper = new SettingsHelper();
   goalLeaves: string[];
   
   async onload() {
-    this.vault = this.app.vault;
     this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.setupCommands();
@@ -66,7 +64,7 @@ export default class WritingGoals extends Plugin {
     }
 
     setupEvents() {
-        this.registerEvent(this.vault.on("modify", async file => {
+        this.registerEvent(this.app.vault.on("modify", async file => {
           if(file instanceof TFolder){
             return;
           }
