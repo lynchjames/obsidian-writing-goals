@@ -9,6 +9,7 @@
 
     let goals: Notes;
     let goal: NoteGoal;
+    let percent: number = 0;
     let progress: number = 0;
     let radius: number = 90;
 
@@ -28,13 +29,13 @@
     }
 
     function calculateProgress() {
-      let val = (goal.wordCount/goal.goalCount)*100;
+      percent = (goal.wordCount/goal.goalCount)*100;
       let c = Math.PI*(radius*2);
     
-      if (val < 0) { val = 0;}
-      if (val > 100) { val = 100;}
+      if (percent < 0) { percent = 0;}
+      if (percent > 100) { percent = 100;}
       
-      progress = ((100-val)/100)*c;
+      progress = ((100-percent)/100)*c;
     }
 </script>
 
@@ -50,13 +51,17 @@
           <span class="goal-note-title">{goal.title}</span>
         </h3>
         <svg class="writing-goals" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <circle id="background" r="100" cx="100" cy="100"></circle>
+          <circle id="background" class="{percent == 100 ? 'note-goal-completed' : ''}" r="100" cx="100" cy="100"></circle>
           <circle id="bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" stroke-width="0.9em" fill="transparent" stroke-dasharray="565.48" stroke-linecap="round" stroke-dashoffset="{progress}"></circle>
           <text fill="#306856" stroke="#000" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold" style="stroke: var(--text-accent)">{goal.wordCount.toLocaleString()}</text>
           <text fill="#306856" stroke="#000" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve" font-weight="bold">words</text>
         </svg>
         <h3>
-          of <span class="note-goal">{goal.goalCount.toLocaleString()}</span> word goal
+          {#if percent == 100}
+           <span class="note-goal">{goal.goalCount.toLocaleString()}</span> <span class="note-goal-completed">word goal completed!</span>
+          {:else}
+            of <span class="note-goal">{goal.goalCount.toLocaleString()}</span> word goal
+          {/if}
         </h3>
       </div>
     {/if}

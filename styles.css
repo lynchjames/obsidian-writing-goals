@@ -4,7 +4,7 @@
 
 .writing-goals-container h3 {
     color: var(--color-text-title);
-    font-size: 1.6em;
+    font-size: 1.4em;
     text-align: center;
 }
 
@@ -19,6 +19,10 @@
     color: var(--text-accent);
 }
 
+.note-goal-completed {
+    color: var(--color-green);
+}
+
 .writing-goals #bar, .writing-goals-simple #bar {
     stroke: var(--interactive-accent);
     transition: stroke-dashoffset 1s linear;
@@ -26,6 +30,10 @@
 
 .writing-goals #background {
     fill: var(--background-primary);
+}
+
+.writing-goals #background.note-goal-completed {
+    fill: var(--color-green);
 }
 
 .workspace-split.mod-root .writing-goals #background {
