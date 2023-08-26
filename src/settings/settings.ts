@@ -6,7 +6,6 @@ export class WritingGoalsSettings {
   folderGoals: {path:string, goalCount:number}[] = [];
 
   noGoal(path:string): boolean{
-    console.log(path);
     return !this.noteGoals.contains(path) && this.folderGoals.filter(fg => fg.path == path).length == 0;
   }
 }

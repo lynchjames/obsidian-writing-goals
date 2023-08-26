@@ -72,6 +72,14 @@ export default class WritingGoals extends Plugin {
           await this.loadNoteGoalData();
         }));
 
+        this.registerEvent(this.app.metadataCache.on("changed", async file => {
+          if(file instanceof TFolder){
+            return;
+          }
+          await this.settingsHelper.updateNoteGoalsInSettings(this, file as TFile)
+          await this.loadNoteGoalData();
+        }));
+
         this.registerEvent(
           this.app.workspace.on("file-menu", (menu, file) => {
             const prefix = this.settings.noGoal(file.path) ? "Add" : "Update"
@@ -106,7 +114,6 @@ export default class WritingGoals extends Plugin {
       
         this.app.workspace.onLayoutReady(async () => {
           await this.loadNoteGoalData();
-          this.initFileLabels();
         });  
     }
 
