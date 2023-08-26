@@ -1,7 +1,8 @@
 import type { Notes } from "../stores/note-goal";
 
 export class WritingGoalsSettings {
-  showInFileExplorer: boolean = false; 
+  showGoalMessage: boolean = true;
+  showInFileExplorer: boolean = true; 
   noteGoals:string[] = [];
   folderGoals: {path:string, goalCount:number}[] = [];
   goalLeaves: string[] = [];

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { onDestroy } from "svelte";
-	  import { noteGoals } from '../stores/goal-store';
+	  import { noteGoals, showGoalMessage } from '../stores/goal-store';
 	import type { NoteGoal, Notes } from '../stores/note-goal';
 
     export let mode: string;
@@ -12,6 +12,7 @@
     let percent: number = 0;
     let progress: number = 0;
     let radius: number = 90;
+    let showMessage: boolean = true;
 
     const unsubNoteGoals = noteGoals.subscribe(val => {
         if(!val[path]){
@@ -22,7 +23,12 @@
         calculateProgress();
     });
 
+    const unsubNShowGoalMessage = showGoalMessage.subscribe(val => {
+        showMessage = val;
+    });
+
     onDestroy(unsubNoteGoals);
+    onDestroy(unsubNShowGoalMessage);
     
     function updateGoal() {
       goal = goals[path];      
@@ -56,6 +62,7 @@
           <text fill="#306856" stroke="#000" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold" style="stroke: var(--text-accent)">{goal.wordCount.toLocaleString()}</text>
           <text fill="#306856" stroke="#000" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve" font-weight="bold">words</text>
         </svg>
+        {#if showMessage}
         <h3>
           {#if percent == 100}
            <span class="note-goal">{goal.goalCount.toLocaleString()}</span> <span class="note-goal-completed">word goal completed!</span>
@@ -63,12 +70,13 @@
             of <span class="note-goal">{goal.goalCount.toLocaleString()}</span> word goal
           {/if}
         </h3>
+        {/if}
       </div>
     {/if}
     {#if mode == 'simple'}
       <div class="writing-goals-simple-container">
         <svg class="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <circle id="background" r="100" cx="100" cy="100"></circle>
+          <circle id="background" class="{percent == 100 ? 'note-goal-completed' : ''}" r="100" cx="100" cy="100"></circle>
           <circle id="bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" stroke-width="2.2em" fill="transparent" stroke-dasharray="565.48" stroke-linecap="round" stroke-dashoffset="{progress}"></circle>
         </svg>
         </div>

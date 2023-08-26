@@ -5,6 +5,7 @@ import {
 } from 'obsidian';
 import type WritingGoals from '../main';
 import { FileLabels } from '../goal/file-labels';
+import { showGoalMessage } from '../stores/goal-store';
   
   export class WritingGoalsSettingsTab extends PluginSettingTab {
     plugin: WritingGoals;
@@ -31,6 +32,18 @@ import { FileLabels } from '../goal/file-labels';
               this.plugin.settings.showInFileExplorer = value;
               await this.plugin.saveData(this.plugin.settings);
               this.fileLabels.initFileLabels();
+            }));
+
+      new Setting(containerEl)
+        .setName('Show goal message')
+        .setDesc('The plugin will display a message below the progress indicator including the current goal')
+        .addToggle(toggle => 
+          toggle
+            .setValue(this.plugin.settings.showGoalMessage)
+            .onChange(async (value:boolean) => {
+              this.plugin.settings.showGoalMessage = value;
+              await this.plugin.saveData(this.plugin.settings);
+              showGoalMessage.set(value);
             }));
     }
 

@@ -20,7 +20,7 @@
 }
 
 .note-goal-completed {
-    color: var(--color-green);
+    color: var(--text-success);
 }
 
 .writing-goals #bar, .writing-goals-simple #bar {
@@ -32,8 +32,8 @@
     fill: var(--background-primary);
 }
 
-.writing-goals #background.note-goal-completed {
-    fill: var(--color-green);
+.writing-goals #background.note-goal-completed, .writing-goals-simple #background.note-goal-completed {
+    fill: var(--background-modifier-success);
 }
 
 .workspace-split.mod-root .writing-goals #background {
