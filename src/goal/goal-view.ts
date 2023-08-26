@@ -34,12 +34,9 @@ export default class GoalView extends ItemView {
     }
     
     onload(): void {
-        console.log("onOpen");
-        console.log(this.goal);
         if(this.goal != undefined){
             return;
         }
-        console.log(this.plugin.goalLeaves);
         const path = this.plugin.goalLeaves.pop();
         if(!path){
             return;
@@ -58,7 +55,6 @@ export default class GoalView extends ItemView {
     }
 
     async updatePath(path) {
-        console.log("Update path");
         this.plugin.settings.goalLeaves.push(path);
         this.plugin.saveData(this.plugin.settings);
         this.path = path;
@@ -66,9 +62,7 @@ export default class GoalView extends ItemView {
     }
 
     async onClose() {
-        console.log("onClose");
-        // this.plugin.settings.goalLeaves.remove(this.path);
-        // await this.plugin.saveData(this.plugin.settings);
+
     }
 
     setGoal() {

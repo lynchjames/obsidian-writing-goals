@@ -114,6 +114,49 @@ export default class WritingGoals extends Plugin {
           })
         );
 
+        this.registerEvent(
+          this.app.vault.on("rename", (file, oldPath) => {
+            if(this.settings.noteGoals.contains(oldPath)){
+              this.settings.noteGoals.remove(oldPath);
+              this.settings.noteGoals.push(file.path);
+            }
+            const folderGoal = this.settings.folderGoals.filter(fg => fg.path == oldPath)[0];
+            if(folderGoal != null){
+              this.settings.folderGoals.remove(folderGoal);
+              folderGoal.path = file.path;
+              this.settings.folderGoals.push(folderGoal);
+              //TODO: Need to also rename note goals that have this folder as a parent
+              const noteGoalChildren = this.settings.noteGoals.filter(ng => ng.contains(oldPath));
+              noteGoalChildren.forEach(ngc => { 
+                this.settings.noteGoals.remove(ngc);
+                const updated = ngc.replace(oldPath, file.path);
+                this.settings.noteGoals.push(updated);
+              });
+            }
+            if(this.settings.goalLeaves.contains(oldPath)){
+              this.settings.goalLeaves.remove(oldPath);
+              this.settings.goalLeaves.push(file.path);
+            }
+            this.saveData(this.settings);
+          })
+        );
+
+        this.registerEvent(
+          this.app.vault.on("delete", (file) => {
+            if(this.settings.noteGoals.contains(file.path)){
+              this.settings.noteGoals.remove(file.path);
+            }
+            const folderGoal = this.settings.folderGoals.filter(fg => fg.path == file.path)[0];
+            if(folderGoal != null){
+              this.settings.folderGoals.remove(folderGoal);
+            }
+            if(this.settings.goalLeaves.contains(file.path)){
+              this.settings.goalLeaves.remove(file.path);
+            }
+            this.saveData(this.settings);
+          })
+        );
+
         this.registerInterval(
           window.setInterval(() => {
             const goalLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
@@ -134,8 +177,6 @@ export default class WritingGoals extends Plugin {
         active: true
       });
       const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
-      console.log("Leaf count", leaves.length);
-      console.log((leaves[0].view as GoalView).goal);
       const view = leaves.filter(l => (l.view as GoalView).goal == undefined)[0].view as GoalView;
       view.updatePath(path);
     }
@@ -201,7 +242,6 @@ export default class WritingGoals extends Plugin {
     }
     
     onunload() {
-      console.log("Onunload plugin");
       this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL);
     }
     
