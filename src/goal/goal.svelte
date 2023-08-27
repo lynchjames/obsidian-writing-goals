@@ -43,6 +43,10 @@
       
       progress = ((100-percent)/100)*c;
     }
+
+    function getLineCap(per:number) {
+      return  per < 93 ? 'round' : 'butt';
+    }
 </script>
 
 <style>
@@ -57,15 +61,9 @@
           <span class="goal-note-title">{goal.title}</span>
         </h3>
         <svg class="writing-goals" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id="myGradient">
-              <stop class="svg-gradient-start" offset="70%" />
-              <stop class="svg-gradient-stop" offset="100%" />
-            </radialGradient>
-          </defs>
           <circle id="background" class="{percent == 100 ? 'note-goal-completed' : ''}" r="100" cx="100" cy="100"></circle>
-          <circle id="bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" stroke-width="1.2em" fill="transparent" stroke-dasharray="565.48" stroke-linecap="butt" 
-            stroke-dashoffset="{progress}" stroke="url(#myGradient)"></circle>
+          <circle id="bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" stroke-width="1.2em" fill="transparent" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
+            stroke-dashoffset="{progress}"></circle>
           <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{goal.wordCount.toLocaleString()}</text>
           <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve" font-weight="bold">words</text>
         </svg>
@@ -85,7 +83,7 @@
         <svg class="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <circle id="background" class="{percent == 100 ? 'note-goal-completed' : ''}" r="100" cx="100" cy="100"></circle>
           <circle id="bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" stroke-width="2.2em" fill="transparent" 
-          stroke="url(#myGradient)" stroke-dasharray="565.48" stroke-linecap="butt" stroke-dashoffset="{progress}"></circle>
+           stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" stroke-dashoffset="{progress}"></circle>
         </svg>
         </div>
     {/if}

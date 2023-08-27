@@ -28,6 +28,7 @@
 }
 
 .writing-goals #bar, .writing-goals-simple #bar {
+    stroke: var(--interactive-accent);
     transition: stroke-dashoffset 1s linear;
 }
 
