@@ -1,9 +1,9 @@
 {
-  "id": "writing-goals",
+  "id": "obsidian-writing-goals",
   "name": "Writing Goals",
+  "minAppVersion": "1.1.6",
   "version": "0.1",
-  "description": "A plugin to help you hit your writing goals",
+  "description": "Set dynamic writing goals for notes and folders in Obsidian.",
   "isDesktopOnly": false,
-  "js": "main.js",
-  "css": "style.css"
+  "fundingUrl": "https://ko-fi.com/lynchjames"
 }
