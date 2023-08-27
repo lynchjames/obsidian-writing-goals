@@ -11,7 +11,7 @@
 .writing-goals-simple-container {
     position: absolute;
     width: 22px;
-    right: 4px;
+    right: 6px;
     top: 2px;
 }
 
@@ -19,12 +19,20 @@
     color: var(--text-accent);
 }
 
+.note-goal-text {
+    fill: var(--text-normal);
+}
+
 .note-goal-completed {
     color: var(--text-success);
 }
 
 .writing-goals #bar, .writing-goals-simple #bar {
-    /* stroke: var(--interactive-accent); */
+    transition: stroke-dashoffset 1s linear;
+}
+
+.writing-goals-simple #bar {
+    stroke: var(--interactive-accent);
     transition: stroke-dashoffset 1s linear;
 }
 
@@ -40,16 +48,14 @@
     fill: var(--background-primary);
 }
 
-.writing-goals #background.note-goal-completed, .writing-goals-simple #background.note-goal-completed {
+.writing-goals #background.note-goal-completed, 
+.workspace-split.mod-root .writing-goals #background.note-goal-completed, 
+.writing-goals-simple #background.note-goal-completed {
     fill: var(--background-modifier-success);
 }
 
 .workspace-split.mod-root .writing-goals #background {
     fill: var(--background-secondary-alt);
-}
-
-.writing-goals text {
-    fill: var(--text-normal);
 }
 
 .writing-goals-simple {
