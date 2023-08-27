@@ -155,7 +155,7 @@ export default class WritingGoals extends Plugin {
         this.registerEvent(
           this.app.workspace.on("layout-change", (async () => {
             this.goalLeaves = this.settings.goalLeaves.map(x => x);
-            await this.loadNoteGoalData(false);
+            await this.loadNoteGoalData(true);
           }))
         );
 
