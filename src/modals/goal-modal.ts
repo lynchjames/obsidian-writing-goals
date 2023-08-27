@@ -1,7 +1,6 @@
 import { App, Modal, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
 import  { getGoalCount } from "../stores/note-goal";
 import type WritingGoals from "../main";
-import { GOAL_FRONTMATTER_KEY } from "../constants";
 
 export default class GoalModal extends Modal {
     userSubmittedGoalCount: string;
@@ -25,6 +24,7 @@ export default class GoalModal extends Modal {
     
         contentEl.createEl("h1", { text: "What's your goal?" });
     
+        const goalCount = getGoalCount(this.app, this.plugin.settings.customGoalFrontmatterKey, this.target);
         new Setting(contentEl)
           .setName("Goal (number)")
           .addText((text) =>
@@ -32,7 +32,7 @@ export default class GoalModal extends Modal {
               this.userSubmittedGoalCount = value
             })
             .inputEl.value = this.target instanceof TFolder ? 
-              this.plugin.settings.getFolderGoal(this.target.path).goalCount : getGoalCount(this.app, this.target));
+              this.plugin.settings.getFolderGoal(this.target.path).goalCount : goalCount);
     
         new Setting(contentEl)
           .addButton((btn) =>
@@ -63,7 +63,7 @@ export default class GoalModal extends Modal {
         if(target instanceof TFile){
             settings.noteGoals.push(target.path);
             await plugin.app.fileManager.processFrontMatter(target as TFile, (frontMatter) => {
-                frontMatter[GOAL_FRONTMATTER_KEY] = goalCount as any as number;
+                frontMatter[settings.customGoalFrontmatterKey] = goalCount as any as number;
             });
             await plugin.saveData(settings);
         }

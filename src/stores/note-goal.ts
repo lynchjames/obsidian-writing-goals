@@ -1,6 +1,6 @@
 import { TFile, TAbstractFile, App, TFolder } from "obsidian"
-import { GOAL_FRONTMATTER_KEY } from "../constants"
 import type { FileHelper } from "../IO/file"
+import type { WritingGoalsSettings } from "../settings/settings"
 
 export enum GoalType {
     Note,
@@ -19,10 +19,10 @@ export class Notes {
     [key: string]: NoteGoal
 }
 
-export async function createGoal(app: App, fileHelper:FileHelper, file: TAbstractFile, goalCount?: number): Promise<NoteGoal> {
+export async function createGoal(app: App, settings:WritingGoalsSettings, fileHelper:FileHelper, file: TAbstractFile, goalCount?: number): Promise<NoteGoal> {
     const isFile = file instanceof TFile;
     if(isFile) {
-        goalCount = getGoalCount(app, file);
+        goalCount = getGoalCount(app, settings.customGoalFrontmatterKey, file);
     }
     return {
         path: file.path,
@@ -33,10 +33,10 @@ export async function createGoal(app: App, fileHelper:FileHelper, file: TAbstrac
     }
 }
 
-export function getGoalCount(app: App, file:TAbstractFile){
+export function getGoalCount(app: App, frontMatterKey:string, file:TAbstractFile){
     const metadata = app.metadataCache.getFileCache(file as TFile);
     if(metadata && metadata.frontmatter){
-        return metadata.frontmatter[GOAL_FRONTMATTER_KEY] ?? 0;
+        return metadata.frontmatter[frontMatterKey] ?? 0;
     }
     return 0;
 }

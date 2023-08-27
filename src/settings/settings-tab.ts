@@ -6,6 +6,8 @@ import {
 import type WritingGoals from '../main';
 import { FileLabels } from '../goal/file-labels';
 import { showGoalMessage } from '../stores/goal-store';
+import type { text } from '@sveltejs/kit';
+import { GOAL_FRONTMATTER_KEY } from '../constants';
   
   export class WritingGoalsSettingsTab extends PluginSettingTab {
     plugin: WritingGoals;
@@ -45,6 +47,18 @@ import { showGoalMessage } from '../stores/goal-store';
               await this.plugin.saveData(this.plugin.settings);
               showGoalMessage.set(value);
             }));
+
+      new Setting(containerEl)
+      .setName('Goal frontmatter property name')
+      .setDesc('The name for the frontmatter property to use for goals (changing this setting will not update existing frontmatter)')
+      .addText(text => 
+        text
+          .setValue(this.plugin.settings.customGoalFrontmatterKey)
+          .onChange(async (value:string) => {
+            value = value != '' ? value : GOAL_FRONTMATTER_KEY;
+            this.plugin.settings.customGoalFrontmatterKey = value;
+            await this.plugin.saveData(this.plugin.settings);
+          }));
     }
 
   }

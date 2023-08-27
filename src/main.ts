@@ -193,13 +193,13 @@ export default class WritingGoals extends Plugin {
       for (let index = 0; index < this.settings.noteGoals.length; index++) {
         const noteGoal = this.settings.noteGoals[index];
         const file = this.app.vault.getAbstractFileByPath(noteGoal);
-        const goal = await createGoal(this.app, this.fileHelper, file);
+        const goal = await createGoal(this.app, this.settings, this.fileHelper, file);
         notes[noteGoal] = goal;
       }
       for (let index = 0; index < this.settings.folderGoals.length; index++) {
         const folderGoal = this.settings.folderGoals[index];
         const folder = this.app.vault.getAbstractFileByPath(folderGoal.path);
-        const goal = await createGoal(this.app, this.fileHelper, folder, folderGoal.goalCount);
+        const goal = await createGoal(this.app, this.settings, this.fileHelper, folder, folderGoal.goalCount);
         notes[folderGoal.path] = goal;
       }
       noteGoals.set(notes);
