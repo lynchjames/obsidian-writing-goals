@@ -24,25 +24,29 @@ export class FileLabels {
         const fileItems: { [path: string]: FileItem } = (
           fileExplorer.view as any
         ).fileItems;
+        console.log(fileExplorer);
+        console.log(fileItems);
         this.resetFileLabels(fileItems);
-        if(!this.settings.showInFileExplorer) {
-          return;
+        if(this.settings.showInFileExplorer) {
+          const combinedGoals = this.settings.noteGoals.concat(this.settings.folderGoals.map(fg => fg.path));
+          combinedGoals.forEach(path => {
+              if(!fileItems){
+                return;
+              }
+              const item = fileItems[path];
+              const itemEl = item ? (item.titleEl ?? item.selfEl) : undefined;
+              if(item && itemEl && !this.containsLabel(itemEl)) {
+                      new Goal({
+                          target: itemEl,
+                          props: {
+                          path: path,
+                          mode: 'simple',
+                          },
+                      });
+                  }
+              });
         }
-        const combinedGoals = this.settings.noteGoals.concat(this.settings.folderGoals.map(fg => fg.path));
-        combinedGoals.forEach(path => {
-            const item = fileItems[path];
-            const itemEl = item ? (item.titleEl ?? item.selfEl) : undefined;
-            if(item && itemEl && !this.containsLabel(itemEl)) {
-                    new Goal({
-                        target: itemEl,
-                        props: {
-                        path: path,
-                        mode: 'simple',
-                        },
-                    });
-                }
-            });
-        }
+      }
 
     resetFileLabels(fileItems:any) {
       for (let key in fileItems) {
