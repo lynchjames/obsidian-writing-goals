@@ -3,6 +3,7 @@ node_modules
 /build
 /dist
 /test-vault
+*/.obsidian
 /.svelte-kit
 /package
 .env
