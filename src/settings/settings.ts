@@ -2,8 +2,7 @@ import type { TAbstractFile } from "obsidian";
 import { GOAL_FRONTMATTER_KEY } from "../constants";
 import type { Notes } from "../stores/note-goal";
 
-export class WritingGoalsSettings {
-  
+export class WritingGoalsSettings {  
   showGoalMessage: boolean = true;
   showInFileExplorer: boolean = true; 
   showGoalOnCreateAndUpdate: boolean = true;
@@ -30,6 +29,30 @@ export class WritingGoalsSettings {
     }
     if(this.goalLeaves.contains(file.path)){
       this.goalLeaves.remove(file.path);
+    }
+  }
+
+  rename(file: TAbstractFile, oldPath: string) {
+    if(this.noteGoals.contains(oldPath)){
+      this.noteGoals.remove(oldPath);
+      this.noteGoals.push(file.path);
+    }
+    const folderGoal = this.folderGoals.filter(fg => fg.path == oldPath)[0];
+    if(folderGoal != null){
+      this.folderGoals.remove(folderGoal);
+      folderGoal.path = file.path;
+      this.folderGoals.push(folderGoal);
+      //TODO: Need to also rename note goals that have this folder as a parent
+      const noteGoalChildren = this.noteGoals.filter(ng => ng.contains(oldPath));
+      noteGoalChildren.forEach(ngc => { 
+        this.noteGoals.remove(ngc);
+        const updated = ngc.replace(oldPath, file.path);
+        this.noteGoals.push(updated);
+      });
+    }
+    if(this.goalLeaves.contains(oldPath)){
+      this.goalLeaves.remove(oldPath);
+      this.goalLeaves.push(file.path);
     }
   }
 }

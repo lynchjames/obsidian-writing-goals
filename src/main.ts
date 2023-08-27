@@ -2,8 +2,7 @@ import {
   Notice,
   Plugin,
   TFile,
-  TFolder,
-  Vault,
+  TFolder
 } from 'obsidian';
 
 import { WritingGoalsSettings } from './settings/settings';
@@ -150,27 +149,7 @@ export default class WritingGoals extends Plugin {
 
         this.registerEvent(
           this.app.vault.on("rename", (file, oldPath) => {
-            if(this.settings.noteGoals.contains(oldPath)){
-              this.settings.noteGoals.remove(oldPath);
-              this.settings.noteGoals.push(file.path);
-            }
-            const folderGoal = this.settings.folderGoals.filter(fg => fg.path == oldPath)[0];
-            if(folderGoal != null){
-              this.settings.folderGoals.remove(folderGoal);
-              folderGoal.path = file.path;
-              this.settings.folderGoals.push(folderGoal);
-              //TODO: Need to also rename note goals that have this folder as a parent
-              const noteGoalChildren = this.settings.noteGoals.filter(ng => ng.contains(oldPath));
-              noteGoalChildren.forEach(ngc => { 
-                this.settings.noteGoals.remove(ngc);
-                const updated = ngc.replace(oldPath, file.path);
-                this.settings.noteGoals.push(updated);
-              });
-            }
-            if(this.settings.goalLeaves.contains(oldPath)){
-              this.settings.goalLeaves.remove(oldPath);
-              this.settings.goalLeaves.push(file.path);
-            }
+            this.settings.rename(file, oldPath);
             this.saveData(this.settings);
           })
         );
