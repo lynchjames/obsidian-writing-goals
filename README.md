@@ -24,7 +24,6 @@ You can update goals in 3 ways:
 2. Using the file explorer context menu item.
 3. For notes only, updating the value of the goal frontmatter property.
 
-
 ## Viewing goals
 You can view the goal set for the current note or for any file or folder using a couple of commands:
 
@@ -35,9 +34,7 @@ Goal progress should update in real-time as you type. Text added to any file wit
 ![](./images/reaching-goal-demo.gif) 
 
 ## Compatibility
-
 This plugin is compatible with Obsidian v1.3.7 and targets API version v1.4.4.
 
 ## Donating
-
 This plugin is provided free of charge. If you would like to donate something to me, you can via [Ko-Fi](https://ko-fi.com/lynchjames). Thank you!
