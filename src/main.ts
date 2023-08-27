@@ -176,9 +176,7 @@ export default class WritingGoals extends Plugin {
         active: true
       });
       // try {
-        console.log('init leaf', path);
         const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
-        console.log(leaves);
         const view = leaves.last().view as GoalView;
         await view.updatePath(path); 
       // } catch (error) {
