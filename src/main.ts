@@ -35,7 +35,6 @@ export default class WritingGoals extends Plugin {
       (leaf) => this.goalView = new GoalView(leaf, this)
     );
     this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
-
     this.setupEvents();
     }
   
@@ -156,9 +155,14 @@ export default class WritingGoals extends Plugin {
         this.registerEvent(
           this.app.workspace.on("layout-change", (async () => {
             this.goalLeaves = this.settings.goalLeaves.map(x => x);
-            await this.loadNoteGoalData();
+            await this.loadNoteGoalData(false);
           }))
         );
+
+        this.app.workspace.onLayoutReady((async () => {
+          this.goalLeaves = this.settings.goalLeaves.map(x => x);
+          await this.loadNoteGoalData();
+        }));
         
         this.registerInterval(
           window.setInterval(() => {
@@ -184,7 +188,7 @@ export default class WritingGoals extends Plugin {
       // }
     }
 
-    async loadNoteGoalData() {
+    async loadNoteGoalData(skipFileLabels?:boolean) {
       let notes = new Notes();
       for (let index = 0; index < this.settings.noteGoals.length; index++) {
         const noteGoal = this.settings.noteGoals[index];
@@ -199,6 +203,9 @@ export default class WritingGoals extends Plugin {
         notes[folderGoal.path] = goal;
       }
       noteGoals.set(notes);
+      if(skipFileLabels){
+        return;
+      }
       await this.fileLabels.initFileLabels();
     }
     
