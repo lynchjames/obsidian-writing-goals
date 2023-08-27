@@ -19,6 +19,11 @@
     color: var(--text-accent);
 }
 
+.note-goal-completed .note-goal-text {
+    fill: var(--text-on-accent-inverted);
+    font-weight: bold;
+}
+
 .note-goal-text {
     fill: var(--text-normal);
 }

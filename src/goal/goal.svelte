@@ -47,6 +47,10 @@
     function getLineCap(per:number) {
       return  per < 95 ? 'round' : 'butt';
     }
+
+    function getCompletedClass(per:number){
+      return percent == 100 ? 'note-goal-completed' : '';
+    }
 </script>
 
 <style>
@@ -60,8 +64,8 @@
         <h3 class="title">
           <span class="goal-note-title">{goal.title}</span>
         </h3>
-        <svg class="writing-goals" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <circle id="background" class="{percent == 100 ? 'note-goal-completed' : ''}" r="100" cx="100" cy="100"></circle>
+        <svg class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <circle id="background" class="{getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
           <circle id="bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" stroke-width="1.2em" fill="transparent" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
             stroke-dashoffset="{progress}"></circle>
           <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{goal.wordCount.toLocaleString()}</text>
@@ -81,7 +85,7 @@
     {#if mode == 'simple'}
       <div class="writing-goals-simple-container">
         <svg class="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <circle id="background" class="{percent == 100 ? 'note-goal-completed' : ''}" r="100" cx="100" cy="100"></circle>
+          <circle id="background" class="{getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
           <circle id="bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" stroke-width="2.2em" fill="transparent" 
            stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" stroke-dashoffset="{progress}"></circle>
         </svg>
