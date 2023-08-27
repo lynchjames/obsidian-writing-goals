@@ -24,8 +24,6 @@ export class FileLabels {
         const fileItems: { [path: string]: FileItem } = (
           fileExplorer.view as any
         ).fileItems;
-        console.log(fileExplorer);
-        console.log(fileItems);
         this.resetFileLabels(fileItems);
         if(this.settings.showInFileExplorer) {
           const combinedGoals = this.settings.noteGoals.concat(this.settings.folderGoals.map(fg => fg.path));
