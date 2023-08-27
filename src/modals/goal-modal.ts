@@ -51,7 +51,9 @@ export default class GoalModal extends Modal {
 
       onSubmit() {
         this.createGoalForTarget();
-        this.plugin.initLeaf(this.target.path);
+        if(this.plugin.settings.showGoalOnCreateAndUpdate){
+          this.plugin.initLeaf(this.target.path);
+        }
         this.plugin.loadNoteGoalData();
       }
 

@@ -45,7 +45,9 @@ export default class WritingGoals extends Plugin {
         name: 'View writing goal for the current note',
         callback: async () => {
           await this.settingsHelper.updateNoteGoalsInSettings(this, this.app.workspace.getActiveFile());
-          this.initLeaf(this.app.workspace.getActiveFile().path);
+          if(this.settings.showGoalOnCreateAndUpdate){
+            this.initLeaf(this.app.workspace.getActiveFile().path);
+          }
         },
         hotkeys: []
       }); 
@@ -139,7 +141,7 @@ export default class WritingGoals extends Plugin {
                       }
                     });
                   }
-                  this.saveData(this.settings);
+                  await this.saveData(this.settings);
                   this.loadNoteGoalData();
                 });
             });

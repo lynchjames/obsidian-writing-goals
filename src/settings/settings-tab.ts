@@ -37,7 +37,7 @@ import { GOAL_FRONTMATTER_KEY } from '../constants';
 
       new Setting(containerEl)
         .setName('Display goal message')
-        .setDesc('The plugin will display a message below the progress indicator including the current goal')
+        .setDesc('The plugin will display a message below the progress including the current goal')
         .addToggle(toggle => 
           toggle
             .setValue(this.plugin.settings.showGoalMessage)
@@ -58,6 +58,16 @@ import { GOAL_FRONTMATTER_KEY } from '../constants';
             this.plugin.settings.customGoalFrontmatterKey = value;
             await this.plugin.saveData(this.plugin.settings);
           }));
-    }
 
+      new Setting(containerEl)
+      .setName('Display goal on create')
+      .setDesc('The plugin will display the goal progress when you create or update it')
+      .addToggle(toggle => 
+        toggle
+          .setValue(this.plugin.settings.showGoalOnCreateAndUpdate)
+          .onChange(async (value:boolean) => {
+            this.plugin.settings.showGoalOnCreateAndUpdate = value;
+            await this.plugin.saveData(this.plugin.settings);
+          }));
+    }
   }

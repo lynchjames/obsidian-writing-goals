@@ -56,7 +56,7 @@ export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
             this.goalModal.init(this.plugin, item);
             this.close();
             this.goalModal.open();
-        } else {
+        } else if(this.settings.showGoalOnCreateAndUpdate) {
             this.plugin.initLeaf(item.path);
         }
     }

@@ -6,6 +6,7 @@ export class WritingGoalsSettings {
   
   showGoalMessage: boolean = true;
   showInFileExplorer: boolean = true; 
+  showGoalOnCreateAndUpdate: boolean = true;
   noteGoals:string[] = [];
   folderGoals: {path:string, goalCount:number}[] = [];
   goalLeaves: string[] = [];
