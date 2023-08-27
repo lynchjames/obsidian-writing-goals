@@ -219,8 +219,4 @@ export default class WritingGoals extends Plugin {
       await this.fileLabels.initFileLabels();
     }
     
-    onunload() {
-      this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL);
-    }
-    
   }
