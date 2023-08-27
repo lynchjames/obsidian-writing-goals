@@ -6,7 +6,7 @@ const EMPTY_TEXT = 'No files found to append content. Enter to create a new one.
 const PLACEHOLDER_TEXT = 'Type file to append to or create';
 const instructions = [
     {command: '↑↓', purpose: 'to navigate'},
-    {command: '↵', purpose: 'to append content to file'},
+    {command: '↵', purpose: 'to select note or folder for goal'},
     {command: 'esc', purpose: 'to dismiss'}
 ];
 

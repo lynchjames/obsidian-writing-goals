@@ -1,4 +1,5 @@
 import {
+  Notice,
   Plugin,
   TFile,
   TFolder,
@@ -6,7 +7,7 @@ import {
 } from 'obsidian';
 
 import { WritingGoalsSettings } from './settings/settings';
-import { GOAL_ICON, VIEW_TYPE_FILE_EXPLORER, VIEW_TYPE_GOAL } from './constants';
+import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_FILE_EXPLORER, VIEW_TYPE_GOAL } from './constants';
 import GoalView from './goal/goal-view';
 import { WritingGoalsSettingsTab } from './settings/settings-tab';
 import { SettingsHelper } from './settings/settings-helper';
@@ -102,16 +103,44 @@ export default class WritingGoals extends Plugin {
         );
 
         this.registerEvent(
-          this.app.workspace.on("file-menu", (menu, file) => {
-            const prefix = this.settings.noGoal(file.path) ? "Add" : "Update"
+          this.app.workspace.on("file-menu", (menu, fileOrFolder) => {
+            const prefix = this.settings.noGoal(fileOrFolder.path) ? "Add" : "Update"
             menu.addItem((item) => {
               item
                 .setTitle(prefix + " writing goal")
                 .setIcon(GOAL_ICON)
                 .onClick(async () => {
                   const modal = new GoalModal(this.app);
-                  modal.init(this, file);
+                  modal.init(this, fileOrFolder);
                   modal.open();
+                });
+            });
+          })
+        );
+
+        this.registerEvent(
+          this.app.workspace.on("file-menu", (menu, fileOrFolder) => {
+            if(this.settings.noGoal(fileOrFolder.path)) { 
+              return;
+            }  
+            menu.addItem((item) => {
+              item
+                .setTitle("Remove writing goal")
+                .setIcon(REMOVE_GOAL_ICON)
+                .onClick(async () => {
+                  this.settings.removeGoal(fileOrFolder);
+                  if(fileOrFolder instanceof TFile){
+                    const file = fileOrFolder as TFile;
+                    await this.app.fileManager.processFrontMatter(file as TFile, (frontMatter) => {
+                      try {
+                        delete frontMatter[this.settings.customGoalFrontmatterKey]; 
+                      } catch (error) {
+                        new Notice("Error removing goal frontmatter for " + file.name);
+                      }
+                    });
+                  }
+                  this.saveData(this.settings);
+                  this.loadNoteGoalData();
                 });
             });
           })
@@ -146,16 +175,7 @@ export default class WritingGoals extends Plugin {
 
         this.registerEvent(
           this.app.vault.on("delete", (file) => {
-            if(this.settings.noteGoals.contains(file.path)){
-              this.settings.noteGoals.remove(file.path);
-            }
-            const folderGoal = this.settings.folderGoals.filter(fg => fg.path == file.path)[0];
-            if(folderGoal != null){
-              this.settings.folderGoals.remove(folderGoal);
-            }
-            if(this.settings.goalLeaves.contains(file.path)){
-              this.settings.goalLeaves.remove(file.path);
-            }
+            this.settings.removeGoal(file);
             this.saveData(this.settings);
             this.loadNoteGoalData();
           })

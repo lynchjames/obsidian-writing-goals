@@ -11,33 +11,37 @@ export default class GoalModal extends Modal {
     plugin: WritingGoals;
     target: TAbstractFile;
 
-
     init(plugin:WritingGoals, target: TAbstractFile){
         this.plugin = plugin;
         this.target = target;
     }
 
-    
-
     onOpen() {
         const { contentEl } = this;
     
-        contentEl.createEl("h1", { text: "What's your goal?" });
+        contentEl.createEl("h2", { text: "Set your writing goal" });
     
-        const goalCount = getGoalCount(this.app, this.plugin.settings.customGoalFrontmatterKey, this.target);
-        new Setting(contentEl)
-          .setName("Goal (number)")
+        let goalCount:any = 0;
+        if(this.target instanceof TFile){
+          goalCount = getGoalCount(this.app, this.plugin.settings.customGoalFrontmatterKey, this.target);
+        } else {
+          const folderGoal = this.plugin.settings.getFolderGoal(this.target.path);
+          if(folderGoal != null){
+            goalCount = folderGoal.goalCount
+          }
+        }
+        const goalSetting = new Setting(contentEl)
+          .setName("Writing goal (number)")
           .addText((text) =>
             text.onChange((value) => {
               this.userSubmittedGoalCount = value
             })
-            .inputEl.value = this.target instanceof TFolder ? 
-              this.plugin.settings.getFolderGoal(this.target.path).goalCount : goalCount);
+            .inputEl.value = goalCount);
     
         new Setting(contentEl)
           .addButton((btn) =>
             btn
-              .setButtonText("Set goal")
+              .setButtonText("Save goal")
               .setCta()
               .onClick(() => {
                 this.close();
@@ -48,6 +52,7 @@ export default class GoalModal extends Modal {
       onSubmit() {
         this.createGoalForTarget();
         this.plugin.initLeaf(this.target.path);
+        this.plugin.loadNoteGoalData();
       }
 
       async createGoalForTarget() {
