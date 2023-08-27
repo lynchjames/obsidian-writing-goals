@@ -45,7 +45,7 @@
     }
 
     function getLineCap(per:number) {
-      return  per < 93 ? 'round' : 'butt';
+      return  per < 95 ? 'round' : 'butt';
     }
 </script>
 
@@ -65,7 +65,7 @@
           <circle id="bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" stroke-width="1.2em" fill="transparent" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
             stroke-dashoffset="{progress}"></circle>
           <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{goal.wordCount.toLocaleString()}</text>
-          <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve" font-weight="bold">words</text>
+          <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">words</text>
         </svg>
         {#if showMessage}
         <h3>
