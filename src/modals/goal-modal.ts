@@ -47,6 +47,7 @@ export default class GoalModal extends Modal {
 
       onSubmit() {
         this.createGoalForTarget();
+        this.plugin.initLeaf(this.target.path);
       }
 
       async createGoalForTarget() {

@@ -52,9 +52,13 @@ export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
     }
     
     onChooseItem(item: TAbstractFile, evt: MouseEvent | KeyboardEvent): void {
-        this.goalModal.init(this.plugin, item);
-        this.close();
-        this.goalModal.open();
+        if(this.goalModal != null) {
+            this.goalModal.init(this.plugin, item);
+            this.close();
+            this.goalModal.open();
+        } else {
+            this.plugin.initLeaf(item.path);
+        }
     }
 
     renderSuggestion(item: FuzzyMatch<TAbstractFile>, el: HTMLElement) {

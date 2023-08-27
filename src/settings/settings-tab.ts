@@ -23,10 +23,9 @@ import { GOAL_FRONTMATTER_KEY } from '../constants';
       const { containerEl } = this;
   
       containerEl.empty();
-
       new Setting(containerEl)
-        .setName('Show goal indicators in file explorer')
-        .setDesc('The plugin will display folder and note writing goals in the file explorer')
+        .setName('Display goals in file explorer')
+        .setDesc('The plugin will display note and folder goals in the file explorer')
         .addToggle(toggle => 
           toggle
             .setValue(this.plugin.settings.showInFileExplorer)
@@ -37,7 +36,7 @@ import { GOAL_FRONTMATTER_KEY } from '../constants';
             }));
 
       new Setting(containerEl)
-        .setName('Show goal message')
+        .setName('Display goal message')
         .setDesc('The plugin will display a message below the progress indicator including the current goal')
         .addToggle(toggle => 
           toggle
@@ -49,8 +48,8 @@ import { GOAL_FRONTMATTER_KEY } from '../constants';
             }));
 
       new Setting(containerEl)
-      .setName('Goal frontmatter property name')
-      .setDesc('The name for the frontmatter property to use for goals (changing this setting will not update existing frontmatter)')
+      .setName('Frontmatter property name')
+      .setDesc('The name for the frontmatter property to use for note goals (changing this setting will not update existing frontmatter)')
       .addText(text => 
         text
           .setValue(this.plugin.settings.customGoalFrontmatterKey)
