@@ -7,6 +7,8 @@ Long form text for the demos was created using [Delorean Ipsum](https://delorean
 
 ![](./images/demo-screenshot-1.png)
 
+![](./images/demo-screenshot-2.png)
+
 ## Adding a goal
 You can either add a goal by using the context menu in the file explorer for any note or folder in your vault. 
 
