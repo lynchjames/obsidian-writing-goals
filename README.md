@@ -14,7 +14,7 @@ You can either add a goal by using the context menu in the file explorer for any
 
 ![](./images/add-goal-demo.gif)
 
-For notes, and entry will be added to the frontmatter of your note with the word goal. The name for the frontmatter property is `word-goal` by default (also used by the awesome [Novel word count plugin](https://github.com/isaaclyman/novel-word-count-obsidian) by @isaaclyman). You can change the property name in the plugin settings.
+For notes, and entry will be added to the frontmatter of your note with the word goal. The name for the frontmatter property is `word-goal` by default (also used by the awesome [Novel word count plugin](https://github.com/isaaclyman/novel-word-count-obsidian) by [@isaaclyman](https://github.com/isaaclyman)). You can change the property name in the plugin settings.
 
 There is also a command to add a goal for any note or folder in your vault.
 
