@@ -1,6 +1,6 @@
 {
   "id": "writing-goals",
-  "name": "Writing Goals",
+  "name": "Writing goals",
   "minAppVersion": "1.1.6",
   "version": "0.2.0",
   "description": "Set dynamic writing goals for notes and folders in Obsidian.",

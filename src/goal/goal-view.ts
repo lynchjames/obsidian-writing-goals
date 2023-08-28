@@ -26,7 +26,7 @@ export default class GoalView extends ItemView {
     }
 
     getDisplayText(): string {
-        return 'Writing Goal';
+        return 'Writing goal';
     }
 
     getIcon() {
