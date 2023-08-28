@@ -189,13 +189,16 @@ export default class WritingGoals extends Plugin {
         type: VIEW_TYPE_GOAL,
         active: true
       });
-      // try {
+      try {
+        if((this.app as any).isMobile) {
+          this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL);
+        }
         const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
         const view = leaves.last().view as GoalView;
         await view.updatePath(path); 
-      // } catch (error) {
-        
-      // }
+      } catch (error) {
+        new Notice("Failed to show goal for " + path); 
+      }
     }
 
     async loadNoteGoalData(skipFileLabels?:boolean) {

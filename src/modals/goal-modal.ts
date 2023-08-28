@@ -36,6 +36,7 @@ export default class GoalModal extends Modal {
             text.onChange((value) => {
               this.userSubmittedGoalCount = value
             })
+            .setValue(goalCount)
             .inputEl.value = goalCount);
     
         new Setting(contentEl)
