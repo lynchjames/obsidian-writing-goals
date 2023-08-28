@@ -217,7 +217,6 @@ export default class WritingGoals extends Plugin {
       }
       noteGoals.set(notes);
       if(requiresGoalLabelUpdate){
-        console.log(requiresGoalLabelUpdate);
         await this.fileLabels.initFileLabels(pathForLabel);
       }
     }
