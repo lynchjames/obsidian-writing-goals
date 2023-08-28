@@ -1,7 +1,7 @@
 import type { App } from "obsidian";
 import Goal from './goal.svelte';
 import type { WritingGoalsSettings } from "../settings/settings";
-import { VIEW_TYPE_FILE_EXPLORER } from "../constants";
+import { LABEL_PATH_DATA_ATTR, VIEW_TYPE_FILE_EXPLORER } from "../constants";
 
 interface FileItem {
 	titleEl?: HTMLElement;
@@ -19,12 +19,12 @@ export class FileLabels {
         this.settings = settings;        
     }
 
-    initFileLabels() {
+    initFileLabels(pathForLabel?:string) {
         const fileExplorer = this.app.workspace.getLeavesOfType(VIEW_TYPE_FILE_EXPLORER)[0];
         const fileItems: { [path: string]: FileItem } = (
           fileExplorer.view as any
         ).fileItems;
-        this.resetFileLabels(fileItems);
+        this.resetFileLabels(fileItems, pathForLabel);
         if(this.settings.showInFileExplorer) {
           const combinedGoals = this.settings.noteGoals.concat(this.settings.folderGoals.map(fg => fg.path));
           const deduped = [...new Set(combinedGoals)];
@@ -47,13 +47,13 @@ export class FileLabels {
         }
       }
 
-    resetFileLabels(fileItems:any) {
+    resetFileLabels(fileItems:any, pathForLabel?:string) {
       for (let key in fileItems) {
         const item = fileItems[key];
         const itemEl = (item.titleEl ?? item.selfEl);
         for (let i = 0; i < itemEl.children.length; i++) {
           const child = itemEl.children[i];
-          if(child && this.containsLabel(child)){
+          if(child && this.containsLabel(child, pathForLabel)){
             itemEl.removeChild(child);
           }
         }
@@ -70,7 +70,7 @@ export class FileLabels {
       return false;
     }
 
-    containsLabel(el: any) {
-      return el?.className?.contains('writing-goals-simple-container')
+    containsLabel(el: any, pathForLabel?:string) {
+      return el?.className?.contains('writing-goals-simple-container') && (!pathForLabel || el?.getAttr(LABEL_PATH_DATA_ATTR) == pathForLabel)
     }
 }

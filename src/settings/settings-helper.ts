@@ -3,7 +3,7 @@ import type WritingGoals from "../main";
 
 export class SettingsHelper {
 
-async updateNoteGoalsInSettings(plugin:WritingGoals, file:TFile) {
+async updateNoteGoalsInSettings(plugin:WritingGoals, file:TFile): Promise<boolean> {
     const metadata = plugin.app.metadataCache.getCache(file.path);
     const wordGoal = metadata && metadata.frontmatter 
                   && metadata.frontmatter[plugin.settings.customGoalFrontmatterKey];
@@ -18,7 +18,8 @@ async updateNoteGoalsInSettings(plugin:WritingGoals, file:TFile) {
       plugin.settings.noteGoals.push(file.path);
       await plugin.saveData(plugin.settings);
     }
-    return wordGoal;
+    // Returns true when frontmatter causes a change to a goal
+    return (wordGoal && !exists) || (!wordGoal && exists);
   }
   
 }

@@ -83,8 +83,8 @@ export default class WritingGoals extends Plugin {
           if(file instanceof TFolder){
             return;
           }
-          await this.settingsHelper.updateNoteGoalsInSettings(this, file as TFile)
-          await this.loadNoteGoalData();
+          const requiresGoalUpdate = await this.settingsHelper.updateNoteGoalsInSettings(this, file as TFile)
+          await this.loadNoteGoalData(requiresGoalUpdate, file.path);
         }));
 
         this.registerEvent(
@@ -201,7 +201,7 @@ export default class WritingGoals extends Plugin {
       }
     }
 
-    async loadNoteGoalData(skipFileLabels?:boolean) {
+    async loadNoteGoalData(requiresGoalLabelUpdate?:boolean, pathForLabel?:string) {
       let notes = new Notes();
       for (let index = 0; index < this.settings.noteGoals.length; index++) {
         const noteGoal = this.settings.noteGoals[index];
@@ -216,10 +216,10 @@ export default class WritingGoals extends Plugin {
         notes[folderGoal.path] = goal;
       }
       noteGoals.set(notes);
-      if(skipFileLabels){
-        return;
+      if(requiresGoalLabelUpdate){
+        console.log(requiresGoalLabelUpdate);
+        await this.fileLabels.initFileLabels(pathForLabel);
       }
-      await this.fileLabels.initFileLabels();
     }
     
   }
