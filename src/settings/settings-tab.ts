@@ -49,7 +49,7 @@ import { GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
 
       new Setting(containerEl)
         .setName('Display single goal view')
-        .setDesc('The plugin will always display a single view for the goal progress. This setting show be enabled on mobile devices with small screens.')
+        .setDesc('The plugin will always display a single view for the goal progress. This setting should be enabled on mobile devices with small screens.')
         .addToggle(toggle => 
           toggle
             .setValue(this.plugin.settings.showSingleGoalView)
