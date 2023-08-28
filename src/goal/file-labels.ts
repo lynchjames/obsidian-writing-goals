@@ -34,7 +34,7 @@ export class FileLabels {
               }
               const item = fileItems[path];
               const itemEl = item ? (item.titleEl ?? item.selfEl) : undefined;
-              if(item && itemEl && !this.containsLabel(itemEl)) {
+              if(item && itemEl && !this.hasLabelInChildren(itemEl)) {
                       new Goal({
                           target: itemEl,
                           props: {
@@ -58,6 +58,16 @@ export class FileLabels {
           }
         }
       }
+    }
+
+    hasLabelInChildren(el: any) {
+      for (let i = 0; i < el.children.length; i++) {
+        const child = el.children[i];
+        if(child && this.containsLabel(child)){
+          return true;
+        }
+      }
+      return false;
     }
 
     containsLabel(el: any) {
