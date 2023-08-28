@@ -36,5 +36,13 @@ Goal progress should update in real-time as you type. Text added to any file wit
 ## Compatibility
 This plugin is compatible with Obsidian v1.3.7 and targets API version v1.4.4.
 
+## Safety
+This plugin only modifies the frontmatter of your notes to add, update and remove the `word-goal` property. You can avoid this by adding the `word-goal` property to your notes manually. It uses cached reads of all files for better performance.
+
+Obsidian's API does not provide contractual access to the File Explorer pane, so this plugin uses duck typing to find it. This is technically undocumented, so there is a possibility that major updates of Obsidian will temporarily cause errors. If and when that happens, this plugin is designed to fail gracefully. In this unlikely scenario you may wish to disable the plugin until it can be updated.
+
+## Thanks
+A big thanks to [@isaaclyman](https://github.com/isaaclyman). I based my code for calculating word counts and displaying content alongside files/folders in the file explorer on his [Novel word count plugin](https://github.com/isaaclyman/novel-word-count-obsidian).
+
 ## Donating
 This plugin is provided free of charge. If you would like to donate something to me, you can via [Ko-Fi](https://ko-fi.com/lynchjames). Thank you!
