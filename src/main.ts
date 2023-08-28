@@ -6,11 +6,11 @@ import {
 } from 'obsidian';
 
 import { WritingGoalsSettings } from './settings/settings';
-import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_FILE_EXPLORER, VIEW_TYPE_GOAL } from './constants';
+import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL } from './constants';
 import GoalView from './goal/goal-view';
 import { WritingGoalsSettingsTab } from './settings/settings-tab';
 import { SettingsHelper } from './settings/settings-helper';
-import { createGoal, Notes } from './stores/note-goal';
+import { createGoal, Notes } from './note-goal';
 import { FileHelper } from './IO/file';
 import { noteGoals } from './stores/goal-store';
 import GoalTargetModal from './modals/goal-target-modal';

@@ -6,7 +6,6 @@ import {
 import type WritingGoals from '../main';
 import { FileLabels } from '../goal/file-labels';
 import { showGoalMessage } from '../stores/goal-store';
-import type { text } from '@sveltejs/kit';
 import { GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
   
   export class WritingGoalsSettingsTab extends PluginSettingTab {

@@ -1,6 +1,6 @@
 import { TFile, TAbstractFile, App, TFolder } from "obsidian"
-import type { FileHelper } from "../IO/file"
-import type { WritingGoalsSettings } from "../settings/settings"
+import type { FileHelper } from "./IO/file"
+import type { WritingGoalsSettings } from "./settings/settings"
 
 export enum GoalType {
     Note,

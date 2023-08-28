@@ -1,8 +1,7 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
 	  import { noteGoals, showGoalMessage } from '../stores/goal-store';
-	  import type { NoteGoal, Notes } from '../stores/note-goal';
-
+	  import type { NoteGoal, Notes } from '../note-goal';
     export let mode: string;
     export let path: string;
 

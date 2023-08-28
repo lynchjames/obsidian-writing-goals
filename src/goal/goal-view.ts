@@ -1,4 +1,4 @@
-import { ItemView, TAbstractFile, TFile, WorkspaceLeaf } from 'obsidian';
+import { ItemView, WorkspaceLeaf } from 'obsidian';
 import Goal from './goal.svelte';
 import type { WritingGoalsSettings } from '../settings/settings';
 import { GOAL_ICON, VIEW_TYPE_GOAL } from '../constants';

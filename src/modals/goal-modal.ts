@@ -1,5 +1,5 @@
 import { App, Modal, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
-import  { getGoalCount } from "../stores/note-goal";
+import  { getGoalCount } from "../note-goal";
 import type WritingGoals from "../main";
 import { SettingsHelper } from "../settings/settings-helper";
 

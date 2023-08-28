@@ -1,4 +1,4 @@
-import type { App, CachedMetadata, MetadataCache, TFile, Vault } from "obsidian";
+import type { CachedMetadata } from "obsidian";
 
 export class FileHelper {
 

@@ -1,6 +1,5 @@
 import type { TAbstractFile } from "obsidian";
 import { GOAL_FRONTMATTER_KEY } from "../constants";
-import type { Notes } from "../stores/note-goal";
 
 export class WritingGoalsSettings {  
   showGoalMessage: boolean = true;

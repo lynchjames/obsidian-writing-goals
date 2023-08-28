@@ -1,4 +1,4 @@
-import { App, FuzzySuggestModal, TAbstractFile, TFile, type FuzzyMatch, TFolder } from 'obsidian';
+import { App, FuzzySuggestModal, TAbstractFile, TFile, type FuzzyMatch } from 'obsidian';
 import type { WritingGoalsSettings } from '../settings/settings';
 import type WritingGoals from '../main';
 import type GoalModal from './goal-modal';
