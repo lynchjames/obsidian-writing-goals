@@ -25,13 +25,13 @@ export class FileHelper {
         }
 
         // if (this.settings.excludeComments) {
-        //     const hasComments = meaningfulContent.includes("%%");
-        //     if (hasComments) {
-        //         const splitByComments = meaningfulContent.split("%%");
-        //         meaningfulContent = splitByComments
-        //             .filter((_, ix) => ix % 2 == 0)
-        //             .join("");
-        //     }
+            const hasComments = meaningfulContent.includes("%%");
+            if (hasComments) {
+                const splitByComments = meaningfulContent.split("%%");
+                meaningfulContent = splitByComments
+                    .filter((_, ix) => ix % 2 == 0)
+                    .join("");
+            }
         // }
 
         return meaningfulContent;
