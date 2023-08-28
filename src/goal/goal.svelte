@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import { onDestroy } from "svelte";
 	  import { noteGoals, showGoalMessage } from '../stores/goal-store';
-	import type { NoteGoal, Notes } from '../stores/note-goal';
+	  import type { NoteGoal, Notes } from '../stores/note-goal';
 
     export let mode: string;
     export let path: string;
@@ -49,7 +48,7 @@
     }
 
     function getCompletedClass(per:number){
-      return percent == 100 ? 'note-goal-completed' : '';
+      return per == 100 ? 'note-goal-completed' : '';
     }
 </script>
 
