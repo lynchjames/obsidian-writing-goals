@@ -7,7 +7,7 @@ import type WritingGoals from '../main';
 import { FileLabels } from '../goal/file-labels';
 import { showGoalMessage } from '../stores/goal-store';
 import type { text } from '@sveltejs/kit';
-import { GOAL_FRONTMATTER_KEY } from '../constants';
+import { GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
   
   export class WritingGoalsSettingsTab extends PluginSettingTab {
     plugin: WritingGoals;
@@ -45,6 +45,22 @@ import { GOAL_FRONTMATTER_KEY } from '../constants';
               this.plugin.settings.showGoalMessage = value;
               await this.plugin.saveData(this.plugin.settings);
               showGoalMessage.set(value);
+            }));
+
+      new Setting(containerEl)
+        .setName('Display single goal view')
+        .setDesc('The plugin will always display a single view for the goal progress. This setting show be enabled on mobile devices with small screens.')
+        .addToggle(toggle => 
+          toggle
+            .setValue(this.plugin.settings.showSingleGoalView)
+            .onChange(async (value:boolean) => {
+              this.plugin.settings.showSingleGoalView = value;
+              await this.plugin.saveData(this.plugin.settings);
+              const moreThanOneGoalLeaf = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL).length > 1;
+              const firstOpenGoalLeafPath = this.plugin.settings.goalLeaves[0];
+              if(moreThanOneGoalLeaf && firstOpenGoalLeafPath){
+                this.plugin.initLeaf(firstOpenGoalLeafPath);
+              }
             }));
 
       new Setting(containerEl)

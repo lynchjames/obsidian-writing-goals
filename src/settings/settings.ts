@@ -10,6 +10,7 @@ export class WritingGoalsSettings {
   folderGoals: {path:string, goalCount:number}[] = [];
   goalLeaves: string[] = [];
   customGoalFrontmatterKey: string = GOAL_FRONTMATTER_KEY;
+  showSingleGoalView: boolean = false;
 
   noGoal(path:string): boolean{
     return !this.noteGoals.contains(path) && this.folderGoals.filter(fg => fg.path == path).length == 0;
