@@ -1,11 +1,14 @@
 import { App, Modal, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
 import  { getGoalCount } from "../stores/note-goal";
 import type WritingGoals from "../main";
+import { SettingsHelper } from "../settings/settings-helper";
 
 export default class GoalModal extends Modal {
     userSubmittedGoalCount: string;
+    settingsHelper: SettingsHelper;
     constructor(app: App) {
         super(app);
+        this.settingsHelper = new SettingsHelper();
     }
 
     plugin: WritingGoals;
@@ -65,16 +68,16 @@ export default class GoalModal extends Modal {
         const goalCount:number = +this.userSubmittedGoalCount; 
         
         if(target instanceof TFolder){
-            settings.folderGoals = settings.folderGoals.filter(fg => fg.path != target.path);
+            settings.folderGoals.filter(fg => fg.path != target.path);
             settings.folderGoals.push({path:target.path, goalCount:goalCount as any as number});
+            settings.folderGoals = [...new Set(plugin.settings.folderGoals)];
             await plugin.saveData(settings);
         }
         if(target instanceof TFile){
-            settings.noteGoals.push(target.path);
+            this.settingsHelper.updateNoteGoalsInSettings(this.plugin, target)
             await plugin.app.fileManager.processFrontMatter(target as TFile, (frontMatter) => {
                 frontMatter[settings.customGoalFrontmatterKey] = goalCount as any as number;
             });
-            await plugin.saveData(settings);
         }
     }
 

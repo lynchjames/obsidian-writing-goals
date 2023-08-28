@@ -27,7 +27,8 @@ export class FileLabels {
         this.resetFileLabels(fileItems);
         if(this.settings.showInFileExplorer) {
           const combinedGoals = this.settings.noteGoals.concat(this.settings.folderGoals.map(fg => fg.path));
-          combinedGoals.forEach(path => {
+          const deduped = [...new Set(combinedGoals)];
+          deduped.forEach(path => {
               if(!fileItems){
                 return;
               }

@@ -8,11 +8,13 @@ async updateNoteGoalsInSettings(plugin:WritingGoals, file:TFile) {
     const wordGoal = metadata && metadata.frontmatter 
                   && metadata.frontmatter[plugin.settings.customGoalFrontmatterKey];
     const exists = plugin.settings.noteGoals.contains(file.path);
-    if(!wordGoal && exists) {
-      plugin.settings.noteGoals.remove(file.path);
-      await plugin.saveData(plugin.settings);
-    } 
-    if(wordGoal && !exists) {
+    plugin.settings.noteGoals = [...new Set(plugin.settings.noteGoals)];
+    if(exists) {
+      if(!wordGoal) {
+        plugin.settings.noteGoals = plugin.settings.noteGoals.filter(ng => ng != file.path);
+        await plugin.saveData(plugin.settings);
+      }
+    } else if(wordGoal) {
       plugin.settings.noteGoals.push(file.path);
       await plugin.saveData(plugin.settings);
     }
