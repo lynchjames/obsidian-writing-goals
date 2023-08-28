@@ -187,7 +187,7 @@ export default class WritingGoals extends Plugin {
       if(this.settings.showSingleGoalView) {
         this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL);
       }
-      const goalLeaf = await this.app.workspace.getRightLeaf(true);
+      const goalLeaf = await this.app.workspace.getRightLeaf(false);
       await goalLeaf.setViewState({
         type: VIEW_TYPE_GOAL,
         active: true
