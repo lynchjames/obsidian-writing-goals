@@ -52,8 +52,7 @@ export default class GoalModal extends Modal {
             text.onChange((value) => {
               this.userSubmittedGoalCount = value
             })
-            .setValue(goalCount.toString())
-            .inputEl.value = goalCount);
+            .setValue(goalCount.toString()));
 
         const dailyGoalSetting = new Setting(contentEl)
           .setName("Daily writing goal (number)")
@@ -61,13 +60,11 @@ export default class GoalModal extends Modal {
             text.onChange((value) => {
               this.userSubmittedDailyGoalCount = value;
             })
-            .setValue(dailyGoalCount.toString())
-            .inputEl.value = dailyGoalCount);
-    
-        new Setting(contentEl)
+            .setValue(dailyGoalCount.toString()));
+
+        const button = new Setting(contentEl)
           .addButton((btn) =>
-            btn
-              .setButtonText("Save goal")
+            btn.setButtonText("Save goal")
               .setCta()
               .onClick(() => {
                 this.close();

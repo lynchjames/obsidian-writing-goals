@@ -14,6 +14,8 @@ export interface NoteGoal {
     goalType: GoalType
     goalCount: number
     wordCount: number
+    dailyGoalCount: number
+    startCount: number
 }
 
 export class Notes {
@@ -38,15 +40,17 @@ export class NoteGoalHelper {
             dailyGoalCount = this.getGoalCount(settings.customDailyGoalFrontmatterKey, file);
         }
         const wordCount = isFile ? await this.getWordCount(file) : await this.getWordCountRecursive(file)
+        await this.goalHistoryHelper.updateGoalForToday(file.path, goalCount, dailyGoalCount, wordCount);
+        const todaysDailyGoal = await this.goalHistoryHelper.todaysGoalItem(file.path);
         const result = {
             path: file.path,
             title: file.name.replace('.md', ''),
             goalType: isFile ? GoalType.Note : GoalType.Folder,
             goalCount: goalCount,
             dailyGoalCount: dailyGoalCount,
+            startCount: todaysDailyGoal.startCount,
             wordCount: wordCount,
         }
-        await this.goalHistoryHelper.updateGoalForToday(file.path, goalCount, dailyGoalCount, wordCount);
         return result;
     }
 

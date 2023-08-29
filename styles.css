@@ -3,21 +3,24 @@
     padding: 0 20px;
 }
 
-.writing-goals-container h3 {
+.writing-goals-container h3, .writing-goals-container h4 {
     color: var(--color-text-title);
-    font-size: 1.4em;
     text-align: center;
 }
 
 .writing-goals-simple-container {
     position: absolute;
-    width: 22px;
+    width: 25px;
     right: 6px;
-    top: 2px;
+    top: 0px;
 }
 
 .note-goal {
     color: var(--text-accent);
+}
+
+.note-daily-goal {
+    color: var(--color-orange);
 }
 
 .note-goal-completed .note-goal-text {
@@ -33,22 +36,22 @@
     color: var(--text-success);
 }
 
+.writing-goals #bar {
+    stroke-width: 1.2em;
+}
+
+.writing-goals-container.daily-goal #bar{
+    stroke-width: .75em;
+}
+
 .writing-goals #bar, .writing-goals-simple #bar {
     stroke: var(--interactive-accent);
     transition: stroke-dashoffset 1s linear;
 }
 
-.writing-goals-simple #bar {
-    stroke: var(--interactive-accent);
+.writing-goals #daily-bar, .writing-goals-simple #daily-bar {
+    stroke: var(--color-orange);
     transition: stroke-dashoffset 1s linear;
-}
-
-.svg-gradient-start {
-    stop-color: transparent;
-}
-
-.svg-gradient-stop {
-    stop-color: var(--interactive-accent);
 }
 
 .writing-goals #background {
