@@ -108,8 +108,6 @@ export default class GoalModal extends Modal {
             });
         }
         const wordCount = await this.noteGoalHelper.getWordCount(target);
-        console.log('Daily goal', this.userSubmittedDailyGoalCount);
-        console.log('Goal', this.userSubmittedGoalCount);
         this.goalHistoryHelper.saveGoalForToday(target.path, {dailyGoal:dailyGoalCount, goal:goalCount, startCount:wordCount, endCount:wordCount})
     }
 
