@@ -5,6 +5,7 @@ import { GOAL_ICON, VIEW_TYPE_GOAL } from '../constants';
 import { ObsidianFileHelper } from '../IO/obsidian-file';
 import type WritingGoals from '../main';
 import GoalModal from '../modals/goal-modal';
+import type { GoalHistoryHelper } from '../goal-history/history';
 
 
 export default class GoalView extends ItemView {
@@ -48,7 +49,7 @@ export default class GoalView extends ItemView {
     async onOpen() {
         this.setGoal();
         this.addAction(GOAL_ICON, "Update goal", (evt:MouseEvent) => {
-            const modal = new GoalModal(this.app);
+            const modal = new GoalModal(this.app, this.plugin.goalHistoryHelper);
             modal.init(this.plugin, this.app.vault.getAbstractFileByPath(this.path));
             modal.open();
         });

@@ -1,14 +1,22 @@
 import { App, Modal, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
-import  { getGoalCount } from "../note-goal";
+import  { NoteGoalHelper } from "../note-goal";
 import type WritingGoals from "../main";
 import { SettingsHelper } from "../settings/settings-helper";
+import { GoalHistoryHelper } from "../goal-history/history";
 
 export default class GoalModal extends Modal {
-    userSubmittedGoalCount: string;
+    userSubmittedGoalCount: string = "0"
+    userSubmittedDailyGoalCount: string = "0";
     settingsHelper: SettingsHelper;
-    constructor(app: App) {
+    goalHistoryHelper: GoalHistoryHelper;
+    noteGoalHelper: NoteGoalHelper;
+    
+    constructor(app: App, goalHistoryHelper:GoalHistoryHelper) {
         super(app);
         this.settingsHelper = new SettingsHelper();
+        this.goalHistoryHelper = goalHistoryHelper;
+        this.noteGoalHelper = new NoteGoalHelper(this.app, this.goalHistoryHelper);
+        this.goalHistoryHelper = new GoalHistoryHelper(this.app);
     }
 
     plugin: WritingGoals;
@@ -25,22 +33,36 @@ export default class GoalModal extends Modal {
         contentEl.createEl("h2", { text: "Set your writing goal" });
     
         let goalCount:any = 0;
+        let dailyGoalCount:any = 0;
         if(this.target instanceof TFile){
-          goalCount = getGoalCount(this.app, this.plugin.settings.customGoalFrontmatterKey, this.target);
+          goalCount = this.noteGoalHelper.getGoalCount(this.plugin.settings.customGoalFrontmatterKey, this.target);
+          dailyGoalCount = this.noteGoalHelper.getGoalCount(this.plugin.settings.customDailyGoalFrontmatterKey, this.target);
         } else {
           const folderGoal = this.plugin.settings.getFolderGoal(this.target.path);
           if(folderGoal != null){
-            goalCount = folderGoal.goalCount
+            goalCount = folderGoal.goalCount;
+            dailyGoalCount = folderGoal.dailyGoalCount;
           }
         }
+        this.userSubmittedDailyGoalCount = dailyGoalCount;
+        this.userSubmittedGoalCount = goalCount;
         const goalSetting = new Setting(contentEl)
           .setName("Writing goal (number)")
           .addText((text) =>
             text.onChange((value) => {
               this.userSubmittedGoalCount = value
             })
-            .setValue(goalCount)
+            .setValue(goalCount.toString())
             .inputEl.value = goalCount);
+
+        const dailyGoalSetting = new Setting(contentEl)
+          .setName("Daily writing goal (number)")
+          .addText((text) =>
+            text.onChange((value) => {
+              this.userSubmittedDailyGoalCount = value;
+            })
+            .setValue(dailyGoalCount.toString())
+            .inputEl.value = dailyGoalCount);
     
         new Setting(contentEl)
           .addButton((btn) =>
@@ -66,19 +88,29 @@ export default class GoalModal extends Modal {
         const settings = plugin.settings;
         const target = this.target;
         const goalCount:number = +this.userSubmittedGoalCount; 
+        const dailyGoalCount:number = +this.userSubmittedDailyGoalCount; 
         
         if(target instanceof TFolder){
             settings.folderGoals.filter(fg => fg.path != target.path);
-            settings.folderGoals.push({path:target.path, goalCount:goalCount as any as number});
+            settings.folderGoals.push({path:target.path, goalCount:goalCount, dailyGoalCount:dailyGoalCount});
             settings.folderGoals = [...new Set(plugin.settings.folderGoals)];
             await plugin.saveData(settings);
         }
         if(target instanceof TFile){
             this.settingsHelper.updateNoteGoalsInSettings(this.plugin, target)
             await plugin.app.fileManager.processFrontMatter(target as TFile, (frontMatter) => {
-                frontMatter[settings.customGoalFrontmatterKey] = goalCount as any as number;
+                if(goalCount > 0){
+                  frontMatter[settings.customGoalFrontmatterKey] = goalCount;
+                }
+                if(dailyGoalCount > 0) {
+                  frontMatter[settings.customDailyGoalFrontmatterKey] = dailyGoalCount;
+                }
             });
         }
+        const wordCount = await this.noteGoalHelper.getWordCount(target);
+        console.log('Daily goal', this.userSubmittedDailyGoalCount);
+        console.log('Goal', this.userSubmittedGoalCount);
+        this.goalHistoryHelper.saveGoalForToday(target.path, {dailyGoal:dailyGoalCount, goal:goalCount, startCount:wordCount, endCount:wordCount})
     }
 
 }

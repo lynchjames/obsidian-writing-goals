@@ -5,8 +5,9 @@ import moment, { type Moment } from "moment";
 
 export interface GoalHistoryItem
 {
-    date:string,
+    date?:string,
     dailyGoal:number,
+    goal:number,
     startCount:number,
     endCount:number
 }
@@ -17,9 +18,11 @@ export class GoalHistory {
 }
 
 export class GoalHistoryHelper {
+    
     goalFile: WritingGoalsFile;
     constructor(app:App) {
         this.goalFile = new WritingGoalsFile(app);
+        this.init();
     }
 
     async init() {
@@ -29,17 +32,35 @@ export class GoalHistoryHelper {
         }
     }
     
-    async todaysGoal(path:string){
-        if(this.historyExists()) {
+    async todaysGoalItem(path:string): Promise<GoalHistoryItem> {
+        if(!this.historyExists()) {
             return undefined;
         }
         const goalHistory = await this.loadHistory();
-        return this.goalItemForDate(goalHistory, path, this.today());
+        const item = this.goalItemForDate(goalHistory, path, this.today());
+        return item;
     }
 
 
     async loadHistory():Promise<GoalHistory> {
         return await this.goalFile.loadJson(GOAL_HISTORY_PATH) as GoalHistory;
+    }
+
+    async saveGoalForToday(path: string, item:GoalHistoryItem){
+        item.date = moment().startOf('day').toString();
+        return await this.saveGoal(path, item);
+    }
+
+    async updateGoalForToday(path: any, goalCount: number, dailyGoalCount:number, wordCount: number) {
+        let item = await this.todaysGoalItem(path);
+        if(item != null) {
+            item.dailyGoal = dailyGoalCount;
+            item.goal = goalCount;
+            item.endCount = wordCount;
+        } else {
+           item = {dailyGoal: dailyGoalCount, goal:goalCount, startCount: wordCount, endCount: wordCount}; 
+        }
+        await this.saveGoalForToday(path, item)
     }
 
     async saveGoal(path:string, item:GoalHistoryItem) {
@@ -51,12 +72,12 @@ export class GoalHistoryHelper {
         this.goalFile.saveJson(GOAL_HISTORY_PATH, goalHistory);
     }
 
-    goalItemForDate(goalHistory:GoalHistory, path: string, date: Moment): GoalHistoryItem {
-        return goalHistory[path].filter(gh => gh.date.toString() == date.toString())[0];
+    goalItemForDate(goalHistory:GoalHistory, path: string, date: string): GoalHistoryItem {
+        return goalHistory[path]?.filter(gh => gh.date == date)[0];
     }
 
-    today(): Moment {
-        return moment().startOf('day');
+    today(): string {
+        return moment().startOf('day').toString();
     }
 
     historyExists() {

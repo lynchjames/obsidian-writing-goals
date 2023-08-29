@@ -5,6 +5,7 @@
     export let mode: string;
     export let path: string;
 
+    let fileHelper
     let goals: Notes;
     let goal: NoteGoal;
     let percent: number = 0;
