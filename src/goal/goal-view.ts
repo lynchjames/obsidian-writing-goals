@@ -2,14 +2,14 @@ import { ItemView, WorkspaceLeaf } from 'obsidian';
 import Goal from './goal.svelte';
 import type { WritingGoalsSettings } from '../settings/settings';
 import { GOAL_ICON, VIEW_TYPE_GOAL } from '../constants';
-import { FileHelper } from '../IO/file';
+import { ObsidianFileHelper } from '../IO/obsidian-file';
 import type WritingGoals from '../main';
 import GoalModal from '../modals/goal-modal';
 
 
 export default class GoalView extends ItemView {
    
-    fileHelper: FileHelper;
+    fileHelper: ObsidianFileHelper;
     settings: WritingGoalsSettings;
     path:string;
     plugin: WritingGoals;
@@ -17,7 +17,7 @@ export default class GoalView extends ItemView {
 
     constructor(leaf: WorkspaceLeaf, plugin: WritingGoals){
         super(leaf);
-        this.fileHelper = new FileHelper;
+        this.fileHelper = new ObsidianFileHelper;
         this.plugin = plugin;
     }
 

@@ -11,17 +11,19 @@ import GoalView from './goal/goal-view';
 import { WritingGoalsSettingsTab } from './settings/settings-tab';
 import { SettingsHelper } from './settings/settings-helper';
 import { createGoal, Notes } from './note-goal';
-import { FileHelper } from './IO/file';
+import { ObsidianFileHelper } from './IO/obsidian-file';
 import { noteGoals } from './stores/goal-store';
 import GoalTargetModal from './modals/goal-target-modal';
 import GoalModal from './modals/goal-modal';
 import { FileLabels } from './goal/file-labels';
+import { WritingGoalsFile } from './IO/file';
+import { GoalHistory, GoalHistoryHelper } from './goal-history/history';
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
   goalView: GoalView | undefined;
   fileLabels: FileLabels;
-  fileHelper: FileHelper = new FileHelper();
+  fileHelper: ObsidianFileHelper = new ObsidianFileHelper();
   settingsHelper: SettingsHelper = new SettingsHelper();
   goalLeaves: string[];
   

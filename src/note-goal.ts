@@ -1,5 +1,5 @@
 import { TFile, TAbstractFile, App, TFolder } from "obsidian"
-import type { FileHelper } from "./IO/file"
+import type { ObsidianFileHelper } from "./IO/obsidian-file"
 import type { WritingGoalsSettings } from "./settings/settings"
 
 export enum GoalType {
@@ -19,7 +19,7 @@ export class Notes {
     [key: string]: NoteGoal
 }
 
-export async function createGoal(app: App, settings:WritingGoalsSettings, fileHelper:FileHelper, file: TAbstractFile, goalCount?: number): Promise<NoteGoal> {
+export async function createGoal(app: App, settings:WritingGoalsSettings, fileHelper:ObsidianFileHelper, file: TAbstractFile, goalCount?: number): Promise<NoteGoal> {
     const isFile = file instanceof TFile;
     if(isFile) {
         goalCount = getGoalCount(app, settings.customGoalFrontmatterKey, file);
@@ -41,14 +41,14 @@ export function getGoalCount(app: App, frontMatterKey:string, file:TAbstractFile
     return 0;
 }
 
-async function getWordCount(app:App, fileHelper:FileHelper, file:TAbstractFile){
+async function getWordCount(app:App, fileHelper:ObsidianFileHelper, file:TAbstractFile){
     const metadata = app.metadataCache.getFileCache(file as TFile);
     const fileContents = await app.vault.cachedRead(file as TFile);
     const wordCount = await fileHelper.countWords(fileContents, metadata);
     return wordCount;
 }
 
-async function getWordCountRecursive(app: App, fileHelper: FileHelper, fileOrFolder: TAbstractFile){
+async function getWordCountRecursive(app: App, fileHelper: ObsidianFileHelper, fileOrFolder: TAbstractFile){
     let count = 0;
     if(fileOrFolder instanceof TFile){
         count = count + await getWordCount(app, fileHelper, fileOrFolder);
