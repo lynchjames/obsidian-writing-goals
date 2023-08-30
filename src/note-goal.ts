@@ -51,7 +51,7 @@ export class NoteGoalHelper {
             goalCount: goalCount,
             dailyGoalCount: dailyGoalCount,
             startCount: todaysDailyGoal.startCount,
-            wordCount: wordCount,
+            wordCount: wordCount
         }
         return result;
     }

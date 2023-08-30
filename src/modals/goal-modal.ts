@@ -90,6 +90,9 @@ export default class GoalModal extends Modal {
         const goalCount:number = +this.userSubmittedGoalCount; 
         const dailyGoalCount:number = +this.userSubmittedDailyGoalCount; 
         
+        const wordCount = await this.noteGoalHelper.getWordCount(target);
+        this.goalHistoryHelper.saveGoalForToday(target.path, {dailyGoal:dailyGoalCount, goal:goalCount, startCount:wordCount, endCount:wordCount})
+        
         if(target instanceof TFolder){
             settings.folderGoals.filter(fg => fg.path != target.path);
             settings.folderGoals.push({path:target.path, goalCount:goalCount, dailyGoalCount:dailyGoalCount});
@@ -107,8 +110,6 @@ export default class GoalModal extends Modal {
                 }
             });
         }
-        const wordCount = await this.noteGoalHelper.getWordCount(target);
-        this.goalHistoryHelper.saveGoalForToday(target.path, {dailyGoal:dailyGoalCount, goal:goalCount, startCount:wordCount, endCount:wordCount})
     }
 
 }

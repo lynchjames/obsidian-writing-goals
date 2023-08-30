@@ -6,7 +6,7 @@ import {
 import type WritingGoals from '../main';
 import { FileLabels } from '../goal/file-labels';
 import { showGoalMessage } from '../stores/goal-store';
-import { GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
+import { DAILY_GOAL_FRONTMATTER_KEY, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
   
   export class WritingGoalsSettingsTab extends PluginSettingTab {
     plugin: WritingGoals;
@@ -103,7 +103,7 @@ import { GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
         text
           .setValue(this.plugin.settings.customDailyGoalFrontmatterKey)
           .onChange(async (value:string) => {
-            value = value != '' ? value : GOAL_FRONTMATTER_KEY;
+            value = value != '' ? value : DAILY_GOAL_FRONTMATTER_KEY;
             this.plugin.settings.customDailyGoalFrontmatterKey = value;
             await this.plugin.saveData(this.plugin.settings);
           }));
