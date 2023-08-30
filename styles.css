@@ -36,35 +36,45 @@
     color: var(--text-success);
 }
 
-.writing-goals #bar {
-    stroke-width: 1.2em;
+.writing-goals .wg-bar {
+    stroke-width: 18px;
 }
 
-.writing-goals-container.daily-goal #bar{
-    stroke-width: .75em;
+.writing-goals-simple .wg-bar { 
+    stroke-width: 22px;
 }
 
-.writing-goals #bar, .writing-goals-simple #bar {
+.writing-goals-simple .wg-daily-bar {
+    stroke-width: 22px;
+}
+
+.writing-goals .wg-daily-bar {
+    stroke-width: 10px;
+}
+
+.wg-daily-goal .writing-goals .wg-bar{
+    stroke-width: 10px;
+}
+
+.wg-bar, .wg-simple .wg-bar {
     stroke: var(--interactive-accent);
     transition: stroke-dashoffset 1s linear;
 }
 
-.writing-goals #daily-bar, .writing-goals-simple #daily-bar {
+.wg-daily-bar, .wg-goals-simple .wg-daily-bar {
     stroke: var(--color-orange);
     transition: stroke-dashoffset 1s linear;
 }
 
-.writing-goals #background {
+.wg-background, .wg-daily-background {
     fill: var(--background-primary);
 }
 
-.writing-goals #background.note-goal-completed, 
-.workspace-split.mod-root .writing-goals #background.note-goal-completed, 
-.writing-goals-simple #background.note-goal-completed {
+.note-goal-completed, .daily-note-goal-completed {
     fill: var(--background-modifier-success);
 }
 
-.workspace-split.mod-root .writing-goals #background {
+.workspace-split.mod-root .writing-goals .background {
     fill: var(--background-secondary-alt);
 }
 
