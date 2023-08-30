@@ -18,11 +18,18 @@ For notes, and entry will be added to the frontmatter of your note with the word
 
 There is also a command to add a goal for any note or folder in your vault.
 
+## Daily goals
+Using the same file explorer and command palette commands, you can also set a daily goal alongside or instead of your overall goal to a note or folder. Daily goals reset each day so you can set yourself a target for the number of words you want to write each day andd also see your progress towards your overall goal.
+
+![](./images/demo-screenshot-3.png)
+
+The name for the frontmatter property is `daily-word-goal` by default. You can change the property name in the plugin settings.
+
 ## Updating a goal
 You can update goals in 3 ways:
 1. Using the add/update command.
 2. Using the file explorer context menu item.
-3. For notes only, updating the value of the goal frontmatter property.
+3. For notes only, updating the value of the goal frontmatter properties.
 
 ## Viewing goals
 You can view the goal set for the current note or for any file or folder using a couple of commands:

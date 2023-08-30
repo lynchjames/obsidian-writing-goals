@@ -1,14 +1,15 @@
 import type { TAbstractFile } from "obsidian";
-import { GOAL_FRONTMATTER_KEY } from "../constants";
+import { DAILY_GOAL_FRONTMATTER_KEY, GOAL_FRONTMATTER_KEY } from "../constants";
 
 export class WritingGoalsSettings {  
   showGoalMessage: boolean = true;
   showInFileExplorer: boolean = true; 
   showGoalOnCreateAndUpdate: boolean = true;
   noteGoals:string[] = [];
-  folderGoals: {path:string, goalCount:number}[] = [];
+  folderGoals: {path:string, goalCount:number, dailyGoalCount:number}[] = [];
   goalLeaves: string[] = [];
   customGoalFrontmatterKey: string = GOAL_FRONTMATTER_KEY;
+  customDailyGoalFrontmatterKey: string = DAILY_GOAL_FRONTMATTER_KEY;
   showSingleGoalView: boolean = false;
 
   noGoal(path:string): boolean{

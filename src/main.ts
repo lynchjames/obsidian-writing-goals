@@ -10,23 +10,28 @@ import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL } from './constants';
 import GoalView from './goal/goal-view';
 import { WritingGoalsSettingsTab } from './settings/settings-tab';
 import { SettingsHelper } from './settings/settings-helper';
-import { createGoal, Notes } from './note-goal';
-import { FileHelper } from './IO/file';
+import { NoteGoalHelper, Notes } from './note-goal';
+import { ObsidianFileHelper } from './IO/obsidian-file';
 import { noteGoals } from './stores/goal-store';
 import GoalTargetModal from './modals/goal-target-modal';
 import GoalModal from './modals/goal-modal';
 import { FileLabels } from './goal/file-labels';
+import { GoalHistoryHelper } from './goal-history/history';
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
   goalView: GoalView | undefined;
   fileLabels: FileLabels;
-  fileHelper: FileHelper = new FileHelper();
+  fileHelper: ObsidianFileHelper = new ObsidianFileHelper();
+  goalHistoryHelper: GoalHistoryHelper;
+  noteGoalHelper: NoteGoalHelper;
   settingsHelper: SettingsHelper = new SettingsHelper();
   goalLeaves: string[];
   
   async onload() {
     this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
+    this.goalHistoryHelper = new GoalHistoryHelper(this.app);
+    this.noteGoalHelper = new NoteGoalHelper(this.app, this.goalHistoryHelper);
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.fileLabels = new FileLabels(this.app, this.settings)
     this.setupCommands();
@@ -64,7 +69,7 @@ export default class WritingGoals extends Plugin {
         id: 'app:add-writing-goal',
         name: 'Add or update a writing goal for a note or folder',
         callback: async () => {
-          new GoalTargetModal(this.app, new GoalModal(this.app), this).open();
+          new GoalTargetModal(this.app, new GoalModal(this.app, this.goalHistoryHelper), this).open();
         },
         hotkeys: []
       });  
@@ -111,7 +116,7 @@ export default class WritingGoals extends Plugin {
                 .setTitle(prefix + " writing goal")
                 .setIcon(GOAL_ICON)
                 .onClick(async () => {
-                  const modal = new GoalModal(this.app);
+                  const modal = new GoalModal(this.app, this.goalHistoryHelper);
                   modal.init(this, fileOrFolder);
                   modal.open();
                 });
@@ -206,13 +211,13 @@ export default class WritingGoals extends Plugin {
       for (let index = 0; index < this.settings.noteGoals.length; index++) {
         const noteGoal = this.settings.noteGoals[index];
         const file = this.app.vault.getAbstractFileByPath(noteGoal);
-        const goal = await createGoal(this.app, this.settings, this.fileHelper, file);
+        const goal = await this.noteGoalHelper.createGoal(this.settings, file);
         notes[noteGoal] = goal;
       }
       for (let index = 0; index < this.settings.folderGoals.length; index++) {
         const folderGoal = this.settings.folderGoals[index];
         const folder = this.app.vault.getAbstractFileByPath(folderGoal.path);
-        const goal = await createGoal(this.app, this.settings, this.fileHelper, folder, folderGoal.goalCount);
+        const goal = await this.noteGoalHelper.createGoal(this.settings, folder, folderGoal.goalCount, folderGoal.dailyGoalCount);
         notes[folderGoal.path] = goal;
       }
       noteGoals.set(notes);

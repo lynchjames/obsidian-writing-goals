@@ -1,40 +1,28 @@
-import type { CachedMetadata } from "obsidian";
+import type { App } from "obsidian";
+import { DEFAULT_GOAL_HISTORY_PATH } from "../constants";
+import moment, { duration } from "moment";
 
-export class FileHelper {
-
-    async countWords(fileContents:string, metadata: CachedMetadata) {
-        const meaningfulContent = this.getMeaningfulContent(fileContents, metadata);
-        return (meaningfulContent.match(/[^\s]+/g) || []).length;
+export class WritingGoalsFile {
+    app: App;
+    constructor(app:App) {
+        this.app = app;
     }
-
-    private getMeaningfulContent(
-        content: string,
-        metadata: CachedMetadata
-    ): string {
-        let meaningfulContent = content;
-
-        const hasFrontmatter = metadata && !!metadata.frontmatter;
-        if (hasFrontmatter) {
-            const frontmatterPos =
-                (metadata as any).frontmatterPosition || metadata.frontmatter.position;
-            meaningfulContent =
-                frontmatterPos && frontmatterPos.start && frontmatterPos.end
-                    ? meaningfulContent.slice(0, frontmatterPos.start.offset) +
-                    meaningfulContent.slice(frontmatterPos.end.offset)
-                    : meaningfulContent;
-        }
-
-        // if (this.settings.excludeComments) {
-            const hasComments = meaningfulContent.includes("%%");
-            if (hasComments) {
-                const splitByComments = meaningfulContent.split("%%");
-                meaningfulContent = splitByComments
-                    .filter((_, ix) => ix % 2 == 0)
-                    .join("");
-            }
-        // }
-
-        return meaningfulContent;
+    async exists(path: string): Promise<boolean> {
+      return await this.app.vault.adapter.exists(path);
     }
-
+  
+    async loadFile(path: string): Promise<string> {
+      if (!(await this.exists(path))) {
+        throw Error(`The file is not found: ${path}`);
+      }
+      return this.app.vault.adapter.read(path);
+    }
+  
+    async loadJson<T>(path: string): Promise<T> {
+      return JSON.parse(await this.loadFile(path)) as T;
+    }
+  
+    async saveJson<T>(path: string, data: T): Promise<void> {
+      await this.app.vault.adapter.write(path, JSON.stringify(data));
+    }
 }
