@@ -27,14 +27,30 @@ export class ObsidianFileHelper {
         // if (this.settings.excludeComments) {
             const hasComments = meaningfulContent.includes("%%");
             if (hasComments) {
-                const splitByComments = meaningfulContent.split("%%");
-                meaningfulContent = splitByComments
-                    .filter((_, ix) => ix % 2 == 0)
-                    .join("");
+                meaningfulContent = this.removeComments("%%", meaningfulContent);
+               
+            }
+            const hasHtmlComments = meaningfulContent.includes("<!--");
+            console.log(hasHtmlComments);
+            if(hasHtmlComments){
+                meaningfulContent = this.removeCommentsRegex(new RegExp("<!--.*--!>", "gmi"), meaningfulContent);
             }
         // }
 
         return meaningfulContent;
+    }
+    removeComments(commentSymbols: string, content: string): string {
+        const splitByComments = content.split(commentSymbols);
+        content = splitByComments
+                    .filter((_, ix) => ix % 2 == 0)
+                    .join("");
+        return content;
+    }
+
+    removeCommentsRegex(commentRegex: RegExp, content: string): string {
+        const replaced = content.replace(commentRegex, '');
+        console.log(replaced);
+        return replaced;
     }
 
 }
