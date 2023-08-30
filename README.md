@@ -19,7 +19,7 @@ For notes, and entry will be added to the frontmatter of your note with the word
 There is also a command to add a goal for any note or folder in your vault.
 
 ## Daily goals
-Using the same file explorer and command palette commands, you can also set a daily goal alongside or instead of your overall goal to a note or folder. Daily goals reset each day so you can set yourself a target for the number of words you want to write each day andd also see your progress towards your overall goal.
+Using the same file explorer and command palette commands, you can also set a daily goal alongside or instead of your overall goal to a note or folder. Daily goals reset each day so you can set yourself a target for the number of words you want to write each day and also see your progress towards your overall goal.
 
 ![](./images/demo-screenshot-3.png)
 
