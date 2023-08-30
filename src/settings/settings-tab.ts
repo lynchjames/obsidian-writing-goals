@@ -74,6 +74,17 @@ import { GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
           }));
 
       new Setting(containerEl)
+      .setName('Exclude comments')
+      .setDesc('The plugin will exclude markdown (%% %%) and HTML (<!-- --!>) comments when counting words')
+      .addToggle(toggle => 
+        toggle
+          .setValue(this.plugin.settings.excludeComments)
+          .onChange(async (value:boolean) => {
+            this.plugin.settings.excludeComments = value;
+            await this.plugin.saveData(this.plugin.settings);
+          }));
+
+      new Setting(containerEl)
       .setName('Goal frontmatter property name')
       .setDesc('The name for the frontmatter property to use for note goals (changing this setting will not update existing frontmatter)')
       .addText(text => 

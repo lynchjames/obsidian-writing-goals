@@ -25,11 +25,13 @@ export class Notes {
 export class NoteGoalHelper {
     app: App
     fileHelper: ObsidianFileHelper
+    settings: WritingGoalsSettings
     goalHistoryHelper: GoalHistoryHelper
 
-    constructor(app:App, goalHistoryHelper:GoalHistoryHelper) {
+    constructor(app:App, settings:WritingGoalsSettings, goalHistoryHelper:GoalHistoryHelper) {
         this.app = app;
-        this.fileHelper = new ObsidianFileHelper();
+        this.settings = settings;
+        this.fileHelper = new ObsidianFileHelper(this.settings);
         this.goalHistoryHelper = goalHistoryHelper;
     }
 

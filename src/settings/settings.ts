@@ -11,6 +11,7 @@ export class WritingGoalsSettings {
   customGoalFrontmatterKey: string = GOAL_FRONTMATTER_KEY;
   customDailyGoalFrontmatterKey: string = DAILY_GOAL_FRONTMATTER_KEY;
   showSingleGoalView: boolean = false;
+  excludeComments: boolean = true;
 
   noGoal(path:string): boolean{
     return !this.noteGoals.contains(path) && this.folderGoals.filter(fg => fg.path == path).length == 0;

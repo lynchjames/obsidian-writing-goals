@@ -18,8 +18,8 @@ export default class GoalView extends ItemView {
 
     constructor(leaf: WorkspaceLeaf, plugin: WritingGoals){
         super(leaf);
-        this.fileHelper = new ObsidianFileHelper;
         this.plugin = plugin;
+        this.fileHelper = new ObsidianFileHelper(this.plugin.settings);
     }
 
     getViewType(): string {
@@ -49,7 +49,7 @@ export default class GoalView extends ItemView {
     async onOpen() {
         this.setGoal();
         this.addAction(GOAL_ICON, "Update goal", (evt:MouseEvent) => {
-            const modal = new GoalModal(this.app, this.plugin.goalHistoryHelper);
+            const modal = new GoalModal(this.app, this.plugin.settings, this.plugin.goalHistoryHelper);
             modal.init(this.plugin, this.app.vault.getAbstractFileByPath(this.path));
             modal.open();
         });

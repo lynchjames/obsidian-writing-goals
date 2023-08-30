@@ -1,6 +1,12 @@
 import type { CachedMetadata } from "obsidian";
+import type { WritingGoalsSettings } from "../settings/settings";
 
 export class ObsidianFileHelper {
+    settings: WritingGoalsSettings;
+
+    constructor(settings:WritingGoalsSettings) {
+        this.settings = settings;
+    }
 
     async countWords(fileContents:string, metadata: CachedMetadata) {
         const meaningfulContent = this.getMeaningfulContent(fileContents, metadata);
@@ -24,21 +30,14 @@ export class ObsidianFileHelper {
                     : meaningfulContent;
         }
 
-        // if (this.settings.excludeComments) {
-            const hasComments = meaningfulContent.includes("%%");
-            if (hasComments) {
-                meaningfulContent = this.removeComments("%%", meaningfulContent);
-               
-            }
-            const hasHtmlComments = meaningfulContent.includes("<!--");
-            console.log(hasHtmlComments);
-            if(hasHtmlComments){
+        if (this.settings.excludeComments) {
+                meaningfulContent = this.removeCommentsRegex(new RegExp("%%.*%%", "gmi"), meaningfulContent);
                 meaningfulContent = this.removeCommentsRegex(new RegExp("<!--.*--!>", "gmi"), meaningfulContent);
-            }
-        // }
+        }
 
         return meaningfulContent;
     }
+    
     removeComments(commentSymbols: string, content: string): string {
         const splitByComments = content.split(commentSymbols);
         content = splitByComments
@@ -49,7 +48,6 @@ export class ObsidianFileHelper {
 
     removeCommentsRegex(commentRegex: RegExp, content: string): string {
         const replaced = content.replace(commentRegex, '');
-        console.log(replaced);
         return replaced;
     }
 

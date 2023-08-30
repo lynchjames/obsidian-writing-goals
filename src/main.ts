@@ -22,7 +22,7 @@ export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
   goalView: GoalView | undefined;
   fileLabels: FileLabels;
-  fileHelper: ObsidianFileHelper = new ObsidianFileHelper();
+  fileHelper: ObsidianFileHelper = new ObsidianFileHelper(this.settings);
   goalHistoryHelper: GoalHistoryHelper;
   noteGoalHelper: NoteGoalHelper;
   settingsHelper: SettingsHelper = new SettingsHelper();
@@ -31,7 +31,7 @@ export default class WritingGoals extends Plugin {
   async onload() {
     this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
     this.goalHistoryHelper = new GoalHistoryHelper(this.app);
-    this.noteGoalHelper = new NoteGoalHelper(this.app, this.goalHistoryHelper);
+    this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.fileLabels = new FileLabels(this.app, this.settings)
     this.setupCommands();
@@ -69,7 +69,7 @@ export default class WritingGoals extends Plugin {
         id: 'app:add-writing-goal',
         name: 'Add or update a writing goal for a note or folder',
         callback: async () => {
-          new GoalTargetModal(this.app, new GoalModal(this.app, this.goalHistoryHelper), this).open();
+          new GoalTargetModal(this.app, new GoalModal(this.app, this.settings, this.goalHistoryHelper), this).open();
         },
         hotkeys: []
       });  
@@ -116,7 +116,7 @@ export default class WritingGoals extends Plugin {
                 .setTitle(prefix + " writing goal")
                 .setIcon(GOAL_ICON)
                 .onClick(async () => {
-                  const modal = new GoalModal(this.app, this.goalHistoryHelper);
+                  const modal = new GoalModal(this.app, this.settings, this.goalHistoryHelper);
                   modal.init(this, fileOrFolder);
                   modal.open();
                 });

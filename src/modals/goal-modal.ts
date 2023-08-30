@@ -3,19 +3,22 @@ import  { NoteGoalHelper } from "../note-goal";
 import type WritingGoals from "../main";
 import { SettingsHelper } from "../settings/settings-helper";
 import { GoalHistoryHelper } from "../goal-history/history";
+import type { WritingGoalsSettings } from "../settings/settings";
 
 export default class GoalModal extends Modal {
+    settings: WritingGoalsSettings;
     userSubmittedGoalCount: string = "0"
     userSubmittedDailyGoalCount: string = "0";
     settingsHelper: SettingsHelper;
     goalHistoryHelper: GoalHistoryHelper;
     noteGoalHelper: NoteGoalHelper;
     
-    constructor(app: App, goalHistoryHelper:GoalHistoryHelper) {
+    constructor(app: App, settings:WritingGoalsSettings, goalHistoryHelper:GoalHistoryHelper) {
         super(app);
+        this.settings = settings;
         this.settingsHelper = new SettingsHelper();
         this.goalHistoryHelper = goalHistoryHelper;
-        this.noteGoalHelper = new NoteGoalHelper(this.app, this.goalHistoryHelper);
+        this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
         this.goalHistoryHelper = new GoalHistoryHelper(this.app);
     }
 
