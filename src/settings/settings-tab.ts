@@ -63,7 +63,18 @@ import { GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
             }));
 
       new Setting(containerEl)
-      .setName('Frontmatter property name')
+      .setName('Display goal on create')
+      .setDesc('The plugin will display the goal progress when you create or update it')
+      .addToggle(toggle => 
+        toggle
+          .setValue(this.plugin.settings.showGoalOnCreateAndUpdate)
+          .onChange(async (value:boolean) => {
+            this.plugin.settings.showGoalOnCreateAndUpdate = value;
+            await this.plugin.saveData(this.plugin.settings);
+          }));
+
+      new Setting(containerEl)
+      .setName('Goal frontmatter property name')
       .setDesc('The name for the frontmatter property to use for note goals (changing this setting will not update existing frontmatter)')
       .addText(text => 
         text
@@ -75,14 +86,17 @@ import { GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
           }));
 
       new Setting(containerEl)
-      .setName('Display goal on create')
-      .setDesc('The plugin will display the goal progress when you create or update it')
-      .addToggle(toggle => 
-        toggle
-          .setValue(this.plugin.settings.showGoalOnCreateAndUpdate)
-          .onChange(async (value:boolean) => {
-            this.plugin.settings.showGoalOnCreateAndUpdate = value;
+      .setName('Daily goal frontmatter property name')
+      .setDesc('The name for the frontmatter property to use for daily note goals (changing this setting will not update existing frontmatter)')
+      .addText(text => 
+        text
+          .setValue(this.plugin.settings.customDailyGoalFrontmatterKey)
+          .onChange(async (value:string) => {
+            value = value != '' ? value : GOAL_FRONTMATTER_KEY;
+            this.plugin.settings.customDailyGoalFrontmatterKey = value;
             await this.plugin.saveData(this.plugin.settings);
           }));
+
+ 
     }
   }
