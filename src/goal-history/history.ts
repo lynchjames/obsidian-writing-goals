@@ -80,7 +80,7 @@ export class GoalHistoryHelper {
         return moment().startOf('day').toString();
     }
 
-    historyExists() {
-        return this.goalFile.exists(GOAL_HISTORY_PATH);
+    async historyExists() {
+        return await this.goalFile.exists(GOAL_HISTORY_PATH);
     }
 }

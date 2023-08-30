@@ -36,12 +36,14 @@
         {/if}
     </h3>
     {/if}
-    <h3>
-    {#if percent >= 100}
-        {goal.goalCount.toLocaleString()} <span class="note-goal note-goal-completed">word goal completed!</span>
-    {:else}
-        {getOverallGoalCountText(goal)} {goal.goalCount.toLocaleString()}&nbsp;<span class="note-goal">word goal</span> 
+    {#if goal.goalCount > 0}
+        <h3>
+        {#if percent >= 100}
+            {goal.goalCount.toLocaleString()} <span class="note-goal note-goal-completed">word goal completed!</span>
+        {:else}
+            {getOverallGoalCountText(goal)} {goal.goalCount.toLocaleString()}&nbsp;<span class="note-goal">word goal</span> 
+        {/if}
+        </h3>
     {/if}
-    </h3>
 {/if}
 

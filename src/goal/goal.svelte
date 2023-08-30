@@ -44,6 +44,7 @@
     }
 
     function getPercent(words, goal) {
+      if(goal == 0) { return 0; }
       let per = (words/goal)*100;
       if (per < 0) { per = 0;}
       if (per > 100) { per = 100;}
@@ -83,7 +84,7 @@
 
 </style>
 
-{#if goal && goal.goalCount > 0}
+{#if goal && (goal.goalCount > 0 || goal.dailyGoalCount > 0)}
     {#if mode == 'full'}
       <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
         <h3 class="title">
