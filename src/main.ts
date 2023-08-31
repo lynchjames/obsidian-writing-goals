@@ -135,18 +135,19 @@ export default class WritingGoals extends Plugin {
                 .setIcon(REMOVE_GOAL_ICON)
                 .onClick(async () => {
                   this.settings.removeGoal(fileOrFolder);
+                  await this.saveData(this.settings);
                   if(fileOrFolder instanceof TFile){
                     const file = fileOrFolder as TFile;
                     await this.app.fileManager.processFrontMatter(file as TFile, (frontMatter) => {
                       try {
-                        delete frontMatter[this.settings.customGoalFrontmatterKey]; 
+                        delete frontMatter[this.settings.customGoalFrontmatterKey];
+                        delete frontMatter[this.settings.customDailyGoalFrontmatterKey]; 
                       } catch (error) {
                         new Notice("Error removing goal frontmatter for " + file.name);
                       }
                     });
                   }
-                  await this.saveData(this.settings);
-                  this.loadNoteGoalData();
+                  await this.loadNoteGoalData(true, fileOrFolder.path);
                 });
             });
           })
@@ -156,6 +157,7 @@ export default class WritingGoals extends Plugin {
           this.app.vault.on("rename", (file, oldPath) => {
             this.settings.rename(file, oldPath);
             this.saveData(this.settings);
+            this.loadNoteGoalData(true, file.path);
           })
         );
 

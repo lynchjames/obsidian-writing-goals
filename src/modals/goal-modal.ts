@@ -75,12 +75,12 @@ export default class GoalModal extends Modal {
               }));
       }
 
-      onSubmit() {
-        this.createGoalForTarget();
+      async onSubmit() {
+        await this.createGoalForTarget();
         if(this.plugin.settings.showGoalOnCreateAndUpdate){
-          this.plugin.initLeaf(this.target.path);
+          await this.plugin.initLeaf(this.target.path);
         }
-        this.plugin.loadNoteGoalData();
+        await this.plugin.loadNoteGoalData(true, this.target.path);
       }
 
       async createGoalForTarget() {
