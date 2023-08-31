@@ -32,13 +32,13 @@ export class ObsidianFileHelper {
         }
 
         if (this.settings.excludeComments) {
-                meaningfulContent = this.removeCommentsRegex(new RegExp("%%.*%%", "gmi"), meaningfulContent);
-                meaningfulContent = this.removeCommentsRegex(new RegExp("<!--.*--!>", "gmi"), meaningfulContent);
+                meaningfulContent = this.removeCommentsRegex(new RegExp("(%%.*?%%|%%[\w\W\n\s]+?%%)", "gmis"), meaningfulContent);
+                meaningfulContent = this.removeCommentsRegex(new RegExp("(<!--.*?-->|<!--[\w\W\n\s]+?-->)", "gmis"), meaningfulContent);
         }
         meaningfulContent = removeMd(meaningfulContent);
         return meaningfulContent;
     }
-    
+
     removeComments(commentSymbols: string, content: string): string {
         const splitByComments = content.split(commentSymbols);
         content = splitByComments
