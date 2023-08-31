@@ -35,18 +35,18 @@ export class NoteGoalHelper {
         this.goalHistoryHelper = goalHistoryHelper;
     }
 
-    async createGoal(settings:WritingGoalsSettings, file: TAbstractFile, goalCount?: number, dailyGoalCount?: number): Promise<NoteGoal> {
-        const isFile = file instanceof TFile;
+    async createGoal(settings:WritingGoalsSettings, fileOrFolder: TAbstractFile, goalCount?: number, dailyGoalCount?: number): Promise<NoteGoal> {
+        const isFile = this.isFile(fileOrFolder);
         if(isFile) {
-            goalCount = this.getGoalCount(settings.customGoalFrontmatterKey, file);
-            dailyGoalCount = this.getGoalCount(settings.customDailyGoalFrontmatterKey, file);
+            goalCount = this.getGoalCount(settings.customGoalFrontmatterKey, fileOrFolder);
+            dailyGoalCount = this.getGoalCount(settings.customDailyGoalFrontmatterKey, fileOrFolder);
         }
-        const wordCount = isFile ? await this.getWordCount(file) : await this.getWordCountRecursive(file)
-        await this.goalHistoryHelper.updateGoalForToday(file.path, goalCount, dailyGoalCount, wordCount);
-        const todaysDailyGoal = await this.goalHistoryHelper.todaysGoalItem(file.path);
+        const wordCount = isFile ? await this.getWordCount(fileOrFolder) : await this.getWordCountRecursive(fileOrFolder)
+        await this.goalHistoryHelper.updateGoalForToday(fileOrFolder.path, goalCount, dailyGoalCount, wordCount);
+        const todaysDailyGoal = await this.goalHistoryHelper.todaysGoalItem(fileOrFolder.path);
         const result = {
-            path: file.path,
-            title: file.name.replace('.md', ''),
+            path: fileOrFolder.path,
+            title: fileOrFolder.name.replace('.md', ''),
             goalType: isFile ? GoalType.Note : GoalType.Folder,
             goalCount: goalCount,
             dailyGoalCount: dailyGoalCount,
@@ -64,16 +64,20 @@ export class NoteGoalHelper {
         return 0;
     }
 
-    async getWordCount(file:TAbstractFile){
-        const metadata = this.app.metadataCache.getFileCache(file as TFile);
-        const fileContents = await this.app.vault.cachedRead(file as TFile);
-        const wordCount = await this.fileHelper.countWords(fileContents, metadata);
-        return wordCount;
+    async getWordCount(fileOrFolder:TAbstractFile){
+        const isFile = this.isFile(fileOrFolder);
+        if(isFile) {
+            const metadata = this.app.metadataCache.getFileCache(fileOrFolder as TFile);
+            const fileContents = await this.app.vault.cachedRead(fileOrFolder as TFile);
+            return await this.fileHelper.countWords(fileContents, metadata);
+        } else {
+            return await this.getWordCountRecursive(fileOrFolder);
+        }
     }
 
     async getWordCountRecursive(fileOrFolder: TAbstractFile){
         let count = 0;
-        if(fileOrFolder instanceof TFile){
+        if(this.isFile(fileOrFolder)){
             count = count + await this.getWordCount(fileOrFolder);
         } else {
             const children = (fileOrFolder as TFolder).children
@@ -83,5 +87,9 @@ export class NoteGoalHelper {
             }
         }
         return count;
+    }
+
+    isFile(fileOrFolder:TAbstractFile){
+        return fileOrFolder instanceof TFile;
     }
 }
