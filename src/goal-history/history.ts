@@ -46,12 +46,7 @@ export class GoalHistoryHelper {
         return await this.goalFile.loadJson(GOAL_HISTORY_PATH) as GoalHistory;
     }
 
-    async saveGoalForToday(path: string, item:GoalHistoryItem){
-        item.date = moment().startOf('day').toString();
-        return await this.saveGoal(path, item);
-    }
-
-    async updateGoalForToday(path: any, goalCount: number, dailyGoalCount:number, wordCount: number) {
+    async updateGoalForToday(path: string, goalCount: number, dailyGoalCount:number, wordCount: number) {
         let item = await this.todaysGoalItem(path);
         if(item != null) {
             item.dailyGoal = dailyGoalCount;
@@ -60,7 +55,8 @@ export class GoalHistoryHelper {
         } else {
            item = {dailyGoal: dailyGoalCount, goal:goalCount, startCount: wordCount, endCount: wordCount}; 
         }
-        await this.saveGoalForToday(path, item)
+        item.date = this.today();
+        await this.saveGoal(path, item)
     }
 
     async saveGoal(path:string, item:GoalHistoryItem) {

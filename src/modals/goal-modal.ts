@@ -91,7 +91,7 @@ export default class GoalModal extends Modal {
         const dailyGoalCount:number = +this.userSubmittedDailyGoalCount; 
         
         const wordCount = await this.noteGoalHelper.getWordCount(target);
-        this.goalHistoryHelper.saveGoalForToday(target.path, {dailyGoal:dailyGoalCount, goal:goalCount, startCount:wordCount, endCount:wordCount})
+        this.goalHistoryHelper.updateGoalForToday(target.path, goalCount, dailyGoalCount, wordCount)
         
         if(target instanceof TFolder){
             settings.folderGoals.filter(fg => fg.path != target.path);
