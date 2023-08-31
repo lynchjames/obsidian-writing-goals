@@ -48,6 +48,16 @@ This plugin only modifies the frontmatter of your notes to add, update and remov
 
 Obsidian's API does not provide contractual access to the File Explorer pane, so this plugin uses duck typing to find it. This is technically undocumented, so there is a possibility that major updates of Obsidian will temporarily cause errors. If and when that happens, this plugin is designed to fail gracefully. In this unlikely scenario you may wish to disable the plugin until it can be updated.
 
+## Running locally
+Follow these steps to get the code running in a local environment:
+
+1. Once you have cloned the repo, run `npm install` in the root folder. All required dependencies and dev dependencies should be installed.
+2. Run `npm run dev` to build and copy `main.js`, `style.css` and `manifest.json` to a test-vault folder. The command will continue to run, listening for file changes (except for style.css).
+3. Open Obsdian and load the test-vault folder as a a vault.
+
+You should now be able to make changes to the code and debug within Obsidian.
+
+
 ## Thanks
 A big thanks to [@isaaclyman](https://github.com/isaaclyman). I based my code for calculating word counts and displaying content alongside files/folders in the file explorer on his [Novel word count plugin](https://github.com/isaaclyman/novel-word-count-obsidian).
 
