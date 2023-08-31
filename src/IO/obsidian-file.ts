@@ -1,5 +1,6 @@
 import type { CachedMetadata } from "obsidian";
 import type { WritingGoalsSettings } from "../settings/settings";
+import removeMd from 'remove-markdown';
 
 export class ObsidianFileHelper {
     settings: WritingGoalsSettings;
@@ -34,7 +35,7 @@ export class ObsidianFileHelper {
                 meaningfulContent = this.removeCommentsRegex(new RegExp("%%.*%%", "gmi"), meaningfulContent);
                 meaningfulContent = this.removeCommentsRegex(new RegExp("<!--.*--!>", "gmi"), meaningfulContent);
         }
-
+        meaningfulContent = removeMd(meaningfulContent);
         return meaningfulContent;
     }
     
