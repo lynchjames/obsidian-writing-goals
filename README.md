@@ -62,4 +62,6 @@ You should now be able to make changes to the code and debug within Obsidian.
 A big thanks to [@isaaclyman](https://github.com/isaaclyman). I based my code for calculating word counts and displaying content alongside files/folders in the file explorer on his [Novel word count plugin](https://github.com/isaaclyman/novel-word-count-obsidian).
 
 ## Donating
-This plugin is provided free of charge. If you would like to donate something to me, you can via [Ko-Fi](https://ko-fi.com/lynchjames). Thank you!
+This plugin is provided free of charge. 
+
+If you would like to donate something to me, you can via [Ko-Fi](https://ko-fi.com/lynchjames). Thank you!
