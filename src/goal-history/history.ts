@@ -2,6 +2,7 @@ import type { App } from "obsidian";
 import { WritingGoalsFile } from "../IO/file";
 import { DEFAULT_GOAL_HISTORY_PATH as GOAL_HISTORY_PATH } from "../constants";
 import moment, { type Moment } from "moment";
+import type { WritingGoalsSettings } from "../settings/settings";
 
 export interface GoalHistoryItem
 {
@@ -20,7 +21,10 @@ export class GoalHistory {
 export class GoalHistoryHelper {
     
     goalFile: WritingGoalsFile;
-    constructor(app:App) {
+    settings: WritingGoalsSettings;
+
+    constructor(app:App, settings:WritingGoalsSettings) {
+        this.settings = settings;
         this.goalFile = new WritingGoalsFile(app);
         this.init();
     }
@@ -54,6 +58,9 @@ export class GoalHistoryHelper {
             item.endCount = wordCount;
         } else {
            item = {dailyGoal: dailyGoalCount, goal:goalCount, startCount: wordCount, endCount: wordCount}; 
+        }
+        if(!this.settings.allowNegativeGoalProgress && item.endCount - item.startCount < 0){
+            item.startCount = item.endCount;
         }
         item.date = this.today();
         await this.saveGoal(path, item)

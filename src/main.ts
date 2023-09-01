@@ -30,7 +30,7 @@ export default class WritingGoals extends Plugin {
   
   async onload() {
     this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
-    this.goalHistoryHelper = new GoalHistoryHelper(this.app);
+    this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings);
     this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.fileLabels = new FileLabels(this.app, this.settings)

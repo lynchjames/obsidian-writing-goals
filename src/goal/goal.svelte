@@ -69,13 +69,8 @@
 
     function getWordCount(goal:NoteGoal) {
       const count = goal.dailyGoalCount > 0 ? 
-        getDailyWordCountWithMinumum(goal.wordCount, goal.startCount, 0) : goal.wordCount;
+        goal.wordCount - goal.startCount : goal.wordCount;
       return count.toLocaleString();
-    }
-
-    function getDailyWordCountWithMinumum(wordCount:number, startCount:number, min:number) {
-      const difference = wordCount - startCount;
-      return difference >= 0 ? difference : min;
     }
 
     function getWordsText(goal:NoteGoal) {

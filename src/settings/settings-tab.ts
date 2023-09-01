@@ -24,7 +24,7 @@ import { DAILY_GOAL_FRONTMATTER_KEY, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from
       containerEl.empty();
       new Setting(containerEl)
         .setName('Display goals in file explorer')
-        .setDesc('The plugin will display note and folder goals in the file explorer')
+        .setDesc('Display note and folder goals in the file explorer')
         .addToggle(toggle => 
           toggle
             .setValue(this.plugin.settings.showInFileExplorer)
@@ -36,7 +36,7 @@ import { DAILY_GOAL_FRONTMATTER_KEY, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from
 
       new Setting(containerEl)
         .setName('Display goal message')
-        .setDesc('The plugin will display a message below the progress including the current goal')
+        .setDesc('Display a message below the progress including the current goal')
         .addToggle(toggle => 
           toggle
             .setValue(this.plugin.settings.showGoalMessage)
@@ -48,7 +48,7 @@ import { DAILY_GOAL_FRONTMATTER_KEY, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from
 
       new Setting(containerEl)
         .setName('Display single goal view')
-        .setDesc('The plugin will always display a single view for the goal progress. This setting should be enabled on mobile devices with small screens.')
+        .setDesc('Disaply a single view for the goal progress. This setting should be enabled on mobile devices with small screens.')
         .addToggle(toggle => 
           toggle
             .setValue(this.plugin.settings.showSingleGoalView)
@@ -64,7 +64,7 @@ import { DAILY_GOAL_FRONTMATTER_KEY, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from
 
       new Setting(containerEl)
       .setName('Display goal on create')
-      .setDesc('The plugin will display the goal progress when you create or update it')
+      .setDesc('Display the goal progress view when you create or update the goal')
       .addToggle(toggle => 
         toggle
           .setValue(this.plugin.settings.showGoalOnCreateAndUpdate)
@@ -74,8 +74,20 @@ import { DAILY_GOAL_FRONTMATTER_KEY, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from
           }));
 
       new Setting(containerEl)
+        .setName('Allow negative daily goal progress')
+        .setDesc('Negative daily progress counts will be displayed if less words are in a note or under a folder than at the start of the day')
+        .addToggle(toggle => 
+          toggle
+            .setValue(this.plugin.settings.allowNegativeGoalProgress)
+            .onChange(async (value:boolean) => {
+              this.plugin.settings.allowNegativeGoalProgress = value;
+              await this.plugin.saveData(this.plugin.settings);
+              this.plugin.loadNoteGoalData();
+            }));
+
+      new Setting(containerEl)
       .setName('Exclude comments')
-      .setDesc('The plugin will exclude markdown (%% %%) and HTML (<!-- --!>) comments when counting words')
+      .setDesc('Exclude markdown (%% %%) and HTML (<!-- --!>) comments when counting words')
       .addToggle(toggle => 
         toggle
           .setValue(this.plugin.settings.excludeComments)
