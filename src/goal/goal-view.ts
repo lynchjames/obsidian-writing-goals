@@ -75,6 +75,8 @@ export default class GoalView extends ItemView {
             props: {
                 path: this.path,
                 mode: 'full',
+                color: this.plugin.settings.customGoalBarColor,
+                dailyColor: this.plugin.settings.customDailyGoalBarColor,
                 rootEl: this.containerEl
             },
         });    

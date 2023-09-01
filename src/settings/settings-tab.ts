@@ -5,12 +5,14 @@ import {
 } from 'obsidian';
 import type WritingGoals from '../main';
 import { FileLabels } from '../goal/file-labels';
-import { showGoalMessage } from '../stores/goal-store';
-import { DAILY_GOAL_FRONTMATTER_KEY, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
+import { dailyGoalColor, goalColor, showGoalMessage } from '../stores/goal-store';
+import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
   
   export class WritingGoalsSettingsTab extends PluginSettingTab {
     plugin: WritingGoals;
     fileLabels: FileLabels;
+    defaultGoalColor: string;
+    defaultDailyGoalColor: string;
     
     constructor(app: App, plugin: WritingGoals) {
       super(app, plugin);
@@ -120,6 +122,49 @@ import { DAILY_GOAL_FRONTMATTER_KEY, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from
             await this.plugin.saveData(this.plugin.settings);
           }));
 
- 
+        const colorSetting = new Setting(containerEl)
+          .setName('Goal progress bar color')
+          .setDesc('Set a custom color for the goal progress bar')
+          .addButton(button => 
+            button
+            .setIcon("lucide-rotate-ccw")
+            .onClick(evt => {
+              const input = colorSetting.controlEl.children[1] as HTMLInputElement;
+              input.value = GOAL_BAR_COLOR;
+              input.trigger("change");
+              
+            }))
+            .addColorPicker(color => 
+            color
+              .setValue(this.plugin.settings.customGoalBarColor)
+              .onChange(async (value:string) => {
+                const defaultColor = GOAL_BAR_COLOR
+                value = value != '' ? value : defaultColor;
+                this.plugin.settings.customGoalBarColor = value;
+                await this.plugin.saveData(this.plugin.settings);
+                goalColor.set(value);
+              }));
+
+        const dailyColorSetting = new Setting(containerEl)
+        .setName('Daily goal progress bar color')
+        .setDesc('Set a custom color for the daily goal progress bar')
+        .addButton(button => 
+          button
+          .setIcon("lucide-rotate-ccw")
+          .onClick(evt => {
+            const input = dailyColorSetting.controlEl.children[1] as HTMLInputElement;
+            input.value = DAILY_GOAL_BAR_COLOR;
+            input.trigger("change");          
+          }))
+        .addColorPicker(color => 
+          color
+            .setValue(this.plugin.settings.customDailyGoalBarColor)
+            .onChange(async (value:string) => {
+              const defaultColor = DAILY_GOAL_BAR_COLOR
+              value = value != '' ? value : defaultColor;
+              this.plugin.settings.customDailyGoalBarColor = value;
+              await this.plugin.saveData(this.plugin.settings);
+              dailyGoalColor.set(value);
+            }));
     }
   }

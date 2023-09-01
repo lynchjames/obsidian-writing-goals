@@ -40,6 +40,8 @@ export class FileLabels {
                           props: {
                           path: path,
                           mode: 'simple',
+                          color: this.settings.customGoalBarColor,
+                          dailyColor: this.settings.customDailyGoalBarColor,
                           },
                       });
                   }

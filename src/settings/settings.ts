@@ -1,7 +1,8 @@
 import type { TAbstractFile } from "obsidian";
-import { DAILY_GOAL_FRONTMATTER_KEY, GOAL_FRONTMATTER_KEY } from "../constants";
+import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_FRONTMATTER_KEY } from "../constants";
 
-export class WritingGoalsSettings {  
+export class WritingGoalsSettings {
+
   showGoalMessage: boolean = true;
   showInFileExplorer: boolean = true; 
   showGoalOnCreateAndUpdate: boolean = true;
@@ -13,6 +14,8 @@ export class WritingGoalsSettings {
   showSingleGoalView: boolean = false;
   excludeComments: boolean = true;
   allowNegativeGoalProgress: boolean= false;
+  customGoalBarColor: string = GOAL_BAR_COLOR;
+  customDailyGoalBarColor: string = DAILY_GOAL_BAR_COLOR;
 
   noGoal(path:string): boolean{
     return !this.noteGoals.contains(path) && this.folderGoals.filter(fg => fg.path == path).length == 0;

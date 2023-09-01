@@ -1,10 +1,12 @@
 <script lang="ts">
     import  GoalSummary from './goal-summary.svelte';
-    import { onDestroy } from "svelte";
-	  import { noteGoals, showGoalMessage } from '../stores/goal-store';
+    import { onDestroy, onMount } from "svelte";
+	  import { dailyGoalColor, goalColor, noteGoals, showGoalMessage } from '../stores/goal-store';
 	  import type { NoteGoal, Notes } from '../note-goal';
     export let mode: string;
     export let path: string;
+    export let color: string;
+    export let dailyColor: string;
 
     let goals: Notes;
     let goal: NoteGoal;
@@ -13,6 +15,13 @@
     let progress: number = 0;
     let dailyProgress: number = 0;
     let simpleDailyProgress: number = 0;
+    let gColor: string;
+    let dGColor: string;
+
+    onMount(() => {
+      gColor = color;
+      dGColor = dailyColor;
+    })
 
     const unsubNoteGoals = noteGoals.subscribe(val => {
         if(!val[path]){
@@ -28,7 +37,17 @@
 
     });
 
+    const unsubGoalColor = goalColor.subscribe(val => {
+      gColor = val
+    });
+
+    const unsubDailyGoalColor = dailyGoalColor.subscribe(val => {
+      dGColor = val
+    });
+
     onDestroy(unsubNoteGoals);
+    onDestroy(unsubGoalColor);
+    onDestroy(unsubDailyGoalColor);
     
     function updateGoal() {
       goal = goals[path];      
@@ -82,7 +101,6 @@
 
 <style>
 
-
 </style>
 
 {#if goal && (goal.goalCount > 0 || goal.dailyGoalCount > 0)}
@@ -93,17 +111,17 @@
         </h3>
         <svg class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
-          <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
+          <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
             stroke-dashoffset="{progress}"></circle>
             {#if goal.dailyGoalCount > 0}
             <circle class="wg-daily-background {getDailyCompletedClass(dailyPercent)}" r="75" cx="100" cy="100"></circle>
               <circle class="wg-daily-bar" r="75" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="471.23" stroke-linecap="{getLineCap(dailyPercent)}" 
-                stroke-dashoffset="{dailyProgress}"></circle>
+                stroke="{dGColor}" stroke-dashoffset="{dailyProgress}"></circle>
             {/if}
           <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{getWordCount(goal)}</text>
           <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
         </svg>
-        <GoalSummary goal={goal} percent={percent} dailyPercent={dailyPercent} />
+        <GoalSummary goal={goal} percent={percent} dailyPercent={dailyPercent} gColor={gColor} dGColor={dGColor} />
       </div>
     {/if}
     {#if mode == 'simple'}
@@ -111,11 +129,11 @@
         <svg class="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
           <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" 
-           stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" stroke-dashoffset="{progress}"></circle>
+          stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" stroke-dashoffset="{progress}"></circle>
            {#if goal.dailyGoalCount > 0}
               <circle r="50" class="wg-daily-background {getDailyCompletedClass(dailyPercent)}"  cx="100" cy="100"></circle>
               <circle class="wg-daily-bar" r="50" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="314.15" stroke-linecap="{getLineCap(dailyPercent)}" 
-                stroke-dashoffset="{simpleDailyProgress}"></circle>
+                stroke="{dGColor}" stroke-dashoffset="{simpleDailyProgress}"></circle>
             {/if}
         </svg>
         </div>

@@ -15,14 +15,6 @@
     top: 0px;
 }
 
-.note-goal {
-    color: var(--text-accent);
-}
-
-.note-daily-goal {
-    color: var(--color-orange);
-}
-
 .note-goal-completed .note-goal-text {
     fill: var(--text-on-accent-inverted);
     font-weight: bold;
@@ -57,12 +49,10 @@
 }
 
 .wg-bar, .wg-simple .wg-bar {
-    stroke: var(--interactive-accent);
     transition: stroke-dashoffset 1s linear;
 }
 
 .wg-daily-bar, .wg-goals-simple .wg-daily-bar {
-    stroke: var(--color-orange);
     transition: stroke-dashoffset 1s linear;
 }
 

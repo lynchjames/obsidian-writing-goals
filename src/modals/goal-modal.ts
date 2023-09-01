@@ -38,10 +38,10 @@ export default class GoalModal extends Modal {
         let goalCount:any = 0;
         let dailyGoalCount:any = 0;
         if(this.target instanceof TFile){
-          goalCount = this.noteGoalHelper.getGoalCount(this.plugin.settings.customGoalFrontmatterKey, this.target);
-          dailyGoalCount = this.noteGoalHelper.getGoalCount(this.plugin.settings.customDailyGoalFrontmatterKey, this.target);
+          goalCount = this.noteGoalHelper.getGoalCount(this.settings.customGoalFrontmatterKey, this.target);
+          dailyGoalCount = this.noteGoalHelper.getGoalCount(this.settings.customDailyGoalFrontmatterKey, this.target);
         } else {
-          const folderGoal = this.plugin.settings.getFolderGoal(this.target.path);
+          const folderGoal = this.settings.getFolderGoal(this.target.path);
           if(folderGoal != null){
             goalCount = folderGoal.goalCount;
             dailyGoalCount = folderGoal.dailyGoalCount;
@@ -77,7 +77,7 @@ export default class GoalModal extends Modal {
 
       async onSubmit() {
         await this.createGoalForTarget();
-        if(this.plugin.settings.showGoalOnCreateAndUpdate){
+        if(this.settings.showGoalOnCreateAndUpdate){
           await this.plugin.initLeaf(this.target.path);
         }
         await this.plugin.loadNoteGoalData(true, this.target.path);
@@ -94,7 +94,7 @@ export default class GoalModal extends Modal {
         if(target instanceof TFolder){
             settings.folderGoals.filter(fg => fg.path != target.path);
             settings.folderGoals.push({path:target.path, goalCount:goalCount, dailyGoalCount:dailyGoalCount});
-            settings.folderGoals = [...new Set(plugin.settings.folderGoals)];
+            settings.folderGoals = [...new Set(settings.folderGoals)];
             await plugin.saveData(settings);
         }
         if(target instanceof TFile){
