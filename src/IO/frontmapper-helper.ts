@@ -7,7 +7,7 @@ export class FrontmatterHelper {
         this.app = app;
     }
 
-    get<T>(key: string, path: string): T {
+    get(key: string, path: string) {
         const file = this.app.vault.getAbstractFileByPath(path);
         if(file == null || file instanceof TFolder) {
             return undefined;
@@ -17,7 +17,7 @@ export class FrontmatterHelper {
             return undefined;
         }
         const value = metadata.frontmatter[key];
-        return value as T;
+        return value;
     }
 
 }

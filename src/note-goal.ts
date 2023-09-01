@@ -71,8 +71,9 @@ export class NoteGoalHelper {
     async getWordCount(fileOrFolder:TAbstractFile){
         const isFile = this.isFile(fileOrFolder);
         if(isFile) {
-            const include = this.frontmatterHelper.get<boolean>(WORD_COUNT_INCLUDE_FRONTMATTER_KEY, fileOrFolder.path);
-            if(include != null && !include) {
+            const include = this.frontmatterHelper.get(WORD_COUNT_INCLUDE_FRONTMATTER_KEY, fileOrFolder.path);
+            console.log(fileOrFolder.path, include);
+            if(include != null && (include == "false" || !include)) {
                 return 0;
             }
             const fileContents = await this.app.vault.cachedRead(fileOrFolder as TFile);
