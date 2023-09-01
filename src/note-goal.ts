@@ -2,6 +2,8 @@ import { TFile, TAbstractFile, App, TFolder } from "obsidian"
 import { ObsidianFileHelper } from "./IO/obsidian-file"
 import type { WritingGoalsSettings } from "./settings/settings"
 import type { GoalHistoryHelper } from "./goal-history/history"
+import { WORD_COUNT_INCLUDE_FRONTMATTER_KEY } from "./constants"
+import { FrontmatterHelper } from "./IO/frontmapper-helper"
 
 export enum GoalType {
     Note,
@@ -23,16 +25,18 @@ export class Notes {
 }
 
 export class NoteGoalHelper {
-    app: App
-    fileHelper: ObsidianFileHelper
-    settings: WritingGoalsSettings
-    goalHistoryHelper: GoalHistoryHelper
+    app: App;
+    fileHelper: ObsidianFileHelper;
+    settings: WritingGoalsSettings;
+    goalHistoryHelper: GoalHistoryHelper;
+    frontmatterHelper: FrontmatterHelper;
 
     constructor(app:App, settings:WritingGoalsSettings, goalHistoryHelper:GoalHistoryHelper) {
         this.app = app;
         this.settings = settings;
         this.fileHelper = new ObsidianFileHelper(this.settings);
         this.goalHistoryHelper = goalHistoryHelper;
+        this.frontmatterHelper = new FrontmatterHelper(this.app);
     }
 
     async createGoal(settings:WritingGoalsSettings, fileOrFolder: TAbstractFile, goalCount?: number, dailyGoalCount?: number): Promise<NoteGoal> {
@@ -67,8 +71,12 @@ export class NoteGoalHelper {
     async getWordCount(fileOrFolder:TAbstractFile){
         const isFile = this.isFile(fileOrFolder);
         if(isFile) {
-            const metadata = this.app.metadataCache.getFileCache(fileOrFolder as TFile);
+            const include = this.frontmatterHelper.get<boolean>(WORD_COUNT_INCLUDE_FRONTMATTER_KEY, fileOrFolder.path);
+            if(include != null && !include) {
+                return 0;
+            }
             const fileContents = await this.app.vault.cachedRead(fileOrFolder as TFile);
+            const metadata = this.app.metadataCache.getCache(fileOrFolder.path);
             return await this.fileHelper.countWords(fileContents, metadata);
         } else {
             return await this.getWordCountRecursive(fileOrFolder);

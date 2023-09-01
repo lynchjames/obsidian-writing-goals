@@ -1,5 +1,6 @@
 export const GOAL_FRONTMATTER_KEY = 'word-goal';
 export const DAILY_GOAL_FRONTMATTER_KEY = 'daily-word-goal';
+export const WORD_COUNT_INCLUDE_FRONTMATTER_KEY = 'wordcount';
 export const VIEW_TYPE_GOAL = 'writing-goal';
 export const VIEW_TYPE_GOAL_SIMPLE = 'writing-goal-simple';
 export const VIEW_TYPE_FILE_EXPLORER = 'file-explorer'
