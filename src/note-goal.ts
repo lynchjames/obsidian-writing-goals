@@ -72,7 +72,6 @@ export class NoteGoalHelper {
         const isFile = this.isFile(fileOrFolder);
         if(isFile) {
             const include = this.frontmatterHelper.get(WORD_COUNT_INCLUDE_FRONTMATTER_KEY, fileOrFolder.path);
-            console.log(fileOrFolder.path, include);
             if(include != null && (include == "false" || !include)) {
                 return 0;
             }
