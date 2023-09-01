@@ -40,6 +40,13 @@ Goal progress should update in real-time as you type. Text added to any file wit
 
 ![](./images/reaching-goal-demo.gif) 
 
+## Excluding a note from word count
+You can exclude a note from contributing to word counts towards parent folders and other folders higher up the filer hierarchy.
+
+Set a frontmatter property in one of two formats:
+
+![](./images/wordcount-frontmatter-bool.png) ![](./images/wordcount-frontmatter-string.png) 
+
 ## Compatibility
 This plugin is compatible with Obsidian v1.3.7 and targets API version v1.4.4.
 
