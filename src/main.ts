@@ -89,7 +89,7 @@ export default class WritingGoals extends Plugin {
             return;
           }
           const requiresGoalUpdate = await this.settingsHelper.updateNoteGoalsInSettings(this, file as TFile)
-          await this.loadNoteGoalData(requiresGoalUpdate, file.path);
+          await this.loadNoteGoalData(true);
         }));
 
         this.registerEvent(
