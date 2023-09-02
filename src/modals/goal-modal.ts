@@ -67,33 +67,23 @@ export default class GoalModal extends Modal {
             
         if(dailyGoalCount > 0){
           const dailyGoalProgress = new Setting(contentEl)
-              .setName(await this.dailyGoalProgressText());    
-
-          const buttons = new Setting(contentEl)
-            .addButton((btn) =>
-                btn.setButtonText("Reset Daily Progress")
-                  .setClass("mod-warning")
-                  .onClick(async () => {
-                    await this.onResetDailyProgress(dailyGoalProgress);
-                    this.plugin.loadNoteGoalData();
-                  }))
+              .setName(await this.dailyGoalProgressText())
               .addButton((btn) =>
-                btn.setButtonText("Save goal")
-                  .setCta()
-                  .onClick(() => {
-                    this.close();
-                    this.onSubmit();
-                  }));
-          } else {
-            const saveButton = new Setting(contentEl)
-              .addButton((btn) =>
-                btn.setButtonText("Save goal")
-                  .setCta()
-                  .onClick(() => {
-                    this.close();
-                    this.onSubmit();
-                  }));
+                  btn.setButtonText("Reset Daily Progress")
+                    .setClass("mod-warning")
+                    .onClick(async () => {
+                      await this.onResetDailyProgress(dailyGoalProgress);
+                      this.plugin.loadNoteGoalData();
+                    }))
           }
+          const saveButton = new Setting(contentEl)
+            .addButton((btn) =>
+              btn.setButtonText("Save goal")
+                .setCta()
+                .onClick(() => {
+                  this.close();
+                  this.onSubmit();
+                }));
       }
 
       async dailyGoalProgressText() {
