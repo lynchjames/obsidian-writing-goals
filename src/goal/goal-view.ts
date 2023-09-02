@@ -77,7 +77,6 @@ export default class GoalView extends ItemView {
 
         //Goal svelte componet creation must happen immediately after existing component is destroyed.
         if(this.goal != null) {
-            console.log('destroying goal view');
             this.goal.$destroy();
         }
         this.goal = new Goal({

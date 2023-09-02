@@ -78,3 +78,20 @@
     fill: var(--background-primary);
     max-width: 50px;
 }
+
+
+/* STATS */
+
+.linked-chart-container {
+    background-color: var(--background-primary);
+    border-radius: 10px;
+    max-width: 450px;
+    margin-top: 24px;
+    padding: 4px 20px 32px 20px;
+    text-align: center;
+}
+
+.linked-chart-container h3, .linked-chart-container h4 {
+    color: var(--color-text-title);
+    text-align: center;
+}

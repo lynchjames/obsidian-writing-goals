@@ -18,15 +18,15 @@
 
     let dGColor: string;
     
-    onMount(() => {
-      dGColor = dailyColor;
-    })
+    // onMount(() => {
+    //   dGColor = dailyColor;
+    // })
 
-    const unsubDailyGoalColor = dailyGoalColor.subscribe(val => {
-      dGColor = val
-    });
+    // const unsubDailyGoalColor = dailyGoalColor.subscribe(val => {
+    //   dGColor = val
+    // });
 
-    onDestroy(unsubDailyGoalColor);
+    // onDestroy(unsubDailyGoalColor);
 
     let heatmap:SvelteHeatmap
     // let startDate = heatmapData[0].date;
@@ -63,21 +63,22 @@
 </div> -->
 
 
-<div class="linked-chart-date-lable" style="position: relative; margin-bottom: 25px">
-  <LinkedLabel linked="link-2"  />
+<div class="linked-chart-container">
+  <h3>Daily goal progress</h3>
+  <div class="linked-chart-date-lable" style="position: relative; margin-bottom: 25px">
+    <LinkedLabel linked="link-2"  />
+  </div>
+
+  <LinkedChart 
+    { data } 
+    linked="link-2"
+    showValue
+    valuePrepend=""
+    valueAppend="words"  
+    fill="{dailyColor}"
+    width={250}
+    height={80}
+    valuePosition="floating"
+    align="left"
+    />
 </div>
-
-<LinkedChart 
-  { data } 
-  linked="link-2"
-  showValue
-  valuePrepend=""
-  valueAppend="words"  
-  fill="{dGColor}"
-  width={250}
-  height={80}
-  valuePosition="floating"
-  align="left"
-  />
-
-
