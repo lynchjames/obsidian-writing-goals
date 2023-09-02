@@ -40,12 +40,12 @@ export default class WritingGoals extends Plugin {
     this.setupCommands();
     this.registerView(
       VIEW_TYPE_GOAL,
-      (leaf) => this.goalView = new GoalView(leaf, this)
+      (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
     );
-    this.registerView(
-      VIEW_TYPE_STATS,
-      (leaf) => this.statsView = new StatsView(leaf, this, this.goalHistoryHelper)
-    );
+    // this.registerView(
+    //   VIEW_TYPE_STATS,
+    //   (leaf) => this.statsView = new StatsView(leaf, this, this.goalHistoryHelper)
+    // );
     this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
     this.setupEvents();
     }

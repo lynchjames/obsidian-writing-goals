@@ -1,17 +1,23 @@
 <script lang="ts">
     import  GoalSummary from './goal-summary.svelte';
+    import  Stats from '../stats/stats.svelte';
     import { onDestroy, onMount } from "svelte";
 	  import { dailyGoalColor, goalColor, noteGoals, showGoalMessage } from '../stores/goal-store';
 	  import type { NoteGoal, Notes } from '../note-goal';
 	  import type { App } from 'obsidian';
-	import type WritingGoals from '../main';
+	  import type WritingGoals from '../main';
+	  import type { HistoryStatsItem } from '../goal-history/history';
     export let mode: string;
     export let path: string;
     export let color: string;
     export let dailyColor: string;
     export let plugin: WritingGoals;
     export let app: App;
+    export let heatMapData: HistoryStatsItem[];
+    export let linkedChartData: any;
 
+    let statsChildRef;
+    let summaryChildRef;
     let goals: Notes;
     let goal: NoteGoal;
     let percent: number = 0;
@@ -52,6 +58,15 @@
     onDestroy(unsubNoteGoals);
     onDestroy(unsubGoalColor);
     onDestroy(unsubDailyGoalColor);
+
+    onDestroy(() => {
+      if(statsChildRef) {
+        statsChildRef.$destroy();
+      }
+      if(summaryChildRef) {
+        summaryChildRef.$destroy();
+      }
+    })
     
     function updateGoal() {
       goal = goals[path];      
@@ -131,8 +146,16 @@
           <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{getWordCount(goal)}</text>
           <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
         </svg>
-        <GoalSummary goal={goal} percent={percent} dailyPercent={dailyPercent} gColor={gColor} dGColor={dGColor} />
+        <GoalSummary bind:this={summaryChildRef} goal={goal} percent={percent} dailyPercent={dailyPercent} color={gColor} dailyColor={dGColor} />
       </div>
+      {#if goal.dailyGoalCount > 0}
+        <Stats 
+          bind:this={statsChildRef}
+          {path}
+          dailyColor={dGColor}
+          {heatMapData}
+          data={linkedChartData}></Stats>
+      {/if}
     {/if}
     {#if mode == 'simple'}
       <div class="writing-goals-simple-container" data-path="{path}">

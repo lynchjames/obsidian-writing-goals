@@ -93,11 +93,14 @@ export class GoalHistoryHelper {
         return await this.goalFile.exists(GOAL_HISTORY_PATH);
     }
 
-    async getStats() {
+    async getStats(path?:string) {
         const history = await this.loadHistory();
         let datesData = [];
-        for(let path in history){
-            const item = history[path];
+        for(let historyPath in history){
+            if(path != null && path != historyPath){
+                continue;
+            }
+            const item = history[historyPath];
             const dateCounts = item.map((i) => new HistoryStatsItem(i.date, i.endCount - i.startCount));
             datesData.push(...dateCounts);
         }

@@ -6,6 +6,7 @@ import { ObsidianFileHelper } from '../IO/obsidian-file';
 import type WritingGoals from '../main';
 import GoalModal from '../modals/goal-modal';
 import type { GoalHistoryHelper, HistoryStatsItem } from '../goal-history/history';
+import moment from 'moment';
 
 
 export default class StatsView extends ItemView {
@@ -58,7 +59,7 @@ export default class StatsView extends ItemView {
             target: (this as any).contentEl,
             props: {
                 path: this.path,
-                heatmapData: heatmapData,
+                heatMapData: heatmapData,
                 data: linkedListData,
                 rootEl: this.containerEl
             },
@@ -66,8 +67,7 @@ export default class StatsView extends ItemView {
     }
 
     getLinkedChartData(data: HistoryStatsItem[]){
-        const result = Object.fromEntries(data.map(d => [d.date, d.value]));
-        console.log(result);
+        const result = Object.fromEntries(data.filter(d => d.value > 0).map(d => [moment(new Date(d.date)).format("ddd DD MMM YYYY"), d.value]));
         return result;
     }
 }

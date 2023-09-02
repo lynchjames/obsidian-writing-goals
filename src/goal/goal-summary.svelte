@@ -6,8 +6,8 @@
     export let goal: NoteGoal;
     export let percent: number;
     export let dailyPercent: number;
-    export let gColor: string;
-    export let dGColor: string;
+    export let color: string;
+    export let dailyColor: string;
 
     let showMessage: boolean = true;
 
@@ -37,7 +37,7 @@
         {#if dailyPercent >= 100}
         {goal.dailyGoalCount.toLocaleString()} <span class="note-daily-goal note-goal-completed">daily word goal</span> completed!
         {:else}
-        {goal.dailyGoalCount.toLocaleString()} <span class="note-daily-goal" style="{getColorStyle(dGColor)}">daily word goal</span>
+        {goal.dailyGoalCount.toLocaleString()} <span class="note-daily-goal" style="{getColorStyle(dailyColor)}">daily word goal</span>
         {/if}
     </h3>
     {/if}
@@ -46,7 +46,7 @@
         {#if percent >= 100}
             {goal.goalCount.toLocaleString()} <span class="note-goal note-goal-completed">word goal completed!</span>
         {:else}
-            {getOverallGoalCountText(goal)} {goal.goalCount.toLocaleString()}&nbsp;<span class="note-goal" style="{getColorStyle(gColor)}">word goal</span> 
+            {getOverallGoalCountText(goal)} {goal.goalCount.toLocaleString()}&nbsp;<span class="note-goal" style="{getColorStyle(color)}">word goal</span> 
         {/if}
         </h3>
     {/if}
