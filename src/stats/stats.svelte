@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import SvelteHeatmap from 'svelte-heatmap';
+    import SvelteHeatmap from "svelte-heatmap";
     import { LinkedChart, LinkedLabel, LinkedValue} from "svelte-tiny-linked-charts"
 	  import type { HistoryStatsItem } from "../goal-history/history";
     import { onDestroy } from 'svelte';
@@ -77,6 +77,7 @@
   width={250}
   height={80}
   valuePosition="floating"
+  align="left"
   />
 
 

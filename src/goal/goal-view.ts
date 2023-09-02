@@ -70,14 +70,16 @@ export default class GoalView extends ItemView {
     }
 
     async setGoal() {
-        if(this.goal != null) {
-            console.log('destroying goal view');
-            this.goal.$destroy();
-        }
         const heatmapData = await this.historyHelper.getStats(this.path);
         const linkedListData = this.getLinkedChartData(heatmapData);
         const customGoalBarColor = this.plugin.settings.customGoalBarColor;
         const customDailyGoalBarColor = this.plugin.settings.customDailyGoalBarColor;
+
+        //Goal svelte componet creation must happen immediately after existing component is destroyed.
+        if(this.goal != null) {
+            console.log('destroying goal view');
+            this.goal.$destroy();
+        }
         this.goal = new Goal({
             target: (this as any).contentEl,
             props: {
