@@ -13,7 +13,7 @@ export class FrontmatterHelper {
             return undefined;
         }
         const metadata = this.app.metadataCache.getFileCache(file as TFile);
-        if(metadata == null) {
+        if(metadata == null || metadata.frontmatter == null) {
             return undefined;
         }
         const value = metadata.frontmatter[key];
