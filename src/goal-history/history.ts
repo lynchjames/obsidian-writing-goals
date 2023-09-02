@@ -71,7 +71,6 @@ export class GoalHistoryHelper {
         let historyForPath = goalHistory[path] ?? [];
         historyForPath = historyForPath.filter(ghi => ghi.date != item.date);
         historyForPath.push(item);
-        console.log(item);
         goalHistory[path] = historyForPath;
         await this.goalFile.saveJson(GOAL_HISTORY_PATH, goalHistory);
     }
@@ -79,7 +78,6 @@ export class GoalHistoryHelper {
     async resetDailyProgress(path: string) {
         const item = await this.todaysGoalItem(path);
         item.startCount = item.endCount;
-        console.log(item);
         await this.saveGoal(path, item);
     }
 
