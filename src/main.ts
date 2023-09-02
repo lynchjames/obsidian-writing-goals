@@ -1,6 +1,7 @@
 import {
   Notice,
   Plugin,
+  TAbstractFile,
   TFile,
   TFolder
 } from 'obsidian';
@@ -110,15 +111,14 @@ export default class WritingGoals extends Plugin {
 
         this.registerEvent(
           this.app.workspace.on("file-menu", (menu, fileOrFolder) => {
-            const prefix = this.settings.noGoal(fileOrFolder.path) ? "Add" : "Update"
+            const isNewGoal = this.settings.noGoal(fileOrFolder.path);
+            const prefix = isNewGoal ? "Add" : "Update"
             menu.addItem((item) => {
               item
                 .setTitle(prefix + " writing goal")
                 .setIcon(GOAL_ICON)
                 .onClick(async () => {
-                  const modal = new GoalModal(this.app, this.settings, this.goalHistoryHelper);
-                  modal.init(this, fileOrFolder);
-                  modal.open();
+                  this.openGoalModal(fileOrFolder, isNewGoal);
                 });
             });
           })
@@ -188,6 +188,12 @@ export default class WritingGoals extends Plugin {
             this.saveData(this.settings);
           }, 5000)
         );
+    }
+
+    async openGoalModal(fileOrFolder: TAbstractFile, openGoalOnSubmit?: boolean){
+      const modal = new GoalModal(this.app, this.settings, this.goalHistoryHelper);
+      modal.init(this, fileOrFolder, openGoalOnSubmit);
+      modal.open();
     }
 
     async initLeaf(path:string) {

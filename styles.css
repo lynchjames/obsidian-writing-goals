@@ -1,5 +1,6 @@
 .writing-goals-container {
     max-width: 550px;
+    cursor: pointer;
 }
 
 .writing-goals-container h3, .writing-goals-container h4 {

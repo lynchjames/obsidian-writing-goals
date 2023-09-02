@@ -48,11 +48,6 @@ export default class GoalView extends ItemView {
 
     async onOpen() {
         this.setGoal();
-        this.addAction(GOAL_ICON, "Update goal", (evt:MouseEvent) => {
-            const modal = new GoalModal(this.app, this.plugin.settings, this.plugin.goalHistoryHelper);
-            modal.init(this.plugin, this.app.vault.getAbstractFileByPath(this.path));
-            modal.open();
-        });
     }
 
     async updatePath(path:string) {
@@ -73,6 +68,8 @@ export default class GoalView extends ItemView {
         this.goal = new Goal({
             target: (this as any).contentEl,
             props: {
+                plugin: this.plugin,
+                app: this.app,
                 path: this.path,
                 mode: 'full',
                 color: this.plugin.settings.customGoalBarColor,

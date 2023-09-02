@@ -3,10 +3,14 @@
     import { onDestroy, onMount } from "svelte";
 	  import { dailyGoalColor, goalColor, noteGoals, showGoalMessage } from '../stores/goal-store';
 	  import type { NoteGoal, Notes } from '../note-goal';
+	  import type { App } from 'obsidian';
+	import type WritingGoals from '../main';
     export let mode: string;
     export let path: string;
     export let color: string;
     export let dailyColor: string;
+    export let plugin: WritingGoals;
+    export let app: App;
 
     let goals: Notes;
     let goal: NoteGoal;
@@ -96,6 +100,10 @@
       return goal.dailyGoalCount > 0 ? 'words today' : 'words'; 
     }
 
+    function onGoalClick() {
+      const fileOrFolder = app.vault.getAbstractFileByPath(path);
+      plugin.openGoalModal(fileOrFolder);
+    }
 
 </script>
 
@@ -105,7 +113,9 @@
 
 {#if goal && (goal.goalCount > 0 || goal.dailyGoalCount > 0)}
     {#if mode == 'full'}
-      <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}" on:click={onGoalClick}>
         <h3 class="title">
           <span class="goal-note-title">{goal.title}</span>
         </h3>

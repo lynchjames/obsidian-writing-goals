@@ -12,6 +12,7 @@ export default class GoalModal extends Modal {
     settingsHelper: SettingsHelper;
     goalHistoryHelper: GoalHistoryHelper;
     noteGoalHelper: NoteGoalHelper;
+    openGoalOnSubmit: boolean = false;
     
     constructor(app: App, settings:WritingGoalsSettings, goalHistoryHelper:GoalHistoryHelper) {
         super(app);
@@ -25,9 +26,10 @@ export default class GoalModal extends Modal {
     plugin: WritingGoals;
     target: TAbstractFile;
 
-    init(plugin:WritingGoals, target: TAbstractFile){
+    init(plugin:WritingGoals, target: TAbstractFile, openGoalOnSubmit?:boolean){
         this.plugin = plugin;
         this.target = target;
+        this.openGoalOnSubmit = openGoalOnSubmit;
     }
 
     async onOpen() {
@@ -103,7 +105,7 @@ export default class GoalModal extends Modal {
 
       async onSubmit() {
         await this.createGoalForTarget();
-        if(this.settings.showGoalOnCreateAndUpdate){
+        if(this.settings.showGoalOnCreateAndUpdate && this.openGoalOnSubmit){
           await this.plugin.initLeaf(this.target.path);
         }
         await this.plugin.loadNoteGoalData(true, this.target.path);
