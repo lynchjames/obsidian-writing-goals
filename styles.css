@@ -1,11 +1,12 @@
 .writing-goals-container {
-    max-width: 350px;
-    padding: 0 20px;
+    max-width: 300px;
 }
 
 .writing-goals-container h3, .writing-goals-container h4 {
     color: var(--color-text-title);
     text-align: center;
+    font-size: 1em;
+    margin: 4px 0;
 }
 
 .writing-goals-simple-container {
@@ -26,6 +27,10 @@
 
 .note-goal-completed {
     color: var(--text-success);
+}
+
+.writing-goals {
+    padding: 0 32px;
 }
 
 .writing-goals .wg-bar {
