@@ -1,4 +1,4 @@
-import { App, Modal, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
+import { App, Modal, Setting, TAbstractFile, TFile, TFolder, TextComponent } from "obsidian";
 import  { NoteGoalHelper } from "../note-goal";
 import type WritingGoals from "../main";
 import { SettingsHelper } from "../settings/settings-helper";
@@ -30,7 +30,7 @@ export default class GoalModal extends Modal {
         this.target = target;
     }
 
-    onOpen() {
+    async onOpen() {
         const { contentEl } = this;
     
         contentEl.createEl("h2", { text: "Set your writing goal" });
@@ -64,15 +64,51 @@ export default class GoalModal extends Modal {
               this.userSubmittedDailyGoalCount = value;
             })
             .setValue(dailyGoalCount.toString()));
+            
+        if(dailyGoalCount > 0){
+          const dailyGoalProgress = new Setting(contentEl)
+              .setName(await this.dailyGoalProgressText());    
 
-        const button = new Setting(contentEl)
-          .addButton((btn) =>
-            btn.setButtonText("Save goal")
-              .setCta()
-              .onClick(() => {
-                this.close();
-                this.onSubmit();
-              }));
+          const buttons = new Setting(contentEl)
+            .addButton((btn) =>
+                btn.setButtonText("Reset Daily Progress")
+                  .setClass("mod-warning")
+                  .onClick(async () => {
+                    await this.onResetDailyProgress(dailyGoalProgress);
+                    this.plugin.loadNoteGoalData();
+                  }))
+              .addButton((btn) =>
+                btn.setButtonText("Save goal")
+                  .setCta()
+                  .onClick(() => {
+                    this.close();
+                    this.onSubmit();
+                  }));
+          } else {
+            const saveButton = new Setting(contentEl)
+              .addButton((btn) =>
+                btn.setButtonText("Save goal")
+                  .setCta()
+                  .onClick(() => {
+                    this.close();
+                    this.onSubmit();
+                  }));
+          }
+      }
+
+      async dailyGoalProgressText() {
+        return `Current daily goal progress: ${(await this.calcProgress()).toLocaleString()} words`;
+      }
+
+      async calcProgress() {
+        const todaysDailyGoalProgress = await this.goalHistoryHelper.todaysGoalItem(this.target.path);
+        return todaysDailyGoalProgress.endCount - todaysDailyGoalProgress.startCount;
+      }
+
+      async onResetDailyProgress(dailyGoalProgress: Setting) {
+        await this.goalHistoryHelper.resetDailyProgress(this.target.path);
+        dailyGoalProgress.setName(await this.dailyGoalProgressText());
+        await this.plugin.loadNoteGoalData(true);
       }
 
       async onSubmit() {
