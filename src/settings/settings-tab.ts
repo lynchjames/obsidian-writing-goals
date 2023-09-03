@@ -5,7 +5,7 @@ import {
 } from 'obsidian';
 import type WritingGoals from '../main';
 import { FileLabels } from '../goal/file-labels';
-import { dailyGoalColor, goalColor, showGoalMessage } from '../stores/goal-store';
+import { dailyGoalColor, goalColor, showGoalMessage, showProgressChart } from '../stores/goal-store';
 import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
   
   export class WritingGoalsSettingsTab extends PluginSettingTab {
@@ -38,7 +38,7 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
 
       new Setting(containerEl)
         .setName('Display goal message')
-        .setDesc('Display a message below the progress including the current goal')
+        .setDesc('Display a summary message below the progress for the current goal')
         .addToggle(toggle => 
           toggle
             .setValue(this.plugin.settings.showGoalMessage)
@@ -46,6 +46,18 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
               this.plugin.settings.showGoalMessage = value;
               await this.plugin.saveData(this.plugin.settings);
               showGoalMessage.set(value);
+            }));
+
+      new Setting(containerEl)
+        .setName('Display daily goal stas')
+        .setDesc('Display a bar chart for goal history below the progress for the current goal')
+        .addToggle(toggle => 
+          toggle
+            .setValue(this.plugin.settings.showProgressChart)
+            .onChange(async (value:boolean) => {
+              this.plugin.settings.showProgressChart = value;
+              await this.plugin.saveData(this.plugin.settings);
+              showProgressChart.set(value);
             }));
 
       new Setting(containerEl)

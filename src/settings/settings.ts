@@ -12,6 +12,7 @@ export class WritingGoalsSettings {
   customGoalFrontmatterKey: string = GOAL_FRONTMATTER_KEY;
   customDailyGoalFrontmatterKey: string = DAILY_GOAL_FRONTMATTER_KEY;
   showSingleGoalView: boolean = false;
+  showProgressChart: boolean = false;
   excludeComments: boolean = true;
   allowNegativeGoalProgress: boolean= false;
   customGoalBarColor: string = GOAL_BAR_COLOR;

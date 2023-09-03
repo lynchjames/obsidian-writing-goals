@@ -1,19 +1,26 @@
 <script lang="ts">
     import { LinkedChart, LinkedLabel} from "svelte-tiny-linked-charts"
-    import { goalHistory } from "../stores/goal-store";
+    import { goalHistory, showProgressChart } from "../stores/goal-store";
     import { onDestroy, onMount } from "svelte";
-	import type WritingGoals from "../main";
-	import moment from "moment";
-	import type { GoalHistoryItem } from "../goal-history/history";
+    import type WritingGoals from "../main";
+    import moment from "moment";
+    import type { GoalHistoryItem } from "../goal-history/history";
 
     export let path: string;
     export let plugin: WritingGoals;
     export let data: any;
     export let dailyColor: string;
+    export let showProgress: boolean;
     let chartData:any;
+    let showChart: boolean;
 
     onMount(() => {
       chartData = data;
+      showChart = showProgress;
+    });
+
+    const unsubNShowProgressChart = showProgressChart.subscribe(val => {
+        showChart = val;
     });
 
     const unsubHistory = goalHistory.subscribe(val => {
@@ -35,7 +42,7 @@
 </script>
 
 
-{#if data != null}
+{#if data != null && showChart}
 <div class="linked-chart-container">
   <h3>Daily goal progress</h3>
   <div class="linked-chart-date-label">

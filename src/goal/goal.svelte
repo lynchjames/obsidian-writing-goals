@@ -148,6 +148,7 @@
           <Stats 
             {plugin}
             {path}
+            showProgress={plugin.settings.showProgressChart}
             dailyColor={dGColor}
             data={linkedChartData}></Stats>
         {/if}
