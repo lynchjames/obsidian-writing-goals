@@ -65,7 +65,7 @@
 
 <div class="linked-chart-container">
   <h3>Daily goal progress</h3>
-  <div class="linked-chart-date-lable" style="position: relative; margin-bottom: 25px">
+  <div class="linked-chart-date-label">
     <LinkedLabel linked="link-2"  />
   </div>
 
@@ -76,8 +76,7 @@
     valuePrepend=""
     valueAppend="words"  
     fill="{dailyColor}"
-    width={250}
-    height={80}
+    height={60}
     valuePosition="floating"
     align="left"
     />
