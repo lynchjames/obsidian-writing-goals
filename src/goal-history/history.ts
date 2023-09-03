@@ -109,9 +109,7 @@ export class GoalHistoryHelper {
 
     async getLinkedChartData(path:string){
         const heatmapData = await this.getStats(path);
-        console.log('transform input', heatmapData);
         const result = this.transformChartData(heatmapData);
-        console.log('transform result', result);
         return result;
     }
 

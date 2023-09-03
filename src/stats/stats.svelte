@@ -27,13 +27,11 @@
       if(val != null && val[path] != null){
         const allowNegativeGoalProgress = plugin.settings.allowNegativeGoalProgress;
         const historyItems = val[path] as GoalHistoryItem[]
-        console.log('tranform input from store', historyItems);
         chartData = Object.fromEntries(historyItems.map(d => {
           const diff = d.endCount - d.startCount;
           const count = allowNegativeGoalProgress || diff >= 0 ? diff : 0; 
           return [moment(new Date(d.date)).format("ddd DD MMM YYYY"), count];
         }));
-        console.log('data for chart', chartData);
       }
     });
 
