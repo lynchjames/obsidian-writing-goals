@@ -2,7 +2,7 @@
   "id": "writing-goals",
   "name": "Writing Goals",
   "minAppVersion": "1.1.6",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Set dynamic writing goals for notes and folders in Obsidian.",
   "isDesktopOnly": false,
   "fundingUrl": "https://ko-fi.com/lynchjames"
