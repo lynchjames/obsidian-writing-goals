@@ -108,7 +108,11 @@ export class GoalHistoryHelper {
         return datesData;
     }
 
-
+    async getLinkedChartData(path:string){
+        const heatmapData = await this.getStats(path);
+        const result = Object.fromEntries(heatmapData.filter(d => d.value > 0).map(d => [moment(new Date(d.date)).format("ddd DD MMM YYYY"), d.value]));
+        return result;
+    }
 }
 
 export class HistoryStatsItem{

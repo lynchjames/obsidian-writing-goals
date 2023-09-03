@@ -7,6 +7,7 @@ import type WritingGoals from '../main';
 import GoalModal from '../modals/goal-modal';
 import type { GoalHistoryHelper, HistoryStatsItem } from '../goal-history/history';
 import moment from 'moment';
+import { noteGoals } from '../stores/goal-store';
 
 
 export default class GoalView extends ItemView {
@@ -17,6 +18,7 @@ export default class GoalView extends ItemView {
     plugin: WritingGoals;
     goal: any;
     historyHelper: GoalHistoryHelper;
+    linkedListData: { [k: string]: number; };
 
     constructor(leaf: WorkspaceLeaf, plugin: WritingGoals, historyHelper:GoalHistoryHelper){
         super(leaf);
@@ -64,14 +66,9 @@ export default class GoalView extends ItemView {
 
     }
 
-    getLinkedChartData(data: HistoryStatsItem[]){
-        const result = Object.fromEntries(data.filter(d => d.value > 0).map(d => [moment(new Date(d.date)).format("ddd DD MMM YYYY"), d.value]));
-        return result;
-    }
-
     async setGoal() {
-        const heatmapData = await this.historyHelper.getStats(this.path);
-        const linkedListData = this.getLinkedChartData(heatmapData);
+    
+        const linkedChartData = await this.historyHelper.getLinkedChartData(this.path);
         const customGoalBarColor = this.plugin.settings.customGoalBarColor;
         const customDailyGoalBarColor = this.plugin.settings.customDailyGoalBarColor;
 
@@ -88,8 +85,7 @@ export default class GoalView extends ItemView {
                 mode: 'full',
                 color: customGoalBarColor,
                 dailyColor: customDailyGoalBarColor,
-                heatmapData: heatmapData,
-                linkedChartData: linkedListData,
+                linkedChartData: linkedChartData,
                 rootEl: this.containerEl
             },
         });    
