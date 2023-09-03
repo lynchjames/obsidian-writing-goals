@@ -25,6 +25,12 @@ Using the same file explorer and command palette commands, you can also set a da
 
 The name for the frontmatter property is `daily-word-goal` by default. You can change the property name in the plugin settings.
 
+### Goal stats
+If you have a daily goal, in the plugin settings you can enable goal progress stats to be displayed as a [bar chart](https://mitcheljager.github.io/svelte-tiny-linked-charts) below the goal:
+
+![](./images/daily-goal-stats.png)
+
+
 ## Updating a goal
 You can update goals in 3 ways:
 1. Using the add/update command.
