@@ -1,4 +1,5 @@
 .writing-goals-container {
+    margin: auto;
     max-width: 400px;
     cursor: pointer;
 }
