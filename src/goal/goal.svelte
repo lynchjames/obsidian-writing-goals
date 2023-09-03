@@ -144,14 +144,14 @@
           <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
         </svg>
         <GoalSummary bind:this={summaryChildRef} goal={goal} percent={percent} dailyPercent={dailyPercent} color={gColor} dailyColor={dGColor} />
+        {#if goal.dailyGoalCount > 0}
+          <Stats 
+            {plugin}
+            {path}
+            dailyColor={dGColor}
+            data={linkedChartData}></Stats>
+        {/if}
       </div>
-      {#if goal.dailyGoalCount > 0}
-        <Stats 
-          {plugin}
-          {path}
-          dailyColor={dGColor}
-          data={linkedChartData}></Stats>
-      {/if}
     {/if}
     {#if mode == 'simple'}
       <div class="writing-goals-simple-container" data-path="{path}">

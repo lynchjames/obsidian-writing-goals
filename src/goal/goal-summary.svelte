@@ -32,23 +32,23 @@
 </style>
 
 {#if showMessage}
-    {#if goal.dailyGoalCount > 0}
-    <h3>
-        {#if dailyPercent >= 100}
-        {goal.dailyGoalCount.toLocaleString()} <span class="note-daily-goal note-goal-completed">daily word goal</span> completed!
-        {:else}
-        {goal.dailyGoalCount.toLocaleString()} <span class="note-daily-goal" style="{getColorStyle(dailyColor)}">daily word goal</span>
-        {/if}
-    </h3>
-    {/if}
     {#if goal.goalCount > 0}
-        <h3>
+    <h3>
         {#if percent >= 100}
             {goal.goalCount.toLocaleString()} <span class="note-goal note-goal-completed">word goal completed!</span>
         {:else}
             {getOverallGoalCountText(goal)} {goal.goalCount.toLocaleString()}&nbsp;<span class="note-goal" style="{getColorStyle(color)}">word goal</span> 
         {/if}
-        </h3>
+    </h3>
+    {/if}
+    {#if goal.dailyGoalCount > 0}
+    <h3>
+        {#if dailyPercent >= 100}
+            {goal.dailyGoalCount.toLocaleString()} <span class="note-daily-goal note-goal-completed">daily word goal</span> completed!
+        {:else}
+            {goal.dailyGoalCount.toLocaleString()} <span class="note-daily-goal" style="{getColorStyle(dailyColor)}">daily word goal</span>
+        {/if}
+    </h3>
     {/if}
 {/if}
 

@@ -10,7 +10,6 @@
     export let plugin: WritingGoals;
     export let data: any;
     export let dailyColor: string;
-
     let chartData:any;
 
     onMount(() => {
@@ -19,9 +18,14 @@
 
     const unsubHistory = goalHistory.subscribe(val => {
       if(val != null && val[path] != null){
+        const allowNegativeGoalProgress = plugin.settings.allowNegativeGoalProgress;
         const historyItems = val[path] as GoalHistoryItem[]
         console.log('tranform input from store', historyItems);
-        chartData = Object.fromEntries(historyItems.map(d => [moment(new Date(d.date)).format("ddd DD MMM YYYY"), d.endCount - d.startCount]));
+        chartData = Object.fromEntries(historyItems.map(d => {
+          const diff = d.endCount - d.startCount;
+          const count = allowNegativeGoalProgress || diff >= 0 ? diff : 0; 
+          return [moment(new Date(d.date)).format("ddd DD MMM YYYY"), count];
+        }));
         console.log('data for chart', chartData);
       }
     });
@@ -42,11 +46,13 @@
   data={chartData}
   linked="link-2"
   showValue
+  barMinWidth={6}
   valuePrepend=""
   valueAppend="words"  
   fill="{dailyColor}"
   valuePosition="floating"
   align="left"
+  transition={500}
   />
 </div>
 {/if}
