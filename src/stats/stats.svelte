@@ -40,25 +40,25 @@
 </script>
 
 {#if data != null && showChart}
-<div class="linked-chart-container">
-  <h3>Daily goal progress</h3>
-  <div class="linked-chart-date-label">
-    <LinkedLabel linked={`${path}-link-2`} />
+  <div class="linked-chart-container">
+    <h3>Daily goal progress</h3>
+    <div class="linked-chart-date-label">
+      <LinkedLabel linked={`${path}-link-2`} />
+    </div>
+      
+    <LinkedChart 
+      uid={path}
+      data={chartData}
+      linked={`${path}-link-2`}
+      showValue
+      fadeOpacity={0.25}
+      barMinWidth={5}
+      valuePrepend=""
+      valueAppend="words"  
+      fill="{dailyColor}"
+      valuePosition="floating"
+      align="left"
+      transition={500}
+    />
   </div>
-    
-  <LinkedChart 
-  uid={path}
-  data={chartData}
-  linked={`${path}-link-2`}
-  showValue
-  fadeOpacity={0.25}
-  barMinWidth={4}
-  valuePrepend=""
-  valueAppend="words"  
-  fill="{dailyColor}"
-  valuePosition="floating"
-  align="left"
-  transition={500}
-  />
-</div>
 {/if}
