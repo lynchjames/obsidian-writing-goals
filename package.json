@@ -29,6 +29,7 @@
 	"dependencies": {
 		"@rollup/plugin-commonjs": "^25.0.4",
 		"@rollup/plugin-node-resolve": "^15.2.1",
-		"remove-markdown": "^0.5.0"
+		"remove-markdown": "^0.5.0",
+		"svelte-tiny-linked-charts": "^1.4.1"
 	}
 }

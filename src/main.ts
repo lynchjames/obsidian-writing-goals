@@ -7,21 +7,23 @@ import {
 } from 'obsidian';
 
 import { WritingGoalsSettings } from './settings/settings';
-import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL } from './constants';
+import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS } from './constants';
 import GoalView from './goal/goal-view';
 import { WritingGoalsSettingsTab } from './settings/settings-tab';
 import { SettingsHelper } from './settings/settings-helper';
 import { NoteGoalHelper, Notes } from './note-goal';
 import { ObsidianFileHelper } from './IO/obsidian-file';
-import { noteGoals } from './stores/goal-store';
+import { goalHistory, noteGoals } from './stores/goal-store';
 import GoalTargetModal from './modals/goal-target-modal';
 import GoalModal from './modals/goal-modal';
 import { FileLabels } from './goal/file-labels';
 import { GoalHistoryHelper } from './goal-history/history';
+import StatsView from './stats/stats-view';
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
   goalView: GoalView | undefined;
+  statsView: StatsView | undefined;
   fileLabels: FileLabels;
   fileHelper: ObsidianFileHelper = new ObsidianFileHelper(this.settings);
   goalHistoryHelper: GoalHistoryHelper;
@@ -38,7 +40,7 @@ export default class WritingGoals extends Plugin {
     this.setupCommands();
     this.registerView(
       VIEW_TYPE_GOAL,
-      (leaf) => this.goalView = new GoalView(leaf, this)
+      (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
     );
     this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
     this.setupEvents();
@@ -73,7 +75,7 @@ export default class WritingGoals extends Plugin {
           new GoalTargetModal(this.app, new GoalModal(this.app, this.settings, this.goalHistoryHelper), this).open();
         },
         hotkeys: []
-      });  
+      });   
     }
 
     setupEvents() {
@@ -229,6 +231,7 @@ export default class WritingGoals extends Plugin {
         notes[folderGoal.path] = goal;
       }
       noteGoals.set(notes);
+      goalHistory.set(await this.goalHistoryHelper.loadHistory());
       if(requiresGoalLabelUpdate){
         await this.fileLabels.initFileLabels(pathForLabel);
       }

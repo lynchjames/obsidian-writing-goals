@@ -55,11 +55,11 @@
 }
 
 .wg-bar, .wg-simple .wg-bar {
-    transition: stroke-dashoffset 1s linear;
+    transition: stroke-dashoffset 0.5s linear;
 }
 
 .wg-daily-bar, .wg-goals-simple .wg-daily-bar {
-    transition: stroke-dashoffset 1s linear;
+    transition: stroke-dashoffset 0.5s linear;
 }
 
 .wg-background, .wg-daily-background {
@@ -77,4 +77,32 @@
 .writing-goals-simple {
     fill: var(--background-primary);
     max-width: 50px;
+}
+
+
+/* STATS */
+
+.linked-chart-container {
+    background-color: var(--background-primary);
+    border-radius: 8px;
+    height: 120px;
+    max-width: 550px;
+    margin-top: 8px;
+    padding: 4px 20px 32px 20px;
+    position: relative;
+}
+
+.linked-chart-container svg {
+    width: 100%;
+}
+
+.linked-chart-date-label {
+    text-align: center;
+}
+
+.linked-chart-container h3, .linked-chart-container h4 {
+    color: var(--color-text-title);
+    font-size: 1em;
+    margin: 4px 0;
+    text-align: center;
 }

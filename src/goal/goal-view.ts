@@ -5,7 +5,9 @@ import { GOAL_ICON, VIEW_TYPE_GOAL } from '../constants';
 import { ObsidianFileHelper } from '../IO/obsidian-file';
 import type WritingGoals from '../main';
 import GoalModal from '../modals/goal-modal';
-import type { GoalHistoryHelper } from '../goal-history/history';
+import type { GoalHistoryHelper, HistoryStatsItem } from '../goal-history/history';
+import moment from 'moment';
+import { noteGoals } from '../stores/goal-store';
 
 
 export default class GoalView extends ItemView {
@@ -15,11 +17,14 @@ export default class GoalView extends ItemView {
     path:string;
     plugin: WritingGoals;
     goal: any;
+    historyHelper: GoalHistoryHelper;
+    linkedListData: { [k: string]: number; };
 
-    constructor(leaf: WorkspaceLeaf, plugin: WritingGoals){
+    constructor(leaf: WorkspaceLeaf, plugin: WritingGoals, historyHelper:GoalHistoryHelper){
         super(leaf);
         this.plugin = plugin;
         this.fileHelper = new ObsidianFileHelper(this.plugin.settings);
+        this.historyHelper = historyHelper;
     }
 
     getViewType(): string {
@@ -34,7 +39,7 @@ export default class GoalView extends ItemView {
         return GOAL_ICON;
     }
     
-    onload(): void {
+    async onload(): Promise<void> {
         if(this.goal != undefined){
             return;
         }
@@ -43,25 +48,31 @@ export default class GoalView extends ItemView {
             return;
         }
         this.path = path; 
-        this.setGoal();
+        await this.setGoal();
     }
 
     async onOpen() {
-        this.setGoal();
+        await this.setGoal();
     }
 
     async updatePath(path:string) {
         this.plugin.settings.goalLeaves.push(path);
         this.plugin.saveData(this.plugin.settings);
         this.path = path;
-        this.setGoal();
+        await this.setGoal();
     }
 
     async onClose() {
 
     }
 
-    setGoal() {
+    async setGoal() {
+    
+        const linkedChartData = await this.historyHelper.getLinkedChartData(this.path);
+        const customGoalBarColor = this.plugin.settings.customGoalBarColor;
+        const customDailyGoalBarColor = this.plugin.settings.customDailyGoalBarColor;
+
+        //Goal svelte componet creation must happen immediately after existing component is destroyed.
         if(this.goal != null) {
             this.goal.$destroy();
         }
@@ -72,8 +83,9 @@ export default class GoalView extends ItemView {
                 app: this.app,
                 path: this.path,
                 mode: 'full',
-                color: this.plugin.settings.customGoalBarColor,
-                dailyColor: this.plugin.settings.customDailyGoalBarColor,
+                color: customGoalBarColor,
+                dailyColor: customDailyGoalBarColor,
+                linkedChartData: linkedChartData,
                 rootEl: this.containerEl
             },
         });    
