@@ -39,7 +39,6 @@
     
 </script>
 
-
 {#if data != null && showChart}
 <div class="linked-chart-container">
   <h3>Daily goal progress</h3>
