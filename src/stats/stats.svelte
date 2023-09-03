@@ -48,7 +48,7 @@
   linked={`${path}-link-2`}
   showValue
   fadeOpacity={0.25}
-  barMinWidth={6}
+  barMinWidth={4}
   valuePrepend=""
   valueAppend="words"  
   fill="{dailyColor}"
