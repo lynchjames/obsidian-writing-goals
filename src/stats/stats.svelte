@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { LinkedChart, LinkedLabel, LinkedValue} from "svelte-tiny-linked-charts"
+    import { LinkedChart, LinkedLabel} from "svelte-tiny-linked-charts"
     import { goalHistory } from "../stores/goal-store";
     import { onDestroy, onMount } from "svelte";
 	import type WritingGoals from "../main";
 	import moment from "moment";
-	import type { GoalHistoryItem, HistoryStatsItem } from "../goal-history/history";
+	import type { GoalHistoryItem } from "../goal-history/history";
 
     export let path: string;
     export let plugin: WritingGoals;
@@ -39,13 +39,15 @@
 <div class="linked-chart-container">
   <h3>Daily goal progress</h3>
   <div class="linked-chart-date-label">
-    <LinkedLabel linked="link-2"  />
+    <LinkedLabel linked={`${path}-link-2`} />
   </div>
     
   <LinkedChart 
+  uid={path}
   data={chartData}
-  linked="link-2"
+  linked={`${path}-link-2`}
   showValue
+  fadeOpacity={0.25}
   barMinWidth={6}
   valuePrepend=""
   valueAppend="words"  

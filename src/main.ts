@@ -42,10 +42,6 @@ export default class WritingGoals extends Plugin {
       VIEW_TYPE_GOAL,
       (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
     );
-    // this.registerView(
-    //   VIEW_TYPE_STATS,
-    //   (leaf) => this.statsView = new StatsView(leaf, this, this.goalHistoryHelper)
-    // );
     this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
     this.setupEvents();
     }
@@ -79,20 +75,7 @@ export default class WritingGoals extends Plugin {
           new GoalTargetModal(this.app, new GoalModal(this.app, this.settings, this.goalHistoryHelper), this).open();
         },
         hotkeys: []
-      });  
-
-      this.addCommand({
-        id: 'app:writing-goal-stats',
-        name: 'View writing goal stats',
-        callback: async () => {
-          const statsLeaf = await this.app.workspace.getRightLeaf(false);
-            await statsLeaf.setViewState({
-              type: VIEW_TYPE_STATS,
-              active: true
-            });
-        },
-        hotkeys: []
-      }); 
+      });   
     }
 
     setupEvents() {

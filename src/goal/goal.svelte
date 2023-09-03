@@ -2,7 +2,7 @@
     import  GoalSummary from './goal-summary.svelte';
     import  Stats from '../stats/stats.svelte';
     import { onDestroy, onMount } from "svelte";
-	  import { dailyGoalColor, goalColor, goalHistory, noteGoals, showGoalMessage } from '../stores/goal-store';
+	  import { dailyGoalColor, goalColor, noteGoals } from '../stores/goal-store';
 	  import type { NoteGoal, Notes } from '../note-goal';
 	  import type { App } from 'obsidian';
 	  import type WritingGoals from '../main';
@@ -143,7 +143,7 @@
           <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{getWordCount(goal)}</text>
           <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
         </svg>
-        <GoalSummary bind:this={summaryChildRef} goal={goal} percent={percent} dailyPercent={dailyPercent} color={gColor} dailyColor={dGColor} />
+        <GoalSummary goal={goal} percent={percent} dailyPercent={dailyPercent} color={gColor} dailyColor={dGColor} />
         {#if goal.dailyGoalCount > 0}
           <Stats 
             {plugin}
