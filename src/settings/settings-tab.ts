@@ -7,13 +7,13 @@ import type WritingGoals from '../main';
 import { FileLabels } from '../goal/file-labels';
 import { dailyGoalColor, goalColor, showGoalMessage, showProgressChart } from '../stores/goal-store';
 import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
-  
+
   export class WritingGoalsSettingsTab extends PluginSettingTab {
     plugin: WritingGoals;
     fileLabels: FileLabels;
     defaultGoalColor: string;
     defaultDailyGoalColor: string;
-    
+
     constructor(app: App, plugin: WritingGoals) {
       super(app, plugin);
       this.plugin = plugin;
@@ -22,12 +22,12 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
 
     display(): void {
       const { containerEl } = this;
-  
+
       containerEl.empty();
       new Setting(containerEl)
         .setName('Display goals in file explorer')
         .setDesc('Display note and folder goals in the file explorer')
-        .addToggle(toggle => 
+        .addToggle(toggle =>
           toggle
             .setValue(this.plugin.settings.showInFileExplorer)
             .onChange(async (value:boolean) => {
@@ -39,7 +39,7 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
       new Setting(containerEl)
         .setName('Display goal message')
         .setDesc('Display a summary message below the progress for the current goal')
-        .addToggle(toggle => 
+        .addToggle(toggle =>
           toggle
             .setValue(this.plugin.settings.showGoalMessage)
             .onChange(async (value:boolean) => {
@@ -51,7 +51,7 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
       new Setting(containerEl)
         .setName('Display daily goal stas')
         .setDesc('Display a bar chart for goal history below the progress for the current goal')
-        .addToggle(toggle => 
+        .addToggle(toggle =>
           toggle
             .setValue(this.plugin.settings.showProgressChart)
             .onChange(async (value:boolean) => {
@@ -63,7 +63,7 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
       new Setting(containerEl)
         .setName('Display single goal view')
         .setDesc('Disaply a single view for the goal progress. This setting should be enabled on mobile devices with small screens.')
-        .addToggle(toggle => 
+        .addToggle(toggle =>
           toggle
             .setValue(this.plugin.settings.showSingleGoalView)
             .onChange(async (value:boolean) => {
@@ -79,7 +79,7 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
       new Setting(containerEl)
       .setName('Display goal on create')
       .setDesc('Display the goal progress view when you create or update the goal')
-      .addToggle(toggle => 
+      .addToggle(toggle =>
         toggle
           .setValue(this.plugin.settings.showGoalOnCreateAndUpdate)
           .onChange(async (value:boolean) => {
@@ -90,7 +90,7 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
       new Setting(containerEl)
         .setName('Allow negative daily goal progress')
         .setDesc('Negative daily progress counts will be displayed if less words are in a note or under a folder than at the start of the day')
-        .addToggle(toggle => 
+        .addToggle(toggle =>
           toggle
             .setValue(this.plugin.settings.allowNegativeGoalProgress)
             .onChange(async (value:boolean) => {
@@ -101,8 +101,8 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
 
       new Setting(containerEl)
       .setName('Exclude comments')
-      .setDesc('Exclude markdown (%% %%) and HTML (<!-- --!>) comments when counting words')
-      .addToggle(toggle => 
+      .setDesc('Exclude markdown (%% %%) and HTML (<!-- -->) comments when counting words')
+      .addToggle(toggle =>
         toggle
           .setValue(this.plugin.settings.excludeComments)
           .onChange(async (value:boolean) => {
@@ -113,7 +113,7 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
       new Setting(containerEl)
       .setName('Goal frontmatter property name')
       .setDesc('The name for the frontmatter property to use for note goals (changing this setting will not update existing frontmatter)')
-      .addText(text => 
+      .addText(text =>
         text
           .setValue(this.plugin.settings.customGoalFrontmatterKey)
           .onChange(async (value:string) => {
@@ -125,7 +125,7 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
       new Setting(containerEl)
       .setName('Daily goal frontmatter property name')
       .setDesc('The name for the frontmatter property to use for daily note goals (changing this setting will not update existing frontmatter)')
-      .addText(text => 
+      .addText(text =>
         text
           .setValue(this.plugin.settings.customDailyGoalFrontmatterKey)
           .onChange(async (value:string) => {
@@ -137,16 +137,16 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
         const colorSetting = new Setting(containerEl)
           .setName('Goal progress bar color')
           .setDesc('Set a custom color for the goal progress bar')
-          .addButton(button => 
+          .addButton(button =>
             button
             .setIcon("lucide-rotate-ccw")
             .onClick(evt => {
               const input = colorSetting.controlEl.children[1] as HTMLInputElement;
               input.value = GOAL_BAR_COLOR;
               input.trigger("change");
-              
+
             }))
-            .addColorPicker(color => 
+            .addColorPicker(color =>
             color
               .setValue(this.plugin.settings.customGoalBarColor)
               .onChange(async (value:string) => {
@@ -160,15 +160,15 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
         const dailyColorSetting = new Setting(containerEl)
         .setName('Daily goal progress bar color')
         .setDesc('Set a custom color for the daily goal progress bar')
-        .addButton(button => 
+        .addButton(button =>
           button
           .setIcon("lucide-rotate-ccw")
           .onClick(evt => {
             const input = dailyColorSetting.controlEl.children[1] as HTMLInputElement;
             input.value = DAILY_GOAL_BAR_COLOR;
-            input.trigger("change");          
+            input.trigger("change");
           }))
-        .addColorPicker(color => 
+        .addColorPicker(color =>
           color
             .setValue(this.plugin.settings.customDailyGoalBarColor)
             .onChange(async (value:string) => {
