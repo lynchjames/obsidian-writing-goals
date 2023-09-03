@@ -127,11 +127,11 @@
     {#if mode == 'full'}
       <!-- svelte-ignore a11y-no-static-element-interactions -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}" on:click={onGoalClick}>
+      <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
         <h3 class="title">
           <span class="goal-note-title">{goal.title}</span>
         </h3>
-        <svg class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <svg on:click={onGoalClick} class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
           <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
             stroke-dashoffset="{progress}"></circle>

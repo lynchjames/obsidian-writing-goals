@@ -51,7 +51,7 @@
       data={chartData}
       linked={`${path}-link-2`}
       showValue
-      fadeOpacity={0.25}
+      fadeOpacity={0.4}
       barMinWidth={5}
       valuePrepend=""
       valueAppend="words"  
