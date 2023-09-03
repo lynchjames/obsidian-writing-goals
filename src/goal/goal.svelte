@@ -2,18 +2,16 @@
     import  GoalSummary from './goal-summary.svelte';
     import  Stats from '../stats/stats.svelte';
     import { onDestroy, onMount } from "svelte";
-	  import { dailyGoalColor, goalColor, noteGoals, showGoalMessage } from '../stores/goal-store';
+	  import { dailyGoalColor, goalColor, goalHistory, noteGoals, showGoalMessage } from '../stores/goal-store';
 	  import type { NoteGoal, Notes } from '../note-goal';
 	  import type { App } from 'obsidian';
 	  import type WritingGoals from '../main';
-	  import type { HistoryStatsItem } from '../goal-history/history';
     export let mode: string;
     export let path: string;
     export let color: string;
     export let dailyColor: string;
     export let plugin: WritingGoals;
     export let app: App;
-    export let heatMapData: HistoryStatsItem[];
     export let linkedChartData: any;
 
     let statsChildRef;
@@ -44,7 +42,6 @@
         progress = calculateProgress(90, percent);
         dailyProgress = calculateProgress(75, dailyPercent);
         simpleDailyProgress = calculateProgress(50, dailyPercent);
-
     });
 
     const unsubGoalColor = goalColor.subscribe(val => {
@@ -150,10 +147,9 @@
       </div>
       {#if goal.dailyGoalCount > 0}
         <Stats 
-          bind:this={statsChildRef}
+          {plugin}
           {path}
           dailyColor={dGColor}
-          {heatMapData}
           data={linkedChartData}></Stats>
       {/if}
     {/if}

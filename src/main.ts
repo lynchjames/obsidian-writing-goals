@@ -13,7 +13,7 @@ import { WritingGoalsSettingsTab } from './settings/settings-tab';
 import { SettingsHelper } from './settings/settings-helper';
 import { NoteGoalHelper, Notes } from './note-goal';
 import { ObsidianFileHelper } from './IO/obsidian-file';
-import { noteGoals } from './stores/goal-store';
+import { goalHistory, noteGoals } from './stores/goal-store';
 import GoalTargetModal from './modals/goal-target-modal';
 import GoalModal from './modals/goal-modal';
 import { FileLabels } from './goal/file-labels';
@@ -248,6 +248,7 @@ export default class WritingGoals extends Plugin {
         notes[folderGoal.path] = goal;
       }
       noteGoals.set(notes);
+      goalHistory.set(await this.goalHistoryHelper.loadHistory());
       if(requiresGoalLabelUpdate){
         await this.fileLabels.initFileLabels(pathForLabel);
       }

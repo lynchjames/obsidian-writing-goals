@@ -67,12 +67,12 @@ export class GoalHistoryHelper {
     }
 
     async saveGoal(path:string, item:GoalHistoryItem) {
-        const goalHistory = await this.loadHistory();
-        let historyForPath = goalHistory[path] ?? [];
+        const history = await this.loadHistory();
+        let historyForPath = history[path] ?? [];
         historyForPath = historyForPath.filter(ghi => ghi.date != item.date);
         historyForPath.push(item);
-        goalHistory[path] = historyForPath;
-        await this.goalFile.saveJson(GOAL_HISTORY_PATH, goalHistory);
+        history[path] = historyForPath;
+        await this.goalFile.saveJson(GOAL_HISTORY_PATH, history);
     }
 
     async resetDailyProgress(path: string) {
@@ -97,12 +97,11 @@ export class GoalHistoryHelper {
         const history = await this.loadHistory();
         let datesData = [];
         for(let historyPath in history){
-            if(path != null && path != historyPath){
-                continue;
+            if(path == null || path == historyPath){
+                const item = history[historyPath];
+                const dateCounts = item.map((i) => new HistoryStatsItem(i.date, i.endCount - i.startCount));
+                datesData.push(...dateCounts);
             }
-            const item = history[historyPath];
-            const dateCounts = item.map((i) => new HistoryStatsItem(i.date, i.endCount - i.startCount));
-            datesData.push(...dateCounts);
         }
         datesData = datesData.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
         return datesData;
@@ -110,8 +109,14 @@ export class GoalHistoryHelper {
 
     async getLinkedChartData(path:string){
         const heatmapData = await this.getStats(path);
-        const result = Object.fromEntries(heatmapData.filter(d => d.value > 0).map(d => [moment(new Date(d.date)).format("ddd DD MMM YYYY"), d.value]));
+        console.log('transform input', heatmapData);
+        const result = this.transformChartData(heatmapData);
+        console.log('transform result', result);
         return result;
+    }
+
+    transformChartData(data: any[]) {
+        return Object.fromEntries(data.map(d => [moment(new Date(d.date)).format("ddd DD MMM YYYY"), d.value]));
     }
 }
 
