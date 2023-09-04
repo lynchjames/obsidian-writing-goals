@@ -18,6 +18,7 @@
     let summaryChildRef;
     let goals: Notes;
     let goal: NoteGoal;
+    let currentIndex: number;
     let percent: number = 0;
     let dailyPercent: number = 0;
     let progress: number = 0;
@@ -36,12 +37,8 @@
           return;
         }
         goals = val;
+        currentIndex = Object.keys(goals).indexOf(path);
         updateGoal();
-        percent = getPercent(goal.wordCount, goal.goalCount);
-        dailyPercent = getPercent(getDailyDifference(goal), goal.dailyGoalCount);
-        progress = calculateProgress(90, percent);
-        dailyProgress = calculateProgress(75, dailyPercent);
-        simpleDailyProgress = calculateProgress(50, dailyPercent);
     });
 
     const unsubGoalColor = goalColor.subscribe(val => {
@@ -65,8 +62,31 @@
       }
     })
     
-    function updateGoal() {
-      goal = goals[path];      
+    function updateGoal(cursor?:number) {
+      const keys = Object.keys(goals);
+      console.log('cursor', cursor);
+      console.log('index before calc', currentIndex);
+      if(cursor){
+        currentIndex += cursor;
+        console.log('cal', currentIndex);
+        if(currentIndex < 0){
+          currentIndex = keys.length - 1;
+        }
+        if(currentIndex > keys.length - 1) {
+          currentIndex = 0;
+        }
+      }
+      console.log('index', currentIndex);
+      goal = goals[keys[currentIndex]];      
+      load();
+    }
+
+    function load() {
+      percent = getPercent(goal.wordCount, goal.goalCount);
+      dailyPercent = getPercent(getDailyDifference(goal), goal.dailyGoalCount);
+      progress = calculateProgress(90, percent);
+      dailyProgress = calculateProgress(75, dailyPercent);
+      simpleDailyProgress = calculateProgress(50, dailyPercent);
     }
 
     function calculateProgress(rad, per) {
@@ -117,6 +137,14 @@
       plugin.openGoalModal(fileOrFolder);
     }
 
+    function onNextClick() {
+      updateGoal(1)
+    }
+
+    function onPrevClick() {
+      updateGoal(-1)
+    }
+
 </script>
 
 <style>
@@ -128,6 +156,7 @@
       <!-- svelte-ignore a11y-no-static-element-interactions -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
+        <span on:click={onPrevClick}>Prev</span> <span on:click={onNextClick}>Next</span>
         <h3 class="title">
           <span class="goal-note-title">{goal.title}</span>
         </h3>
