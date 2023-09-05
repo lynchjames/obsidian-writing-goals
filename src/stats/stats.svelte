@@ -7,7 +7,7 @@
 
     export let path: string;
     export let data: HistoryStatsItem[];
-    export let dailyColor: string;
+    export let color: string;
     export let showProgress: boolean;
     export let onHistoryUpdate: (val:GoalHistory) => any;
     let chartData:any;
@@ -55,7 +55,7 @@
       barMinWidth={5}
       valuePrepend=""
       valueAppend="words"  
-      fill="{dailyColor}"
+      fill="{color}"
       valuePosition="floating"
       align="left"
       transition={500}

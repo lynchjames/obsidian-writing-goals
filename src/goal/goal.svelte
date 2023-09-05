@@ -161,14 +161,12 @@
         <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
       </svg>
       <GoalSummary goal={goal} percent={percent} dailyPercent={dailyPercent} color={gColor} dailyColor={dGColor} />
-      {#if goal.dailyGoalCount > 0}
         <Stats 
           {path}
           showProgress={showProgressChart}
-          dailyColor={dGColor}
+          color={goal.dailyGoalCount > 0 ? dGColor : gColor}
           data={chartData}
           onHistoryUpdate={onHistoryUpdate}
             />
-      {/if}
     </div>
 {/if}
