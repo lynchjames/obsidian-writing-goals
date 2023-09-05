@@ -7,7 +7,7 @@ import {
 } from 'obsidian';
 
 import { WritingGoalsSettings } from './settings/settings';
-import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS } from './constants';
+import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL } from './constants';
 import GoalView from './goal/goal-view';
 import { WritingGoalsSettingsTab } from './settings/settings-tab';
 import { SettingsHelper } from './settings/settings-helper';
@@ -18,12 +18,10 @@ import GoalTargetModal from './modals/goal-target-modal';
 import GoalModal from './modals/goal-modal';
 import { FileLabels } from './goal/file-labels';
 import { GoalHistoryHelper } from './goal-history/history';
-import StatsView from './stats/stats-view';
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
   goalView: GoalView | undefined;
-  statsView: StatsView | undefined;
   fileLabels: FileLabels;
   fileHelper: ObsidianFileHelper = new ObsidianFileHelper(this.settings);
   goalHistoryHelper: GoalHistoryHelper;

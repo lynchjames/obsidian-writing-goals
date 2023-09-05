@@ -1,41 +1,40 @@
 <script lang="ts">
     import { LinkedChart, LinkedLabel} from "svelte-tiny-linked-charts"
-    import { goalHistory, showProgressChart } from "../stores/goal-store";
+    import { goalHistory, noteGoals, showProgressChart } from "../stores/goal-store";
     import { onDestroy, onMount } from "svelte";
-    import type WritingGoals from "../main";
-    import moment from "moment";
-    import type { GoalHistoryItem } from "../goal-history/history";
+  	import type { GoalHistory } from "../goal-history/history";
+	import { HistoryStatsItem } from "../goal-history/history-stats";
 
     export let path: string;
-    export let plugin: WritingGoals;
-    export let data: any;
+    export let data: HistoryStatsItem[];
     export let dailyColor: string;
     export let showProgress: boolean;
+    export let onHistoryUpdate: (val:GoalHistory) => any;
     let chartData:any;
     let showChart: boolean;
 
     onMount(() => {
-      chartData = data;
+      chartData = transform(data);
       showChart = showProgress;
     });
 
-    const unsubNShowProgressChart = showProgressChart.subscribe(val => {
+    const unsubShowProgressChart = showProgressChart.subscribe(val => {
         showChart = val;
     });
-
+    
     const unsubHistory = goalHistory.subscribe(val => {
-      if(val != null && val[path] != null){
-        const allowNegativeGoalProgress = plugin.settings.allowNegativeGoalProgress;
-        const historyItems = val[path] as GoalHistoryItem[]
-        chartData = Object.fromEntries(historyItems.map(d => {
-          const diff = d.endCount - d.startCount;
-          const count = allowNegativeGoalProgress || diff >= 0 ? diff : 0; 
-          return [moment(new Date(d.date)).format("ddd DD MMM YYYY"), count];
-        }));
+      if(val) {
+        const data = onHistoryUpdate(val);
+        chartData = transform(data[path]);
       }
     });
-
+    
+    onDestroy(unsubShowProgressChart);
     onDestroy(unsubHistory);
+
+    function transform(stats: HistoryStatsItem[]) {
+      return stats ? Object.fromEntries(stats.map(s => [s.date, s.value])) : {};
+    }
     
 </script>
 

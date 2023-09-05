@@ -2,6 +2,7 @@ import type { App } from "obsidian";
 import Goal from './goal.svelte';
 import type { WritingGoalsSettings } from "../settings/settings";
 import { LABEL_PATH_DATA_ATTR, VIEW_TYPE_FILE_EXPLORER } from "../constants";
+import { HistoryStatsItems } from "../goal-history/history-stats";
 
 interface FileItem {
 	titleEl?: HTMLElement;
@@ -38,10 +39,14 @@ export class FileLabels {
                       new Goal({
                           target: itemEl,
                           props: {
-                          path: path,
-                          mode: 'simple',
-                          color: this.settings.customGoalBarColor,
-                          dailyColor: this.settings.customDailyGoalBarColor,
+                            path: path,
+                            mode: 'simple',
+                            color: this.settings.customGoalBarColor,
+                            dailyColor: this.settings.customDailyGoalBarColor,
+                            linkedChartData: new HistoryStatsItems(),
+                            showProgressChart: false,
+                            onGoalClick: undefined,
+                            onHistoryUpdate: undefined
                           },
                       });
                   }

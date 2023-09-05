@@ -2,28 +2,22 @@ import { ItemView, WorkspaceLeaf } from 'obsidian';
 import Goal from './goal.svelte';
 import type { WritingGoalsSettings } from '../settings/settings';
 import { GOAL_ICON, VIEW_TYPE_GOAL } from '../constants';
-import { ObsidianFileHelper } from '../IO/obsidian-file';
 import type WritingGoals from '../main';
-import GoalModal from '../modals/goal-modal';
-import type { GoalHistoryHelper, HistoryStatsItem } from '../goal-history/history';
-import moment from 'moment';
-import { noteGoals } from '../stores/goal-store';
+import type { GoalHistory, GoalHistoryHelper } from '../goal-history/history';
 
 
 export default class GoalView extends ItemView {
    
-    fileHelper: ObsidianFileHelper;
     settings: WritingGoalsSettings;
     path:string;
     plugin: WritingGoals;
     goal: any;
     historyHelper: GoalHistoryHelper;
-    linkedListData: { [k: string]: number; };
+    linkedListData: { [key: string]: number; };
 
-    constructor(leaf: WorkspaceLeaf, plugin: WritingGoals, historyHelper:GoalHistoryHelper){
+    constructor(leaf: WorkspaceLeaf, plugin:WritingGoals, historyHelper:GoalHistoryHelper){
         super(leaf);
         this.plugin = plugin;
-        this.fileHelper = new ObsidianFileHelper(this.plugin.settings);
         this.historyHelper = historyHelper;
     }
 
@@ -62,15 +56,24 @@ export default class GoalView extends ItemView {
         await this.setGoal();
     }
 
-    async onClose() {
+    onGoalClick = (path:string) => {
+        const fileOrFolder = this.app.vault.getAbstractFileByPath(path);
+        this.plugin.openGoalModal(fileOrFolder);
+    }
 
+    onHistoryUpdate = (val: GoalHistory) => {
+        if(val != null){
+            const historyStats = this.historyHelper.transformHistory(val);
+            return historyStats;
+        }
     }
 
     async setGoal() {
     
-        const linkedChartData = await this.historyHelper.getLinkedChartData(this.path);
-        const customGoalBarColor = this.plugin.settings.customGoalBarColor;
-        const customDailyGoalBarColor = this.plugin.settings.customDailyGoalBarColor;
+        const linkedChartData = await this.historyHelper.getStats();
+        const {customGoalBarColor, customDailyGoalBarColor, showProgressChart} = this.plugin.settings;
+        const onGoalClick = this.onGoalClick;
+        const onHistoryUpdate = this.onHistoryUpdate;
 
         //Goal svelte componet creation must happen immediately after existing component is destroyed.
         if(this.goal != null) {
@@ -79,15 +82,15 @@ export default class GoalView extends ItemView {
         this.goal = new Goal({
             target: (this as any).contentEl,
             props: {
-                plugin: this.plugin,
-                app: this.app,
                 path: this.path,
                 mode: 'full',
                 color: customGoalBarColor,
                 dailyColor: customDailyGoalBarColor,
                 linkedChartData: linkedChartData,
-                rootEl: this.containerEl
-            },
+                showProgressChart: showProgressChart,
+                onGoalClick: onGoalClick,
+                onHistoryUpdate: onHistoryUpdate
+            }
         });    
     }
 }

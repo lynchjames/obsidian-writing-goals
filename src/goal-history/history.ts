@@ -1,7 +1,8 @@
 import type { App } from "obsidian";
 import { WritingGoalsFile } from "../IO/file";
+import { HistoryStatsItem, HistoryStatsItems } from "./history-stats";
 import { DEFAULT_GOAL_HISTORY_PATH as GOAL_HISTORY_PATH } from "../constants";
-import moment, { type Moment } from "moment";
+import moment from "moment";
 import type { WritingGoalsSettings } from "../settings/settings";
 
 export interface GoalHistoryItem
@@ -95,35 +96,31 @@ export class GoalHistoryHelper {
 
     async getStats(path?:string) {
         const history = await this.loadHistory();
-        let datesData = [];
+        return this.transformHistory(history, path);
+    }
+
+    transformHistory(history: GoalHistory, path?:string) {
+        const transformResult = new HistoryStatsItems();
         for(let historyPath in history){
             if(path == null || path == historyPath){
                 const item = history[historyPath];
-                const dateCounts = item.map((i) => new HistoryStatsItem(i.date, i.endCount - i.startCount));
-                datesData.push(...dateCounts);
+                transformResult[historyPath] = [];
+                const sortedDateCounts = item.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+                const statsItems = sortedDateCounts
+                    .map(d => new HistoryStatsItem(
+                            historyPath, 
+                            moment(new Date(d.date)).format("ddd DD MMM YYYY"), 
+                            this.calculateWordsWritten(d)
+                        ));
+                transformResult[historyPath].push(...statsItems);
             }
         }
-        datesData = datesData.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-        return datesData;
+        return transformResult;
     }
 
-    async getLinkedChartData(path:string){
-        const heatmapData = await this.getStats(path);
-        const result = this.transformChartData(heatmapData);
-        return result;
-    }
-
-    transformChartData(data: any[]) {
-        return Object.fromEntries(data.map(d => [moment(new Date(d.date)).format("ddd DD MMM YYYY"), d.value]));
-    }
-}
-
-export class HistoryStatsItem{
-    date: string;
-    value: number;
-
-    constructor(date:string, value:number) {
-        this.date = date;
-        this.value = value;
+    calculateWordsWritten(item: GoalHistoryItem) {
+        const diff = item.endCount - item.startCount;
+        const count = this.settings.allowNegativeGoalProgress || diff >= 0 ? diff : 0;
+        return count;
     }
 }

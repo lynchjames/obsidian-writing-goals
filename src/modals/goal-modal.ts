@@ -1,4 +1,4 @@
-import { App, Modal, Setting, TAbstractFile, TFile, TFolder, TextComponent } from "obsidian";
+import { App, Modal, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
 import  { NoteGoalHelper } from "../note-goal";
 import type WritingGoals from "../main";
 import { SettingsHelper } from "../settings/settings-helper";

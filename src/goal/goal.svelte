@@ -1,23 +1,26 @@
 <script lang="ts">
+    import Nav from './nav.svelte';
     import  GoalSummary from './goal-summary.svelte';
     import  Stats from '../stats/stats.svelte';
     import { onDestroy, onMount } from "svelte";
 	  import { dailyGoalColor, goalColor, noteGoals } from '../stores/goal-store';
 	  import type { NoteGoal, Notes } from '../note-goal';
-	  import type { App } from 'obsidian';
-	  import type WritingGoals from '../main';
+	  import type { GoalHistory } from '../goal-history/history';
+	import type { HistoryStatsItem, HistoryStatsItems } from '../goal-history/history-stats';
+    
     export let mode: string;
     export let path: string;
     export let color: string;
     export let dailyColor: string;
-    export let plugin: WritingGoals;
-    export let app: App;
-    export let linkedChartData: any;
+    export let linkedChartData: HistoryStatsItems;
+    export let showProgressChart: boolean;
+    export let onGoalClick: (path:string) => void;
+    export let onHistoryUpdate: (val:GoalHistory) => any;
 
-    let statsChildRef;
-    let summaryChildRef;
     let goals: Notes;
+    let keys: string[];
     let goal: NoteGoal;
+    let chartData: HistoryStatsItem[];
     let currentIndex: number;
     let percent: number = 0;
     let dailyPercent: number = 0;
@@ -30,6 +33,7 @@
     onMount(() => {
       gColor = color;
       dGColor = dailyColor;
+      chartData = linkedChartData[path];
     })
 
     const unsubNoteGoals = noteGoals.subscribe(val => {
@@ -37,7 +41,8 @@
           return;
         }
         goals = val;
-        currentIndex = Object.keys(goals).indexOf(path);
+        keys = Object.keys(goals);
+        currentIndex = keys.indexOf(path);
         updateGoal();
     });
 
@@ -52,23 +57,10 @@
     onDestroy(unsubNoteGoals);
     onDestroy(unsubGoalColor);
     onDestroy(unsubDailyGoalColor);
-
-    onDestroy(() => {
-      if(statsChildRef) {
-        statsChildRef.$destroy();
-      }
-      if(summaryChildRef) {
-        summaryChildRef.$destroy();
-      }
-    })
     
     function updateGoal(cursor?:number) {
-      const keys = Object.keys(goals);
-      console.log('cursor', cursor);
-      console.log('index before calc', currentIndex);
       if(cursor){
         currentIndex += cursor;
-        console.log('cal', currentIndex);
         if(currentIndex < 0){
           currentIndex = keys.length - 1;
         }
@@ -76,12 +68,13 @@
           currentIndex = 0;
         }
       }
-      console.log('index', currentIndex);
-      goal = goals[keys[currentIndex]];      
-      load();
+      path = keys[currentIndex];
+      goal = goals[path];     
+      chartData = linkedChartData ? linkedChartData[path] : []; 
+      loadGoal();
     }
 
-    function load() {
+    function loadGoal() {
       percent = getPercent(goal.wordCount, goal.goalCount);
       dailyPercent = getPercent(getDailyDifference(goal), goal.dailyGoalCount);
       progress = calculateProgress(90, percent);
@@ -132,17 +125,16 @@
       return goal.dailyGoalCount > 0 ? 'words today' : 'words'; 
     }
 
-    function onGoalClick() {
-      const fileOrFolder = app.vault.getAbstractFileByPath(path);
-      plugin.openGoalModal(fileOrFolder);
-    }
-
     function onNextClick() {
       updateGoal(1)
     }
 
-    function onPrevClick() {
+    function onPreviousClick() {
       updateGoal(-1)
+    }
+
+    function onClick() {
+      onGoalClick(path);
     }
 
 </script>
@@ -156,11 +148,8 @@
       <!-- svelte-ignore a11y-no-static-element-interactions -->
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
-        <span on:click={onPrevClick}>Prev</span> <span on:click={onNextClick}>Next</span>
-        <h3 class="title">
-          <span class="goal-note-title">{goal.title}</span>
-        </h3>
-        <svg on:click={onGoalClick} class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <Nav showArrows={keys.length > 1} goal={goal} onNextClick={onNextClick} onPreviousClick={onPreviousClick} />
+        <svg on:click={onClick} class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
           <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
             stroke-dashoffset="{progress}"></circle>
@@ -175,11 +164,12 @@
         <GoalSummary goal={goal} percent={percent} dailyPercent={dailyPercent} color={gColor} dailyColor={dGColor} />
         {#if goal.dailyGoalCount > 0}
           <Stats 
-            {plugin}
             {path}
-            showProgress={plugin.settings.showProgressChart}
+            showProgress={showProgressChart}
             dailyColor={dGColor}
-            data={linkedChartData}></Stats>
+            data={chartData}
+            onHistoryUpdate={onHistoryUpdate}
+             />
         {/if}
       </div>
     {/if}
