@@ -1,5 +1,5 @@
 import type { App } from "obsidian";
-import Goal from './goal.svelte';
+import SimpleGoal from './simple-goal.svelte';
 import type { WritingGoalsSettings } from "../settings/settings";
 import { LABEL_PATH_DATA_ATTR, VIEW_TYPE_FILE_EXPLORER } from "../constants";
 import { HistoryStatsItems } from "../goal-history/history-stats";
@@ -36,17 +36,12 @@ export class FileLabels {
               const item = fileItems[path];
               const itemEl = item ? (item.titleEl ?? item.selfEl) : undefined;
               if(item && itemEl && !this.hasLabelInChildren(itemEl)) {
-                      new Goal({
+                      new SimpleGoal({
                           target: itemEl,
                           props: {
                             path: path,
-                            mode: 'simple',
                             color: this.settings.customGoalBarColor,
                             dailyColor: this.settings.customDailyGoalBarColor,
-                            linkedChartData: new HistoryStatsItems(),
-                            showProgressChart: false,
-                            onGoalClick: undefined,
-                            onHistoryUpdate: undefined
                           },
                       });
                   }

@@ -1,10 +1,4 @@
 <script lang="ts">
-    import  GoalSummary from './goal-summary.svelte';
-    import  Stats from '../stats/stats.svelte';
-    import { onDestroy, onMount } from "svelte";
-    import { dailyGoalColor, goalColor, noteGoals } from '../stores/goal-store';
-    import type { NoteGoal, Notes } from '../note-goal';
-	  
     export let direction: string;
     export let onClick: () => void;
 

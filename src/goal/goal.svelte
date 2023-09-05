@@ -6,9 +6,8 @@
 	  import { dailyGoalColor, goalColor, noteGoals } from '../stores/goal-store';
 	  import type { NoteGoal, Notes } from '../note-goal';
 	  import type { GoalHistory } from '../goal-history/history';
-	import type { HistoryStatsItem, HistoryStatsItems } from '../goal-history/history-stats';
+	  import type { HistoryStatsItem, HistoryStatsItems } from '../goal-history/history-stats';
     
-    export let mode: string;
     export let path: string;
     export let color: string;
     export let dailyColor: string;
@@ -126,11 +125,11 @@
     }
 
     function onNextClick() {
-      updateGoal(1)
+      updateGoal(1);
     }
 
     function onPreviousClick() {
-      updateGoal(-1)
+      updateGoal(-1);
     }
 
     function onClick() {
@@ -144,47 +143,32 @@
 </style>
 
 {#if goal && (goal.goalCount > 0 || goal.dailyGoalCount > 0)}
-    {#if mode == 'full'}
-      <!-- svelte-ignore a11y-no-static-element-interactions -->
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
-        <Nav showArrows={keys.length > 1} goal={goal} onNextClick={onNextClick} onPreviousClick={onPreviousClick} />
-        <svg on:click={onClick} class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
-          <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
-            stroke-dashoffset="{progress}"></circle>
-            {#if goal.dailyGoalCount > 0}
-            <circle class="wg-daily-background {getDailyCompletedClass(dailyPercent)}" r="75" cx="100" cy="100"></circle>
-              <circle class="wg-daily-bar" r="75" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="471.23" stroke-linecap="{getLineCap(dailyPercent)}" 
-                stroke="{dGColor}" stroke-dashoffset="{dailyProgress}"></circle>
-            {/if}
-          <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{getWordCount(goal)}</text>
-          <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
-        </svg>
-        <GoalSummary goal={goal} percent={percent} dailyPercent={dailyPercent} color={gColor} dailyColor={dGColor} />
-        {#if goal.dailyGoalCount > 0}
-          <Stats 
-            {path}
-            showProgress={showProgressChart}
-            dailyColor={dGColor}
-            data={chartData}
-            onHistoryUpdate={onHistoryUpdate}
-             />
-        {/if}
-      </div>
-    {/if}
-    {#if mode == 'simple'}
-      <div class="writing-goals-simple-container" data-path="{path}">
-        <svg class="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
-          <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" 
-          stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" stroke-dashoffset="{progress}"></circle>
-           {#if goal.dailyGoalCount > 0}
-              <circle r="50" class="wg-daily-background {getDailyCompletedClass(dailyPercent)}"  cx="100" cy="100"></circle>
-              <circle class="wg-daily-bar" r="50" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="314.15" stroke-linecap="{getLineCap(dailyPercent)}" 
-                stroke="{dGColor}" stroke-dashoffset="{simpleDailyProgress}"></circle>
-            {/if}
-        </svg>
-        </div>
-    {/if}
+
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
+      <Nav showArrows={keys.length > 1} goal={goal} onNextClick={onNextClick} onPreviousClick={onPreviousClick} />
+      <svg on:click={onClick} class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
+        <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
+          stroke-dashoffset="{progress}"></circle>
+          {#if goal.dailyGoalCount > 0}
+          <circle class="wg-daily-background {getDailyCompletedClass(dailyPercent)}" r="75" cx="100" cy="100"></circle>
+            <circle class="wg-daily-bar" r="75" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="471.23" stroke-linecap="{getLineCap(dailyPercent)}" 
+              stroke="{dGColor}" stroke-dashoffset="{dailyProgress}"></circle>
+          {/if}
+        <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{getWordCount(goal)}</text>
+        <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
+      </svg>
+      <GoalSummary goal={goal} percent={percent} dailyPercent={dailyPercent} color={gColor} dailyColor={dGColor} />
+      {#if goal.dailyGoalCount > 0}
+        <Stats 
+          {path}
+          showProgress={showProgressChart}
+          dailyColor={dGColor}
+          data={chartData}
+          onHistoryUpdate={onHistoryUpdate}
+            />
+      {/if}
+    </div>
 {/if}

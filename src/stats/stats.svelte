@@ -1,9 +1,9 @@
 <script lang="ts">
     import { LinkedChart, LinkedLabel} from "svelte-tiny-linked-charts"
-    import { goalHistory, noteGoals, showProgressChart } from "../stores/goal-store";
+    import { goalHistory, showProgressChart } from "../stores/goal-store";
     import { onDestroy, onMount } from "svelte";
   	import type { GoalHistory } from "../goal-history/history";
-	import { HistoryStatsItem } from "../goal-history/history-stats";
+	  import { HistoryStatsItem } from "../goal-history/history-stats";
 
     export let path: string;
     export let data: HistoryStatsItem[];
@@ -14,9 +14,10 @@
     let showChart: boolean;
 
     onMount(() => {
-      chartData = transform(data);
       showChart = showProgress;
-    });
+    })
+
+    $: transform(data);
 
     const unsubShowProgressChart = showProgressChart.subscribe(val => {
         showChart = val;
@@ -24,8 +25,8 @@
     
     const unsubHistory = goalHistory.subscribe(val => {
       if(val) {
-        const data = onHistoryUpdate(val);
-        chartData = transform(data[path]);
+        const updatedData = onHistoryUpdate(val);
+        transform(updatedData[path]);
       }
     });
     
@@ -33,14 +34,14 @@
     onDestroy(unsubHistory);
 
     function transform(stats: HistoryStatsItem[]) {
-      return stats ? Object.fromEntries(stats.map(s => [s.date, s.value])) : {};
+      chartData = stats ? Object.fromEntries(stats.map(s => [s.date, s.value])) : {};
     }
     
 </script>
 
-{#if data != null && showChart}
+{#if data && showChart}
   <div class="linked-chart-container">
-    <h3>Daily goal progress</h3>
+    <h3>Goal progress</h3>
     <div class="linked-chart-date-label">
       <LinkedLabel linked={`${path}-link-2`} />
     </div>
