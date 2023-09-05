@@ -120,7 +120,7 @@ export default class GoalModal extends Modal {
         const wordCount = await this.noteGoalHelper.getWordCount(target);
         await this.goalHistoryHelper.updateGoalForToday(target.path, goalCount, dailyGoalCount, wordCount)
         if(target instanceof TFolder){
-            settings.folderGoals.filter(fg => fg.path != target.path);
+            settings.folderGoals = settings.folderGoals.filter(fg => fg.path != target.path);
             settings.folderGoals.push({path:target.path, goalCount:goalCount, dailyGoalCount:dailyGoalCount});
             settings.folderGoals = [...new Set(settings.folderGoals)];
             await plugin.saveData(settings);
