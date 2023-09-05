@@ -72,7 +72,6 @@ export default class GoalView extends ItemView {
     
         const linkedChartData = await this.historyHelper.getStats();
         const {customGoalBarColor, customDailyGoalBarColor, showProgressChart} = this.plugin.settings;
-        const onUpdatePath = this.onUpdatePath;
         const onGoalClick = this.onGoalClick;
         const onHistoryUpdate = this.onHistoryUpdate;
 
