@@ -6,40 +6,26 @@
 	  import { HistoryStatsItem } from "../goal-history/history-stats";
 
     export let path: string;
-    export let data: HistoryStatsItem[];
+    // export let data: HistoryStatsItem[];
+    export let chartData:any;
     export let color: string;
     export let showProgress: boolean;
-    export let onHistoryUpdate: (val:GoalHistory) => any;
-    let chartData:any;
+    // export let onHistoryUpdate: (val:GoalHistory) => any;
     let showChart: boolean;
 
     onMount(() => {
       showChart = showProgress;
     })
 
-    $: transform(data);
-
     const unsubShowProgressChart = showProgressChart.subscribe(val => {
         showChart = val;
     });
     
-    const unsubHistory = goalHistory.subscribe(val => {
-      if(val) {
-        const updatedData = onHistoryUpdate(val);
-        transform(updatedData[path]);
-      }
-    });
-    
     onDestroy(unsubShowProgressChart);
-    onDestroy(unsubHistory);
-
-    function transform(stats: HistoryStatsItem[]) {
-      chartData = stats ? Object.fromEntries(stats.map(s => [s.date, s.value])) : {};
-    }
     
 </script>
 
-{#if data && showChart}
+{#if chartData && showChart}
   <div class="linked-chart-container">
     <h3>Goal progress</h3>
     <div class="linked-chart-date-label">

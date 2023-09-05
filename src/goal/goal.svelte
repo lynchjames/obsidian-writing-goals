@@ -3,7 +3,7 @@
     import  GoalSummary from './goal-summary.svelte';
     import  Stats from '../stats/stats.svelte';
     import { onDestroy, onMount } from "svelte";
-	  import { dailyGoalColor, goalColor, noteGoals } from '../stores/goal-store';
+	  import { dailyGoalColor, goalColor, goalHistory, noteGoals } from '../stores/goal-store';
 	  import type { NoteGoal, Notes } from '../note-goal';
 	  import type { GoalHistory } from '../goal-history/history';
 	  import type { HistoryStatsItem, HistoryStatsItems } from '../goal-history/history-stats';
@@ -19,7 +19,7 @@
     let goals: Notes;
     let keys: string[];
     let goal: NoteGoal;
-    let chartData: HistoryStatsItem[];
+    let chartData: any;
     let currentIndex: number;
     let percent: number = 0;
     let dailyPercent: number = 0;
@@ -32,8 +32,9 @@
     onMount(() => {
       gColor = color;
       dGColor = dailyColor;
-      chartData = linkedChartData[path];
     })
+
+    $: transform(linkedChartData[path]);
 
     const unsubNoteGoals = noteGoals.subscribe(val => {
         if(!val[path]){
@@ -45,6 +46,12 @@
         updateGoal();
     });
 
+    const unsubHistory = goalHistory.subscribe(val => {
+      if(val) {
+        linkedChartData = onHistoryUpdate(val);
+      }
+    });
+
     const unsubGoalColor = goalColor.subscribe(val => {
       gColor = val
     });
@@ -54,8 +61,13 @@
     });
 
     onDestroy(unsubNoteGoals);
+    onDestroy(unsubHistory);
     onDestroy(unsubGoalColor);
     onDestroy(unsubDailyGoalColor);
+
+    function transform(stats: HistoryStatsItem[]) {
+      chartData = stats ? Object.fromEntries(stats.map(s => [s.date, s.value])) : {};
+    }
     
     function updateGoal(cursor?:number) {
       if(cursor){
@@ -69,7 +81,6 @@
       }
       path = keys[currentIndex];
       goal = goals[path];     
-      chartData = linkedChartData ? linkedChartData[path] : []; 
       loadGoal();
     }
 
@@ -165,8 +176,7 @@
           {path}
           showProgress={showProgressChart}
           color={goal.dailyGoalCount > 0 ? dGColor : gColor}
-          data={chartData}
-          onHistoryUpdate={onHistoryUpdate}
-            />
+          chartData={chartData}
+          />
     </div>
 {/if}
