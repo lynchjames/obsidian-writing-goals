@@ -23,7 +23,7 @@ export class WritingGoalsFile {
     }
   
     async saveJson<T>(path: string, data: T): Promise<void> {
-      const dataToSave = JSON.stringify(data);
+      const dataToSave = JSON.stringify(data, null, 2);
       await this.app.vault.adapter.write(path, dataToSave);
     }
 
