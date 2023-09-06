@@ -1,6 +1,7 @@
 <script lang="ts">
     export let direction: string;
     export let onClick: () => void;
+    export let isMobile: boolean;
 
 </script>
 
@@ -8,6 +9,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   class="arrow"
+  class:is-mobile="{isMobile}"
   class:right="{direction === 'right'}"
   on:click="{onClick}"
 >

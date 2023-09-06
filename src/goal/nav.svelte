@@ -4,6 +4,7 @@
     
     export let showArrows: boolean;
     export let goal: NoteGoal;
+    export let isMobile: boolean;
     export let onPreviousClick: () => void;
     export let onNextClick: () => void;
 
@@ -12,7 +13,7 @@
 <div class="nav">
     <div>
         {#if showArrows}
-            <Arrow onClick={onPreviousClick} direction="left" /> 
+            <Arrow onClick={onPreviousClick} {isMobile} direction="left" /> 
         {/if}
     </div>
     <h3 class="title">
@@ -20,7 +21,7 @@
     </h3>
     <div>
         {#if showArrows}
-            <Arrow onClick={onNextClick} direction="right" /> 
+            <Arrow onClick={onNextClick} {isMobile} direction="right" /> 
         {/if}
     </div>
 </div>

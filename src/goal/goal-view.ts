@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf } from 'obsidian';
+import { ItemView, WorkspaceLeaf, Platform } from 'obsidian';
 import Goal from './goal.svelte';
 import type { WritingGoalsSettings } from '../settings/settings';
 import { GOAL_ICON, VIEW_TYPE_GOAL } from '../constants';
@@ -69,9 +69,9 @@ export default class GoalView extends ItemView {
     }
 
     async setGoal() {
-    
         const linkedChartData = await this.historyHelper.getStats();
         const {customGoalBarColor, customDailyGoalBarColor, showProgressChart} = this.plugin.settings;
+        const isMobile = Platform.isMobile;
         const onGoalClick = this.onGoalClick;
         const onHistoryUpdate = this.onHistoryUpdate;
 
@@ -83,6 +83,7 @@ export default class GoalView extends ItemView {
             target: (this as any).contentEl,
             props: {
                 path: this.path,
+                isMobile: isMobile,
                 color: customGoalBarColor,
                 dailyColor: customDailyGoalBarColor,
                 linkedChartData: linkedChartData,
