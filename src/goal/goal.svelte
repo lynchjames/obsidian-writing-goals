@@ -149,10 +149,6 @@
 
 </script>
 
-<style>
-
-</style>
-
 {#if goal && (goal.goalCount > 0 || goal.dailyGoalCount > 0)}
 
     <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -180,3 +176,57 @@
           />
     </div>
 {/if}
+
+<style>
+  .writing-goals-container {
+      margin: auto;
+      max-width: 400px;
+      cursor: pointer;
+  }
+
+  .note-goal-completed .note-goal-text {
+      fill: var(--text-on-accent-inverted);
+      font-weight: bold;
+  }
+
+  .note-goal-text {
+      fill: var(--text-normal);
+  }
+
+  .writing-goals {
+      padding: 0 40px;
+  }
+
+  .writing-goals .wg-bar {
+      stroke-width: 18px;
+  }
+
+  .writing-goals .wg-daily-bar {
+      stroke-width: 10px;
+  }
+
+  .wg-daily-goal .writing-goals .wg-bar{
+      stroke-width: 10px;
+  }
+
+  .wg-bar, .wg-simple .wg-bar {
+      transition: stroke-dashoffset 0.5s linear;
+  }
+
+  .wg-daily-bar, .wg-daily-bar {
+      transition: stroke-dashoffset 0.5s linear;
+  }
+
+  .wg-background, .wg-daily-background {
+      fill: var(--background-primary);
+  }
+
+  .note-goal-completed, .daily-note-goal-completed {
+      fill: var(--background-modifier-success);
+  }
+
+  .workspace-split.mod-root .writing-goals .background {
+      fill: var(--background-secondary-alt);
+  }
+
+</style>

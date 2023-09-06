@@ -27,10 +27,6 @@
 
 </script>
 
-<style>
-
-</style>
-
 {#if showMessage}
     {#if goal.goalCount > 0}
     <h3>
@@ -52,3 +48,15 @@
     {/if}
 {/if}
 
+<style>
+    h3 {
+        color: var(--color-text-title);
+        text-align: center;
+        font-size: 1em;
+        margin: 4px 0;
+    }
+
+    .note-goal-completed {
+        color: var(--text-success);
+    }
+</style>

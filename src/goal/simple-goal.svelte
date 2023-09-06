@@ -90,10 +90,6 @@
 
 </script>
 
-<style>
-
-</style>
-
  <div class="writing-goals-simple-container" data-path="{path}">
     <svg class="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
         <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
@@ -107,3 +103,32 @@
     </svg>
 </div>
 
+<style>
+    .writing-goals-simple-container {
+        position: absolute;
+        width: 25px;
+        right: 6px;
+        top: 0px;
+    }
+    
+    .writing-goals-simple {
+        fill: var(--background-primary);
+        max-width: 50px;
+    }
+    
+    .writing-goals-simple .wg-bar { 
+      stroke-width: 22px;
+    }
+
+    .writing-goals-simple .wg-daily-bar {
+        stroke-width: 22px;
+    }
+
+    .wg-simple .wg-bar {
+        transition: stroke-dashoffset 0.5s linear;
+    }
+
+    .wg-goals-simple .wg-daily-bar {
+        transition: stroke-dashoffset 0.5s linear;
+    }
+</style>
