@@ -8,6 +8,9 @@
     export let color: string;
     export let showProgress: boolean;
     let showChart: boolean;
+    let compWidth: number;
+    
+    $: keyCount = Object.keys(chartData).length ?? 0;
 
     onMount(() => {
       showChart = showProgress;
@@ -24,7 +27,7 @@
 {#if chartData && showChart}
   <div class="linked-chart-container">
     <h3>Goal progress</h3>
-    <div class="linked-chart-date-label">
+    <div class="linked-chart-date-label" bind:clientWidth={compWidth}>
       <LinkedLabel linked={`${path}-link-2`} />
     </div>
       
@@ -34,15 +37,15 @@
       linked={`${path}-link-2`}
       showValue
       fadeOpacity={0.3}
-      barMinWidth={4}
-      gap={1}
+      barMinWidth={keyCount > 20 ? 0 : 6}
+      gap={keyCount > 50 ? 0 : 1}
+      grow={keyCount > 20}
       align="left"
       valuePrepend=""
       valueAppend="words"  
       barMinHeight={2}
       hideBarBelow={1}
       fill="{color}"
-      valuePosition="floating"
       transition={500}
     />
   </div>
@@ -52,14 +55,10 @@
   .linked-chart-container {
     background-color: var(--background-primary);
     border-radius: 8px;
-    height: 128px;
+    height: auto;
     max-width: 550px;
     margin-top: 8px;
-    padding: 4px 20px 32px 20px;
-    position: relative;
-}
-
-.linked-chart-container svg {
+    padding: 4px 20px 4px 20px;
     width: 100%;
 }
 

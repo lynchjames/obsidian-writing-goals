@@ -105,7 +105,9 @@ export class GoalHistoryHelper {
                 const item = history[historyPath];
                 transformResult[historyPath] = [];
                 const sortedDateCounts = item.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-                const statsItems = sortedDateCounts
+                // Limiting data for chart to a limited number of entries. Will need to change this for the dedicated stats view. 
+                const take = sortedDateCounts.reverse().slice(0, 90).reverse();
+                const statsItems = take
                     .map(d => new HistoryStatsItem(
                             historyPath, 
                             moment(new Date(d.date)).format("ddd DD MMM YYYY"), 

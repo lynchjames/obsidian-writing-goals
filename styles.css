@@ -1,3 +1,8 @@
-.writing-goals {
-    padding: 0 60px;
+.linked-chart-container svg {
+    width: 100%;
+    height: auto;
+}
+
+.linked-chart-container .tiny-linked-charts-value {
+    text-align: center;
 }
