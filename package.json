@@ -13,6 +13,7 @@
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@tsconfig/svelte": "^5.0.1",
+		"@types/remove-markdown": "^0.3.1",
 		"ignore-styles": "^5.0.1",
 		"obsidian": "latest",
 		"rollup": "^3.28.1",

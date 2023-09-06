@@ -1,16 +1,12 @@
 <script lang="ts">
     import { LinkedChart, LinkedLabel} from "svelte-tiny-linked-charts"
-    import { goalHistory, showProgressChart } from "../stores/goal-store";
+    import { showProgressChart } from "../stores/goal-store";
     import { onDestroy, onMount } from "svelte";
-  	import type { GoalHistory } from "../goal-history/history";
-	  import { HistoryStatsItem } from "../goal-history/history-stats";
 
     export let path: string;
-    // export let data: HistoryStatsItem[];
     export let chartData:any;
     export let color: string;
     export let showProgress: boolean;
-    // export let onHistoryUpdate: (val:GoalHistory) => any;
     let showChart: boolean;
 
     onMount(() => {
@@ -72,7 +68,7 @@
     text-align: center;
 }
 
-.linked-chart-container h3, .linked-chart-container h4 {
+.linked-chart-container h3 {
     color: var(--color-text-title);
     font-size: 1em;
     margin: 4px 0;

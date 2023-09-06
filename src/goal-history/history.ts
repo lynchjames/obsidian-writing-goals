@@ -15,7 +15,6 @@ export interface GoalHistoryItem
 }
 
 export class GoalHistory {
-    //Dictionary with path as the key and array of history items as the value
     [key: string]: GoalHistoryItem[]
 }
 
@@ -42,7 +41,7 @@ export class GoalHistoryHelper {
             return undefined;
         }
         const goalHistory = await this.loadHistory();
-        const item = await this.goalItemForDate(goalHistory, path, this.today());
+        const item = this.goalItemForDate(goalHistory, path, this.today());
         return item;
     }
 

@@ -12,9 +12,7 @@ interface FileItem {
 export class FileLabels {
     app: App;
     settings: WritingGoalsSettings;
-    /**
-     *
-     */
+
     constructor(app:App, settings:WritingGoalsSettings) {
         this.app = app;
         this.settings = settings;        
@@ -36,18 +34,22 @@ export class FileLabels {
               const item = fileItems[path];
               const itemEl = item ? (item.titleEl ?? item.selfEl) : undefined;
               if(item && itemEl && !this.hasLabelInChildren(itemEl)) {
-                      new SimpleGoal({
-                          target: itemEl,
-                          props: {
-                            path: path,
-                            color: this.settings.customGoalBarColor,
-                            dailyColor: this.settings.customDailyGoalBarColor,
-                          },
-                      });
+                      this.createSimpleGoal(itemEl, path);
                   }
               });
         }
       }
+
+    private createSimpleGoal(itemEl: HTMLElement, path: string) {
+      new SimpleGoal({
+        target: itemEl,
+        props: {
+          path: path,
+          color: this.settings.customGoalBarColor,
+          dailyColor: this.settings.customDailyGoalBarColor,
+        },
+      });
+    }
 
     resetFileLabels(fileItems:any, pathForLabel?:string) {
       for (let key in fileItems) {
