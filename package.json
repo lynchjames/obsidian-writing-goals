@@ -10,6 +10,8 @@
 	},
 	"devDependencies": {
 		"@rollup/plugin-typescript": "^11.1.2",
+		"@rollup/plugin-commonjs": "^25.0.4",
+		"@rollup/plugin-node-resolve": "^15.2.1",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
 		"@tsconfig/svelte": "^5.0.1",
@@ -19,6 +21,7 @@
 		"rollup": "^3.28.1",
 		"rollup-plugin-copy": "^3.4.0",
 		"rollup-plugin-svelte": "^7.1.6",
+		
 		"svelte": "^4.2.0",
 		"svelte-check": "^3.4.3",
 		"svelte-preprocess": "^5.0.4",
@@ -28,8 +31,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@rollup/plugin-commonjs": "^25.0.4",
-		"@rollup/plugin-node-resolve": "^15.2.1",
 		"remove-markdown": "^0.5.0",
 		"svelte-tiny-linked-charts": "^1.4.2"
 	}

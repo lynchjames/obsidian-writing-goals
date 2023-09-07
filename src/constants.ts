@@ -13,4 +13,4 @@ export const GOAL_BAR_COLOR = "#a882ff";
 export const DAILY_GOAL_BAR_COLOR = "#e9973f";
 
 export const DEFAULT_GOAL_HISTORY_PATH =
-  ".obsidian/plugins/writing-goals/goal-history.json";
+  "goal-history.json";

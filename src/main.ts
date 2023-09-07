@@ -31,7 +31,7 @@ export default class WritingGoals extends Plugin {
   
   async onload() {
     this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
-    this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings);
+    this.goalHistoryHelper = new GoalHistoryHelper(this);
     this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.fileLabels = new FileLabels(this.app, this.settings)
@@ -61,7 +61,7 @@ export default class WritingGoals extends Plugin {
         id: 'app:view-writing-goal',
         name: 'View writing goal for any note or folder',
         callback: async () => {
-          new GoalTargetModal(this.app, null, this).open();
+          new GoalTargetModal(this, null).open();
         },
         hotkeys: []
       });  
@@ -70,7 +70,7 @@ export default class WritingGoals extends Plugin {
         id: 'app:add-writing-goal',
         name: 'Add or update a writing goal for a note or folder',
         callback: async () => {
-          new GoalTargetModal(this.app, new GoalModal(this.app, this.settings, this.goalHistoryHelper), this).open();
+          new GoalTargetModal(this, new GoalModal(this, this.goalHistoryHelper)).open();
         },
         hotkeys: []
       });   
@@ -191,7 +191,7 @@ export default class WritingGoals extends Plugin {
     }
 
     async openGoalModal(fileOrFolder: TAbstractFile, openGoalOnSubmit?: boolean){
-      const modal = new GoalModal(this.app, this.settings, this.goalHistoryHelper);
+      const modal = new GoalModal(this, this.goalHistoryHelper);
       modal.init(this, fileOrFolder, openGoalOnSubmit);
       modal.open();
     }

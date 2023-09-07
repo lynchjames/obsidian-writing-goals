@@ -1,9 +1,10 @@
-import type { App } from "obsidian";
+import { type App, FileSystemAdapter } from "obsidian";
 import { WritingGoalsFile } from "../IO/file";
 import { HistoryStatsItem, HistoryStatsItems } from "./history-stats";
 import { DEFAULT_GOAL_HISTORY_PATH as GOAL_HISTORY_PATH } from "../constants";
 import moment from "moment";
 import type { WritingGoalsSettings } from "../settings/settings";
+import type WritingGoals from "../main";
 
 export interface GoalHistoryItem
 {
@@ -20,20 +21,36 @@ export class GoalHistory {
 
 export class GoalHistoryHelper {
     
+    plugin: WritingGoals;
+    app: App;
     goalFile: WritingGoalsFile;
     settings: WritingGoalsSettings;
 
-    constructor(app:App, settings:WritingGoalsSettings) {
-        this.settings = settings;
-        this.goalFile = new WritingGoalsFile(app);
+    constructor(plugin:WritingGoals) {
+        this.plugin = plugin;
+        this.app = this.plugin.app;
+        this.settings = this.plugin.settings;
+        this.goalFile = new WritingGoalsFile(this.plugin.app);
         this.init();
     }
 
     async init() {
         const historyExists = await this.historyExists();
         if(!historyExists) {
-            await this.goalFile.saveJson(GOAL_HISTORY_PATH, new GoalHistory);
+            if(this.app.vault.adapter instanceof FileSystemAdapter) {
+                await this.goalFile.saveJson(this.historyPath(), new GoalHistory);
+            }
         }
+    }
+
+    historyPath() {
+        const nodePath = require("path");
+        const historyPath = nodePath.join(this.plugin.manifest.dir!!, GOAL_HISTORY_PATH);
+        return historyPath;
+    }
+
+    async historyExists() {
+        return await this.goalFile.exists(this.historyPath());
     }
     
     async todaysGoalItem(path:string): Promise<GoalHistoryItem> {
@@ -47,7 +64,7 @@ export class GoalHistoryHelper {
 
 
     async loadHistory():Promise<GoalHistory> {
-        return await this.goalFile.loadJson(GOAL_HISTORY_PATH) as GoalHistory;
+        return await this.goalFile.loadJson(this.historyPath()) as GoalHistory;
     }
 
     async updateGoalForToday(path: string, goalCount: number, dailyGoalCount:number, wordCount: number) {
@@ -72,7 +89,7 @@ export class GoalHistoryHelper {
         historyForPath = historyForPath.filter(ghi => ghi.date != item.date);
         historyForPath.push(item);
         history[path] = historyForPath;
-        await this.goalFile.saveJson(GOAL_HISTORY_PATH, history);
+        await this.goalFile.saveJson(this.historyPath(), history);
     }
 
     async resetDailyProgress(path: string) {
@@ -87,10 +104,6 @@ export class GoalHistoryHelper {
 
     today(): string {
         return moment().startOf('day').toString();
-    }
-
-    async historyExists() {
-        return await this.goalFile.exists(GOAL_HISTORY_PATH);
     }
 
     async getStats(path?:string) {
@@ -110,6 +123,7 @@ export class GoalHistoryHelper {
                 const statsItems = take
                     .map(d => new HistoryStatsItem(
                             historyPath, 
+                            //TODO: Convert this format to a plugin setting
                             moment(new Date(d.date)).format("ddd DD MMM YYYY"), 
                             this.calculateWordsWritten(d)
                         ));

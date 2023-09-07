@@ -6,6 +6,7 @@ import { GoalHistoryHelper } from "../goal-history/history";
 import type { WritingGoalsSettings } from "../settings/settings";
 
 export default class GoalModal extends Modal {
+    plugin: WritingGoals;
     settings: WritingGoalsSettings;
     userSubmittedGoalCount: string = "0"
     userSubmittedDailyGoalCount: string = "0";
@@ -14,16 +15,16 @@ export default class GoalModal extends Modal {
     noteGoalHelper: NoteGoalHelper;
     openGoalOnSubmit: boolean = false;
     
-    constructor(app: App, settings:WritingGoalsSettings, goalHistoryHelper:GoalHistoryHelper) {
-        super(app);
-        this.settings = settings;
+    constructor(plugin:WritingGoals, goalHistoryHelper:GoalHistoryHelper) {
+        super(plugin.app);
+        this.plugin = plugin;
+        this.settings = this.plugin.settings;
         this.settingsHelper = new SettingsHelper();
         this.goalHistoryHelper = goalHistoryHelper;
         this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
-        this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings);
+        this.goalHistoryHelper = new GoalHistoryHelper(this.plugin);
     }
 
-    plugin: WritingGoals;
     target: TAbstractFile;
 
     init(plugin:WritingGoals, target: TAbstractFile, openGoalOnSubmit?:boolean){

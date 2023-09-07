@@ -20,8 +20,8 @@ export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
     plugin: WritingGoals;
     goalModal: GoalModal;
 
-    constructor(app: App, goalModal:GoalModal, plugin:WritingGoals) {
-        super(app);
+    constructor(plugin:WritingGoals, goalModal:GoalModal) {
+        super(plugin.app);
         this.goalModal = goalModal;
         this.plugin = plugin;
         this.settings = this.plugin.settings;
