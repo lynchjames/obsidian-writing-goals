@@ -72,6 +72,11 @@
       return per;
     }
 
+    function getPercentText(percent:number) {
+      const prefix = goal.dailyGoalCount > 0 ? "Daily goal" : "Goal";
+      return `${prefix} ${percent.toFixed(0)}% complete`;
+    }
+
     function getLineCap(per:number) {
       return  per < 95 ? 'round' : 'butt';
     }
@@ -90,7 +95,7 @@
 
 </script>
 
- <div class="writing-goals-simple-container" data-path="{path}">
+ <div class="writing-goals-simple-container" data-path="{path}" title="{getPercentText(percent)}">
     <svg class="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
         <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
         <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" 
