@@ -22,7 +22,7 @@ export default class GoalModal extends Modal {
         this.settingsHelper = new SettingsHelper();
         this.goalHistoryHelper = goalHistoryHelper;
         this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
-        this.goalHistoryHelper = new GoalHistoryHelper(this.plugin);
+        this.goalHistoryHelper = new GoalHistoryHelper(this.plugin.app, this.plugin.settings, this.plugin.manifest);
     }
 
     target: TAbstractFile;

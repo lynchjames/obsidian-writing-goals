@@ -1,4 +1,4 @@
-import { type App, FileSystemAdapter } from "obsidian";
+import { type App, FileSystemAdapter, type PluginManifest } from "obsidian";
 import { WritingGoalsFile } from "../IO/file";
 import { HistoryStatsItem, HistoryStatsItems } from "./history-stats";
 import { DEFAULT_GOAL_HISTORY_PATH as GOAL_HISTORY_PATH } from "../constants";
@@ -21,16 +21,16 @@ export class GoalHistory {
 
 export class GoalHistoryHelper {
     
-    plugin: WritingGoals;
     app: App;
-    goalFile: WritingGoalsFile;
     settings: WritingGoalsSettings;
+    manifest: PluginManifest;
+    goalFile: WritingGoalsFile;
 
-    constructor(plugin:WritingGoals) {
-        this.plugin = plugin;
-        this.app = this.plugin.app;
-        this.settings = this.plugin.settings;
-        this.goalFile = new WritingGoalsFile(this.plugin.app);
+    constructor(app:App, settings:WritingGoalsSettings, manifest:PluginManifest) {
+        this.app = app;
+        this.settings = settings;
+        this.manifest = manifest;
+        this.goalFile = new WritingGoalsFile(this.app);
         this.init();
     }
 
@@ -45,7 +45,7 @@ export class GoalHistoryHelper {
 
     historyPath() {
         const nodePath = require("path");
-        const historyPath = nodePath.join(this.plugin.manifest.dir!!, GOAL_HISTORY_PATH);
+        const historyPath = nodePath.join(this.manifest.dir!!, GOAL_HISTORY_PATH);
         return historyPath;
     }
 
