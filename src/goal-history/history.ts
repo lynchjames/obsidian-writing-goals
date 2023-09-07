@@ -4,7 +4,6 @@ import { HistoryStatsItem, HistoryStatsItems } from "./history-stats";
 import { DEFAULT_GOAL_HISTORY_PATH as GOAL_HISTORY_PATH } from "../constants";
 import moment from "moment";
 import type { WritingGoalsSettings } from "../settings/settings";
-import type WritingGoals from "../main";
 
 export interface GoalHistoryItem
 {

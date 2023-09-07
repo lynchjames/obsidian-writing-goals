@@ -2,7 +2,6 @@ import type { App } from "obsidian";
 import SimpleGoal from './simple-goal.svelte';
 import type { WritingGoalsSettings } from "../settings/settings";
 import { LABEL_PATH_DATA_ATTR, VIEW_TYPE_FILE_EXPLORER } from "../constants";
-import { HistoryStatsItems } from "../goal-history/history-stats";
 
 interface FileItem {
 	titleEl?: HTMLElement;
