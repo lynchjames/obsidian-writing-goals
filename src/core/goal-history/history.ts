@@ -1,5 +1,5 @@
 import { type App, FileSystemAdapter, type PluginManifest } from "obsidian";
-import { WritingGoalsFile } from "../IO/file";
+import { WritingGoalsFile } from "../../IO/file";
 import { HistoryStatsItem, HistoryStatsItems } from "./history-stats";
 import { DEFAULT_GOAL_HISTORY_PATH as GOAL_HISTORY_PATH } from "../constants";
 import moment from "moment";

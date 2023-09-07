@@ -1,5 +1,5 @@
 import type { App, TFile } from "obsidian";
-import type WritingGoals from "../main";
+import type WritingGoals from "../../main";
 
 export class SettingsHelper {
 

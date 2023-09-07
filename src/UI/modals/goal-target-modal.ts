@@ -1,6 +1,6 @@
 import { FuzzySuggestModal, TAbstractFile, TFile, type FuzzyMatch } from 'obsidian';
-import type { WritingGoalsSettings } from '../settings/settings';
-import type WritingGoals from '../main';
+import type { WritingGoalsSettings } from '../../core/settings/settings';
+import type WritingGoals from '../../main';
 import type GoalModal from './goal-modal';
 const EMPTY_TEXT = 'No files found to append content. Enter to create a new one.'
 const PLACEHOLDER_TEXT = 'Type file to append to or create';

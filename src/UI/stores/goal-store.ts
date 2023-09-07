@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
-import { Notes } from '../note-goal';
-import { GoalHistory } from '../goal-history/history';
+import { Notes } from '../../core/note-goal';
+import { GoalHistory } from '../../core/goal-history/history';
 
 export const noteGoals = writable(new Notes());
 export const goalHistory = writable(new GoalHistory());

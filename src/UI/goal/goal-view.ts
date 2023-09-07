@@ -1,9 +1,9 @@
 import { ItemView, WorkspaceLeaf, Platform } from 'obsidian';
 import Goal from './goal.svelte';
-import type { WritingGoalsSettings } from '../settings/settings';
-import { GOAL_ICON, VIEW_TYPE_GOAL } from '../constants';
-import type WritingGoals from '../main';
-import type { GoalHistory, GoalHistoryHelper } from '../goal-history/history';
+import type { WritingGoalsSettings } from '../../core/settings/settings';
+import { GOAL_ICON, VIEW_TYPE_GOAL } from '../../core/constants';
+import type WritingGoals from '../../main';
+import type { GoalHistory, GoalHistoryHelper } from '../../core/goal-history/history';
 
 
 export default class GoalView extends ItemView {

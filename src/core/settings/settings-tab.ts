@@ -3,9 +3,9 @@ import {
     PluginSettingTab,
     Setting
 } from 'obsidian';
-import type WritingGoals from '../main';
-import { FileLabels } from '../goal/file-labels';
-import { dailyGoalColor, goalColor, showGoalMessage, showProgressChart } from '../stores/goal-store';
+import type WritingGoals from '../../main';
+import { FileLabels } from '../../UI/goal/file-labels';
+import { dailyGoalColor, goalColor, showGoalMessage, showProgressChart } from '../../UI/stores/goal-store';
 import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
 
   export class WritingGoalsSettingsTab extends PluginSettingTab {

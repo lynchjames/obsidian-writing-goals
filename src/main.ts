@@ -6,18 +6,18 @@ import {
   TFolder
 } from 'obsidian';
 
-import { WritingGoalsSettings } from './settings/settings';
-import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL } from './constants';
-import GoalView from './goal/goal-view';
-import { WritingGoalsSettingsTab } from './settings/settings-tab';
-import { SettingsHelper } from './settings/settings-helper';
-import { NoteGoalHelper, Notes } from './note-goal';
+import { WritingGoalsSettings } from './core/settings/settings';
+import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL } from './core/constants';
+import GoalView from './UI/goal/goal-view';
+import { WritingGoalsSettingsTab } from './core/settings/settings-tab';
+import { SettingsHelper } from './core/settings/settings-helper';
+import { NoteGoalHelper, Notes } from './core/note-goal';
 import { ObsidianFileHelper } from './IO/obsidian-file';
-import { goalHistory, noteGoals } from './stores/goal-store';
-import GoalTargetModal from './modals/goal-target-modal';
-import GoalModal from './modals/goal-modal';
-import { FileLabels } from './goal/file-labels';
-import { GoalHistoryHelper } from './goal-history/history';
+import { goalHistory, noteGoals } from './UI/stores/goal-store';
+import GoalTargetModal from './UI/modals/goal-target-modal';
+import GoalModal from './UI/modals/goal-modal';
+import { FileLabels } from './UI/goal/file-labels';
+import { GoalHistoryHelper } from './core/goal-history/history';
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;

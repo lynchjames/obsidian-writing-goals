@@ -1,5 +1,5 @@
 import type { CachedMetadata } from "obsidian";
-import type { WritingGoalsSettings } from "../settings/settings";
+import type { WritingGoalsSettings } from "../core/settings/settings";
 import removeMd from 'remove-markdown';
 
 export class ObsidianFileHelper {

@@ -1,9 +1,9 @@
 import { TFile, TAbstractFile, App, TFolder } from "obsidian"
-import { ObsidianFileHelper } from "./IO/obsidian-file"
+import { ObsidianFileHelper } from "../IO/obsidian-file"
 import type { WritingGoalsSettings } from "./settings/settings"
-import type { GoalHistoryHelper } from "./goal-history/history"
+import type { GoalHistoryHelper } from "../core/goal-history/history"
 import { WORD_COUNT_INCLUDE_FRONTMATTER_KEY } from "./constants"
-import { FrontmatterHelper } from "./IO/frontmapper-helper"
+import { FrontmatterHelper } from "../IO/frontmapper-helper"
 
 export enum GoalType {
     Note,

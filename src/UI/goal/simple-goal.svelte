@@ -2,7 +2,7 @@
 
     import { onDestroy, onMount } from "svelte";
     import { dailyGoalColor, goalColor, noteGoals } from '../stores/goal-store';
-    import type { NoteGoal, Notes } from '../note-goal';
+    import type { NoteGoal, Notes } from '../../core/note-goal';
     
     export let path: string;
     export let color: string;

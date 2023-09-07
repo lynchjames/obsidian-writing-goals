@@ -1,9 +1,9 @@
-import { App, Modal, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
-import  { NoteGoalHelper } from "../note-goal";
-import type WritingGoals from "../main";
-import { SettingsHelper } from "../settings/settings-helper";
-import { GoalHistoryHelper } from "../goal-history/history";
-import type { WritingGoalsSettings } from "../settings/settings";
+import { Modal, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
+import  { NoteGoalHelper } from "../../core/note-goal";
+import type WritingGoals from "../../main";
+import { SettingsHelper } from "../../core/settings/settings-helper";
+import { GoalHistoryHelper } from "../../core/goal-history/history";
+import type { WritingGoalsSettings } from "../../core/settings/settings";
 
 export default class GoalModal extends Modal {
     plugin: WritingGoals;
