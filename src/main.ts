@@ -34,14 +34,23 @@ export default class WritingGoals extends Plugin {
     this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings, this.manifest);
     this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
-    this.fileLabels = new FileLabels(this.app, this.settings)
+    this.fileLabels = new FileLabels(this.app, this.settings);
     this.setupCommands();
     this.registerView(
       VIEW_TYPE_GOAL,
       (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
-    );
-    this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
-    this.setupEvents();
+      );
+      this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
+      this.setupEvents();
+      this.initialFrontmatterGoalIndex();
+    }
+
+    initialFrontmatterGoalIndex() {
+      const files = this.app.vault.getMarkdownFiles();
+      console.log(files.length);
+      files.forEach(async (file) => {
+        await this.settingsHelper.updateNoteGoalsInSettings(this, file);
+      });
     }
   
     setupCommands() {
@@ -89,7 +98,7 @@ export default class WritingGoals extends Plugin {
           if(file instanceof TFolder){
             return;
           }
-          const requiresGoalUpdate = await this.settingsHelper.updateNoteGoalsInSettings(this, file as TFile)
+          await this.settingsHelper.updateNoteGoalsInSettings(this, file as TFile);
           await this.loadNoteGoalData(true);
         }));
 
