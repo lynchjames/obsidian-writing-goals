@@ -49,7 +49,6 @@ export default class WritingGoals extends Plugin {
 
     initialFrontmatterGoalIndex() {
       const files = this.app.vault.getMarkdownFiles();
-      console.log(files.length);
       files.forEach(async (file) => {
         await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file);
       });
