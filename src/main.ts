@@ -10,7 +10,6 @@ import { WritingGoalsSettings } from './core/settings/settings';
 import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL } from './core/constants';
 import GoalView from './UI/goal/goal-view';
 import { WritingGoalsSettingsTab } from './core/settings/settings-tab';
-import { SettingsHelper } from './core/settings/settings-helper';
 import { NoteGoalHelper, Notes } from './core/note-goal';
 import { ObsidianFileHelper } from './IO/obsidian-file';
 import { goalHistory, noteGoals } from './UI/stores/goal-store';
@@ -18,19 +17,22 @@ import GoalTargetModal from './UI/modals/goal-target-modal';
 import GoalModal from './UI/modals/goal-modal';
 import { FileLabels } from './UI/goal/file-labels';
 import { GoalHistoryHelper } from './core/goal-history/history';
+import { FrontmatterHelper } from './IO/frontmapper-helper';
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
   goalView: GoalView | undefined;
   fileLabels: FileLabels;
-  fileHelper: ObsidianFileHelper = new ObsidianFileHelper(this.settings);
+  fileHelper: ObsidianFileHelper;
+  frontmatterHelper: FrontmatterHelper;
   goalHistoryHelper: GoalHistoryHelper;
   noteGoalHelper: NoteGoalHelper;
-  settingsHelper: SettingsHelper = new SettingsHelper();
   goalLeaves: string[];
   
   async onload() {
     this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
+    this.fileHelper = new ObsidianFileHelper(this.settings);
+    this.frontmatterHelper =  new FrontmatterHelper(this.app);
     this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings, this.manifest);
     this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
@@ -49,7 +51,7 @@ export default class WritingGoals extends Plugin {
       const files = this.app.vault.getMarkdownFiles();
       console.log(files.length);
       files.forEach(async (file) => {
-        await this.settingsHelper.updateNoteGoalsInSettings(this, file);
+        await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file);
       });
     }
   
@@ -58,7 +60,7 @@ export default class WritingGoals extends Plugin {
         id: 'view-writing-goal-for-note',
         name: 'View writing goal for the current note',
         callback: async () => {
-          await this.settingsHelper.updateNoteGoalsInSettings(this, this.app.workspace.getActiveFile());
+          await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, this.app.workspace.getActiveFile());
           if(this.settings.showGoalOnCreateAndUpdate){
             this.initLeaf(this.app.workspace.getActiveFile().path);
           }
@@ -90,7 +92,7 @@ export default class WritingGoals extends Plugin {
           if(file instanceof TFolder){
             return;
           }
-          await this.settingsHelper.updateNoteGoalsInSettings(this, file as TFile)
+          await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile)
           await this.loadNoteGoalData();
         }));
 
@@ -98,7 +100,7 @@ export default class WritingGoals extends Plugin {
           if(file instanceof TFolder){
             return;
           }
-          await this.settingsHelper.updateNoteGoalsInSettings(this, file as TFile);
+          await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile);
           await this.loadNoteGoalData(true);
         }));
 

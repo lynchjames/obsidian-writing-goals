@@ -1,16 +1,16 @@
 import { Modal, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
 import  { NoteGoalHelper } from "../../core/note-goal";
 import type WritingGoals from "../../main";
-import { SettingsHelper } from "../../core/settings/settings-helper";
 import { GoalHistoryHelper } from "../../core/goal-history/history";
 import type { WritingGoalsSettings } from "../../core/settings/settings";
+import { FrontmatterHelper } from "../../IO/frontmapper-helper";
 
 export default class GoalModal extends Modal {
     plugin: WritingGoals;
     settings: WritingGoalsSettings;
     userSubmittedGoalCount: string = "0"
     userSubmittedDailyGoalCount: string = "0";
-    settingsHelper: SettingsHelper;
+    frontmatterHelper: FrontmatterHelper;
     goalHistoryHelper: GoalHistoryHelper;
     noteGoalHelper: NoteGoalHelper;
     openGoalOnSubmit: boolean = false;
@@ -19,7 +19,7 @@ export default class GoalModal extends Modal {
         super(plugin.app);
         this.plugin = plugin;
         this.settings = this.plugin.settings;
-        this.settingsHelper = new SettingsHelper();
+        this.frontmatterHelper = new FrontmatterHelper(this.plugin.app);
         this.goalHistoryHelper = goalHistoryHelper;
         this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
         this.goalHistoryHelper = new GoalHistoryHelper(this.plugin.app, this.plugin.settings, this.plugin.manifest);
@@ -140,7 +140,7 @@ export default class GoalModal extends Modal {
       }
 
       private async createGoalForFile(target: TFile, plugin: WritingGoals, goalCount: number, settings: WritingGoalsSettings, dailyGoalCount: number) {
-        this.settingsHelper.updateNoteGoalsInSettings(this.plugin, target);
+        this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this.plugin, target);
         await plugin.app.fileManager.processFrontMatter(target as TFile, (frontMatter) => {
           if (goalCount > 0) {
             frontMatter[settings.customGoalFrontmatterKey] = goalCount;
