@@ -46,7 +46,7 @@ export default class WritingGoals extends Plugin {
   
     setupCommands() {
       this.addCommand({
-        id: 'app:view-writing-goal-for-note',
+        id: 'view-writing-goal-for-note',
         name: 'View writing goal for the current note',
         callback: async () => {
           await this.settingsHelper.updateNoteGoalsInSettings(this, this.app.workspace.getActiveFile());
@@ -58,7 +58,7 @@ export default class WritingGoals extends Plugin {
       }); 
       
       this.addCommand({
-        id: 'app:view-writing-goal',
+        id: 'view-writing-goal',
         name: 'View writing goal for any note or folder',
         callback: async () => {
           new GoalTargetModal(this, null).open();
@@ -67,7 +67,7 @@ export default class WritingGoals extends Plugin {
       });  
 
       this.addCommand({
-        id: 'app:add-writing-goal',
+        id: 'add-writing-goal',
         name: 'Add or update a writing goal for a note or folder',
         callback: async () => {
           new GoalTargetModal(this, new GoalModal(this, this.goalHistoryHelper)).open();
