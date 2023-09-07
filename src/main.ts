@@ -7,6 +7,7 @@ import {
   addIcon
 } from "obsidian";
 
+<<<<<<< HEAD
 import { WritingGoalsSettings } from "./core/settings/settings";
 import { GOAL_ICON, GOAL_ICON_SVG, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS_DETAIL } from "./core/constants";
 import GoalView from "./UI/goal/goal-view";
@@ -19,6 +20,21 @@ import { FileLabels } from "./UI/goal/file-labels";
 import { GoalHistoryHelper } from "./core/goal-history/history";
 import { FrontmatterHelper } from "./IO/frontmapper-helper";
 import StatsDetaillView from "./UI/stats/stats-detail-view";
+=======
+import { WritingGoalsSettings } from './core/settings/settings';
+import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_GOAL_SPRINT } from './core/constants';
+import GoalView from './UI/goal/goal-view';
+import { WritingGoalsSettingsTab } from './core/settings/settings-tab';
+import { NoteGoalHelper, Notes } from './core/note-goal';
+import { ObsidianFileHelper } from './IO/obsidian-file';
+import { goalHistory, noteGoals } from './UI/stores/goal-store';
+import GoalTargetModal from './UI/modals/goal-target-modal';
+import GoalModal from './UI/modals/goal-modal';
+import { FileLabels } from './UI/goal/file-labels';
+import { GoalHistoryHelper } from './core/goal-history/history';
+import { FrontmatterHelper } from './IO/frontmapper-helper';
+import SprintGoalView from './UI/goal/sprint-goal-view';
+>>>>>>> 722af5d (Sprint goal PoC)
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
@@ -56,9 +72,15 @@ export default class WritingGoals extends Plugin {
       VIEW_TYPE_GOAL,
       (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
     );
+
     this.registerView(
       VIEW_TYPE_STATS_DETAIL,
       (leaf) => new StatsDetaillView(leaf, this, this.goalHistoryHelper)
+    );
+
+    this.registerView(
+      VIEW_TYPE_GOAL_SPRINT,
+      (leaf) => new SprintGoalView(leaf, this, this.goalHistoryHelper)
     );
   }
 
@@ -80,6 +102,27 @@ export default class WritingGoals extends Plugin {
       name: "View writing goal for any note or folder",
       callback: async () => {
         new GoalTargetModal(this, null).open();
+      },
+      hotkeys: []
+    });
+
+    this.addCommand({
+      id: 'view-writing-sprint-goal-for-note',
+      name: 'View writing sprint goal for the current note',
+      callback: async () => {
+        const file = this.app.workspace.getActiveFile();
+        const goalLeaf = this.app.workspace.getRightLeaf(false);
+        await goalLeaf.setViewState({
+          type: VIEW_TYPE_GOAL_SPRINT,
+          active: true
+        });
+        // try {
+        const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL_SPRINT);
+        const view = leaves.last().view as SprintGoalView;
+        await view.updatePath(file.path);
+        // } catch (error) {
+        //   new Notice("Failed to show goal for " + file.path);
+        // }
       },
       hotkeys: []
     });
