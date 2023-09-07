@@ -110,10 +110,10 @@
 
 <style>
     .writing-goals-simple-container {
-        position: absolute;
-        width: 25px;
-        right: 6px;
-        top: 0px;
+      align-self: center;
+      width: 25px;
+      height: 15px;
+      margin: -10px 0 0 10px;
     }
     
     .writing-goals-simple {
