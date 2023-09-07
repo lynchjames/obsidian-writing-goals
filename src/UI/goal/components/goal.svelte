@@ -1,12 +1,12 @@
 <script lang="ts">
     import Nav from './nav.svelte';
     import  GoalSummary from './goal-summary.svelte';
-    import  Stats from '../stats/stats.svelte';
+    import  Stats from '../../stats/components/stats.svelte';
     import { onDestroy, onMount } from "svelte";
-	  import { dailyGoalColor, goalColor, goalHistory, noteGoals } from '../stores/goal-store';
-	  import type { NoteGoal, Notes } from '../note-goal';
-	  import type { GoalHistory } from '../goal-history/history';
-	  import type { HistoryStatsItem, HistoryStatsItems } from '../goal-history/history-stats';
+	  import { dailyGoalColor, goalColor, goalHistory, noteGoals } from '../../stores/goal-store';
+	  import type { NoteGoal, Notes } from '../../../core/note-goal';
+	  import type { GoalHistory } from '../../../core/goal-history/history';
+	  import type { HistoryStatsItem, HistoryStatsItems } from '../../../core/goal-history/history-stats';
     
     export let path: string;
     export let isMobile: boolean;

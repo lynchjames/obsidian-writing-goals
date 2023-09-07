@@ -1,5 +1,5 @@
 import type { App } from "obsidian";
-import SimpleGoal from './simple-goal.svelte';
+import SimpleGoal from './components/simple-goal.svelte';
 import type { WritingGoalsSettings } from "../../core/settings/settings";
 import { LABEL_PATH_DATA_ATTR, VIEW_TYPE_FILE_EXPLORER } from "../../core/constants";
 
