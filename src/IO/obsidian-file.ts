@@ -19,8 +19,7 @@ export class ObsidianFileHelper {
         meaningfulContent = this.excludeFrontMatter(metadata, meaningfulContent);
 
         if (this.settings.excludeComments) {
-                meaningfulContent = this.removeCommentsRegex(new RegExp("(%%.*?%%|%%[\w\W\n\s]+?%%)", "gmis"), meaningfulContent);
-                meaningfulContent = this.removeCommentsRegex(new RegExp("(<!--.*?-->|<!--[\w\W\n\s]+?-->)", "gmis"), meaningfulContent);
+                meaningfulContent = this.removeCommentsRegex(new RegExp("(%%.*?%%|<!--.*?-->)", "gmis"), meaningfulContent);
         }
         meaningfulContent = removeMd(meaningfulContent);
         return meaningfulContent;
