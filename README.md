@@ -1,7 +1,7 @@
 # Obsidian Writing Goals
 Set yourself dynamic writing goals for notes and folders to help you hit your long form writing targets with Obsidian.
 
-This plugin provides a simplified version of a [goals feature available in Ulysses](https://help.ulysses.app/kb/guide/en/goals-3jzwhIUp5a). 
+This plugin provides a simplified version of a [goals feature available in Ulysses](https://help.ulysses.app/kb/guide/en/goals-3jzwhIUp5a).
 
 Long form text for the demos was created using [Delorean Ipsum](https://deloreanipsum.com/).
 
@@ -10,7 +10,7 @@ Long form text for the demos was created using [Delorean Ipsum](https://delorean
 ![](./images/demo-screenshot-2.png)
 
 ## Adding a goal
-You can either add a goal by using the context menu in the file explorer for any note or folder in your vault. 
+You can either add a goal by using the context menu in the file explorer for any note or folder in your vault.
 
 ![](./images/add-goal-demo.gif)
 
@@ -40,18 +40,18 @@ You can update goals in 3 ways:
 ## Viewing goals
 You can view the goal set for the current note or for any file or folder using a couple of commands:
 
-![](./images/view-goal-command-demo.gif) 
+![](./images/view-goal-command-demo.gif)
 
 Goal progress should update in real-time as you type. Text added to any file within a folder with a goal (including folders within folders, recursively) will go towards that goal.
 
-![](./images/reaching-goal-demo.gif) 
+![](./images/reaching-goal-demo.gif)
 
 ## Excluding a note from word count
 You can exclude a note from contributing to word counts towards parent folders and other folders higher up the filer hierarchy.
 
 Set a frontmatter property in one of two formats:
 
-![](./images/wordcount-frontmatter-bool.png) ![](./images/wordcount-frontmatter-string.png) 
+![](./images/wordcount-frontmatter-bool.png) ![](./images/wordcount-frontmatter-string.png)
 
 ## Compatibility
 This plugin is compatible with Obsidian v1.3.7 and targets API version v1.4.4.
@@ -66,7 +66,7 @@ Follow these steps to get the code running in a local environment:
 
 1. Once you have cloned the repo, run `npm install` in the root folder. All required dependencies and dev dependencies should be installed.
 2. Run `npm run dev` to build and copy `main.js`, `style.css` and `manifest.json` to a test-vault folder. The command will continue to run, listening for file changes (except for style.css).
-3. Open Obsdian and load the test-vault folder as a a vault.
+3. Open Obsdian and load the test-vault folder as a vault.
 
 You should now be able to make changes to the code and debug within Obsidian.
 
@@ -75,6 +75,6 @@ You should now be able to make changes to the code and debug within Obsidian.
 A big thanks to [@isaaclyman](https://github.com/isaaclyman). I based my code for calculating word counts and displaying content alongside files/folders in the file explorer on his [Novel word count plugin](https://github.com/isaaclyman/novel-word-count-obsidian).
 
 ## Donating
-This plugin is provided free of charge. 
+This plugin is provided free of charge.
 
 If you would like to donate something to me, you can via [Ko-Fi](https://ko-fi.com/lynchjames). Thank you!

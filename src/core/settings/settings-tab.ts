@@ -49,7 +49,7 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
             }));
 
       new Setting(containerEl)
-        .setName('Display daily goal stas')
+        .setName('Display daily goal stats')
         .setDesc('Display a bar chart for goal history below the progress for the current goal')
         .addToggle(toggle =>
           toggle
