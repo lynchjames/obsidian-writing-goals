@@ -98,6 +98,6 @@ export class NoteGoalHelper {
     }
 
     isFile(fileOrFolder:TAbstractFile){
-        return fileOrFolder instanceof TFile;
+        return fileOrFolder instanceof TFile && fileOrFolder.extension == "md";
     }
 }
