@@ -72,9 +72,11 @@
       return per;
     }
 
-    function getPercentText(percent:number) {
-      const prefix = goal.dailyGoalCount > 0 ? "Daily goal" : "Goal";
-      return `${prefix} ${percent.toFixed(0)}% complete`;
+    function getPercentText(percent:number, dailyPercent:number) {
+      const isDaily = goal.dailyGoalCount>0;
+      const prefix = isDaily ? "Daily goal" : "Goal";
+      const figure = isDaily ? dailyPercent : percent;
+      return `${prefix} ${figure.toFixed(0)}% complete`;
     }
 
     function getLineCap(per:number) {
@@ -95,7 +97,7 @@
 
 </script>
 
- <div class="writing-goals-simple-container" data-path="{path}" title="{getPercentText(percent)}">
+ <div class="writing-goals-simple-container" data-path="{path}" title="{getPercentText(percent, dailyPercent)}">
     <svg class="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
         <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
         <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" 
@@ -111,14 +113,17 @@
 <style>
     .writing-goals-simple-container {
       align-self: center;
-      width: 25px;
-      height: 15px;
+      flex: 1;
       margin: -10px 0 0 10px;
+      max-width: 25px;
+      min-width: 25px;
+      max-height: 15px;
+      min-height: 15px;
+      order: 8;
     }
     
     .writing-goals-simple {
         fill: var(--background-primary);
-        max-width: 50px;
     }
     
     .writing-goals-simple .wg-bar { 
