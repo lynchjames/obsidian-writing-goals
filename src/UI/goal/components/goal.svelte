@@ -15,6 +15,7 @@
     export let linkedChartData: HistoryStatsItems;
     export let showProgressChart: boolean;
     export let onGoalClick: (path:string) => void;
+    export let onNavClick: (path:string) => void;
     export let onHistoryUpdate: (val:GoalHistory) => any;
 
     let goals: Notes;
@@ -138,10 +139,12 @@
 
     function onNextClick() {
       updateGoal(1);
+      onNavClick(path)
     }
 
     function onPreviousClick() {
       updateGoal(-1);
+      onNavClick(path)
     }
 
     function onClick() {

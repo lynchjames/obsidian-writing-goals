@@ -61,6 +61,12 @@ export default class GoalView extends ItemView {
         this.plugin.openGoalModal(fileOrFolder);
     }
 
+    onNavClick = (path:string) => {
+        this.plugin.settings.goalLeaves.push(path);
+        this.plugin.saveData(this.plugin.settings);
+        this.path = path;    
+    }
+
     onHistoryUpdate = (val: GoalHistory) => {
         if(val != null){
             const historyStats = this.historyHelper.transformHistory(val);
@@ -73,6 +79,7 @@ export default class GoalView extends ItemView {
         const {customGoalBarColor, customDailyGoalBarColor, showProgressChart} = this.plugin.settings;
         const isMobile = Platform.isMobile;
         const onGoalClick = this.onGoalClick;
+        const onNavClick = this.onNavClick;
         const onHistoryUpdate = this.onHistoryUpdate;
 
         //Goal svelte componet creation must happen immediately after existing component is destroyed.
@@ -89,6 +96,7 @@ export default class GoalView extends ItemView {
                 linkedChartData: linkedChartData,
                 showProgressChart: showProgressChart,
                 onGoalClick: onGoalClick,
+                onNavClick: onNavClick,
                 onHistoryUpdate: onHistoryUpdate
             }
         });    
