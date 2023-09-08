@@ -172,9 +172,10 @@ export default class WritingGoals extends Plugin {
         );
 
         this.registerEvent(
-          this.app.vault.on("delete", (file) => {
+          this.app.vault.on("delete", async (file) => {
             this.settings.removeGoal(file);
-            this.saveData(this.settings);
+            await this.saveData(this.settings);
+            this.detachGoalViewLeaf(file.path);
             this.loadNoteGoalData();
           })
         );
@@ -222,6 +223,15 @@ export default class WritingGoals extends Plugin {
       } catch (error) {
         new Notice("Failed to show goal for " + path); 
       }
+    }
+
+    detachGoalViewLeaf(path: string) {
+      const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
+      leaves.forEach(l =>  {
+        if((l.view as GoalView).path == path) {
+          l.detach();
+        }
+      });
     }
 
     async loadNoteGoalData(requiresGoalLabelUpdate?:boolean, pathForLabel?:string) {
