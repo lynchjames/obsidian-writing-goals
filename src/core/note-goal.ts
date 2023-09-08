@@ -87,7 +87,7 @@ export class NoteGoalHelper {
         let count = 0;
         if(this.isFile(fileOrFolder)){
             count = count + await this.getWordCount(fileOrFolder);
-        } else {
+        } else if(fileOrFolder instanceof TFolder) {
             const children = (fileOrFolder as TFolder).children
             for (let index = 0; index < children.length; index++) {
                 const child = children[index];
