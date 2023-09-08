@@ -92,7 +92,7 @@ export default class WritingGoals extends Plugin {
             return;
           }
           await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile)
-          await this.loadNoteGoalData();
+          await this.loadNoteGoalData(false);
         }));
 
         this.registerEvent(this.app.metadataCache.on("changed", async file => {
