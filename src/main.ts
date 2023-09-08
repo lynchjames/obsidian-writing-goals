@@ -157,6 +157,7 @@ export default class WritingGoals extends Plugin {
                       }
                     });
                   }
+                  this.detachGoalViewLeaf(fileOrFolder.path);
                   await this.loadNoteGoalData(true, fileOrFolder.path);
                 });
             });
