@@ -44,7 +44,6 @@ export class GoalHistoryHelper {
 
     historyPath() {
         const historyPath = `${this.manifest.dir!!}/${GOAL_HISTORY_PATH}`;
-        console.log(historyPath);
         return historyPath;
     }
 
