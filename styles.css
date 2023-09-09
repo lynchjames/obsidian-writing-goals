@@ -6,3 +6,7 @@
 .linked-chart-container .tiny-linked-charts-value {
     text-align: center;
 }
+
+.nav-file-title, .nav-folder-title {
+    justify-content: space-between;
+}
