@@ -43,8 +43,8 @@ export class GoalHistoryHelper {
     }
 
     historyPath() {
-        const nodePath = require("path");
-        const historyPath = nodePath.join(this.manifest.dir!!, GOAL_HISTORY_PATH);
+        const historyPath = `${this.manifest.dir!!}/${GOAL_HISTORY_PATH}`;
+        console.log(historyPath);
         return historyPath;
     }
 
