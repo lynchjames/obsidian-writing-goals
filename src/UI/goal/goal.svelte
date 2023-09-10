@@ -1,13 +1,14 @@
 <script lang="ts">
-    import GoalProgress from './goal-progress.svelte';
-    import Nav from './nav.svelte';
-    import  GoalSummary from './goal-summary.svelte';
-    import  Stats from '../../stats/components/stats.svelte';
+    import GoalProgress from './components/goal-progress.svelte';
+    import  GoalSummary from './components/goal-summary.svelte';
+    import  Stats from '../stats/components/stats.svelte';
     import { onDestroy, onMount } from "svelte";
-	  import { dailyGoalColor, goalColor, goalHistory, noteGoals } from '../../stores/goal-store';
-	  import type { NoteGoal, Notes } from '../../../core/note-goal';
-	  import type { GoalHistory } from '../../../core/goal-history/history';
-	  import type { HistoryStatsItem, HistoryStatsItems } from '../../../core/goal-history/history-stats';
+	  import { dailyGoalColor, goalColor, goalHistory, noteGoals } from '../stores/goal-store';
+	  import type { NoteGoal, Notes } from '../../core/note-goal';
+	  import type { GoalHistory } from '../../core/goal-history/history';
+	  import type { HistoryStatsItem, HistoryStatsItems } from '../../core/goal-history/history-stats';
+  	import { loadGoal } from './goal-helper.js';
+	import Nav from '../nav/components/nav.svelte';
     
     export let path: string;
     export let isMobile: boolean;
@@ -24,11 +25,6 @@
     let goal: NoteGoal;
     let chartData: any;
     let currentIndex: number;
-    let percent: number = 0;
-    let dailyPercent: number = 0;
-    let progress: number = 0;
-    let dailyProgress: number = 0;
-    let simpleDailyProgress: number = 0;
     let gColor: string;
     let dGColor: string;
 
@@ -84,38 +80,7 @@
       }
       path = keys[currentIndex];
       goal = goals[path];     
-      loadGoal();
     }
-    
-    function loadGoal() {
-      percent = getPercent(goal.wordCount, goal.goalCount);
-      dailyPercent = getPercent(getDailyDifference(goal), goal.dailyGoalCount);
-      progress = calculateProgress(90, percent);
-      dailyProgress = calculateProgress(75, dailyPercent);
-      simpleDailyProgress = calculateProgress(50, dailyPercent);
-    }
-
-    function calculateProgress(rad, per) {
-      let c = Math.PI*(rad*2);
-    
-      if (per < 0) { per = 0;}
-      if (per > 100) { per = 100;}
-      
-      return ((100-per)/100)*c;
-    }
-
-    function getPercent(words, goal) {
-      if(goal == 0) { return 0; }
-      let per = (words/goal)*100;
-      if (per < 0) { per = 0;}
-      if (per > 100) { per = 100;}
-      return per;
-    }
-
-    function getDailyDifference(goal){
-      return goal.wordCount - goal.startCount;
-    }
-
 
     function onNextClick() {
       updateGoal(1);
@@ -144,6 +109,7 @@
       <GoalProgress
         {path}
         goal={goals[path]}
+        goalData={loadGoal(goal)}
         {color}
         {dailyColor}
         {onGoalClick}
@@ -151,8 +117,7 @@
       
       <GoalSummary 
         goal={goal} 
-        percent={percent} 
-        dailyPercent={dailyPercent} 
+        goalData={loadGoal(goal)}
         color={gColor} 
         dailyColor={dGColor} 
       />

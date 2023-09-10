@@ -1,5 +1,5 @@
 import { ItemView, WorkspaceLeaf, Platform, TFile } from 'obsidian';
-import StatsDetail from './components/stats-detail.svelte';
+import StatsDetail from './stats-detail.svelte';
 import type { WritingGoalsSettings } from '../../core/settings/settings';
 import { GOAL_ICON, VIEW_TYPE_STATS_DETAIL } from '../../core/constants';
 import type WritingGoals from '../../main';

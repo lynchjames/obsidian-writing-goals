@@ -1,22 +1,20 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
-    import { dailyGoalColor, goalColor, goalHistory, noteGoals } from '../../stores/goal-store';
-    import type { NoteGoal, Notes } from '../../../core/note-goal';
+    import { dailyGoalColor, goalColor, noteGoals } from '../../stores/goal-store';
+    import type { NoteGoal } from '../../../core/note-goal';
     
     export let path: string;
     export let goal: NoteGoal;
+    export let goalData: { 
+                          percent: number, 
+                          dailyPercent: number, 
+                          progress: number, 
+                          dailyProgress: number
+                        };
     export let color: string;
     export let dailyColor: string;
     export let onGoalClick: (path:string) => void;
 
-    let goals: Notes;
-    let keys: string[];
-    let currentIndex: number;
-    let percent: number = 0;
-    let dailyPercent: number = 0;
-    let progress: number = 0;
-    let dailyProgress: number = 0;
-    let simpleDailyProgress: number = 0;
     let gColor: string;
     let dGColor: string;
 
@@ -24,16 +22,6 @@
       gColor = color;
       dGColor = dailyColor;
     })
-
-    const unsubNoteGoals = noteGoals.subscribe(val => {
-        if(!val[path]){
-          return;
-        }
-        goals = val;
-        keys = Object.keys(goals);
-        currentIndex = keys.indexOf(path);
-        updateGoal();
-    });
 
     const unsubGoalColor = goalColor.subscribe(val => {
       gColor = val
@@ -43,56 +31,11 @@
       dGColor = val
     });
 
-    onDestroy(unsubNoteGoals);
     onDestroy(unsubGoalColor);
     onDestroy(unsubDailyGoalColor);
-    
-    function updateGoal(cursor?:number) {
-      if(cursor){
-        currentIndex += cursor;
-        if(currentIndex < 0){
-          currentIndex = keys.length - 1;
-        }
-        if(currentIndex > keys.length - 1) {
-          currentIndex = 0;
-        }
-      }
-      path = keys[currentIndex];
-      goal = goals[path];     
-      loadGoal();
-    }
-
-    function loadGoal() {
-      percent = getPercent(goal.wordCount, goal.goalCount);
-      dailyPercent = getPercent(getDailyDifference(goal), goal.dailyGoalCount);
-      progress = calculateProgress(90, percent);
-      dailyProgress = calculateProgress(75, dailyPercent);
-      simpleDailyProgress = calculateProgress(50, dailyPercent);
-    }
-
-    function calculateProgress(rad, per) {
-      let c = Math.PI*(rad*2);
-    
-      if (per < 0) { per = 0;}
-      if (per > 100) { per = 100;}
-      
-      return ((100-per)/100)*c;
-    }
-
-    function getPercent(words, goal) {
-      if(goal == 0) { return 0; }
-      let per = (words/goal)*100;
-      if (per < 0) { per = 0;}
-      if (per > 100) { per = 100;}
-      return per;
-    }
 
     function getLineCap(per:number) {
       return  per < 95 ? 'round' : 'butt';
-    }
-
-    function getDailyDifference(goal){
-      return goal.wordCount - goal.startCount;
     }
 
     function getCompletedClass(percent) {
@@ -121,14 +64,14 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<svg on:click={onClick} class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-<circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
-<circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
-    stroke-dashoffset="{progress}"></circle>
+<svg on:click={onClick} class="writing-goals {getCompletedClass(goalData.percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<circle class="wg-background {getCompletedClass(goalData.percent)}" r="100" cx="100" cy="100"></circle>
+<circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(goalData.percent)}" 
+    stroke-dashoffset="{goalData.progress}"></circle>
     {#if goal.dailyGoalCount > 0}
-    <circle class="wg-daily-background {getDailyCompletedClass(dailyPercent)}" r="75" cx="100" cy="100"></circle>
-    <circle class="wg-daily-bar" r="75" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="471.23" stroke-linecap="{getLineCap(dailyPercent)}" 
-        stroke="{dGColor}" stroke-dashoffset="{dailyProgress}"></circle>
+    <circle class="wg-daily-background {getDailyCompletedClass(goalData.dailyPercent)}" r="75" cx="100" cy="100"></circle>
+    <circle class="wg-daily-bar" r="75" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="471.23" stroke-linecap="{getLineCap(goalData.dailyPercent)}" 
+        stroke="{dGColor}" stroke-dashoffset="{goalData.dailyProgress}"></circle>
     {/if}
 <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{getWordCount(goal)}</text>
 <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>

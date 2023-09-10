@@ -1,12 +1,13 @@
 <script lang="ts">
-    import GoalProgress from "../../goal/components/goal-progress.svelte";
-    import GoalSummary from "../../goal/components/goal-summary.svelte";
+    import GoalProgress from "../goal/components/goal-progress.svelte";
+    import GoalSummary from "../goal/components/goal-summary.svelte";
     import { LinkedChart, LinkedLabel} from "svelte-tiny-linked-charts"
-    import { dailyGoalColor, goalColor, goalHistory, noteGoals } from "../../stores/goal-store";
+    import { dailyGoalColor, goalColor, goalHistory, noteGoals } from "../stores/goal-store";
     import { onDestroy, onMount } from "svelte";
-	  import type { Notes } from '../../../core/note-goal';
-	  import type { GoalHistory } from "../../../core/goal-history/history";
-	  import type { HistoryStatsItem, HistoryStatsItems } from "../../../core/goal-history/history-stats";
+	  import type { Notes } from '../../core/note-goal';
+	  import type { GoalHistory } from "../../core/goal-history/history";
+	  import type { HistoryStatsItem, HistoryStatsItems } from "../../core/goal-history/history-stats";
+	  import { loadGoal } from "../goal/goal-helper.js";
 
     export let chartData:HistoryStatsItems;
     export let color: string;
@@ -17,7 +18,6 @@
 
     let goals: Notes;
     let keys: string[];
-    let compWidth: number;
     let gColor: string;
     let dGColor: string;
     
@@ -59,13 +59,14 @@
 
 <div class="stats-detail-container">
   {#each keys as key}
+     
   <div class="stats-detail-item">
     <div class="stats-detail-title">
       <!-- svelte-ignore a11y-click-events-have-key-events -->
       <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
       <h3 on:click={onTitleClick(key)}>{goals[key].title}</h3>
 
-      <div class="linked-chart-date-label" bind:clientWidth={compWidth}>
+      <div class="linked-chart-date-label">
         <LinkedLabel linked="link-stats-details-1" />
       </div>
     </div>
@@ -73,13 +74,14 @@
     <div class="stats-detail">
       
       <div class="stats-detail-goal">
-        <GoalProgress 
-          path={key} 
-          goal={goals[key]}
-          color={color}
-          dailyColor={dailyColor}  
-          {onGoalClick}
-        />
+          <GoalProgress 
+            path={key} 
+            goal={goals[key]}
+            color={color}
+            dailyColor={dailyColor}  
+            {onGoalClick}
+            goalData={loadGoal(goals[key])}
+          />
 
       </div>
     
@@ -108,8 +110,7 @@
 
     <GoalSummary 
       goal={goals[key]} 
-      percent={0} 
-      dailyPercent={0} 
+      goalData={loadGoal(goals[key])}
       color={gColor} 
       dailyColor={dGColor} 
     />
