@@ -25,12 +25,6 @@ Using the same file explorer and command palette commands, you can also set a da
 
 The name for the frontmatter property is `daily-word-goal` by default. You can change the property name in the plugin settings.
 
-### Goal stats
-If you have a daily goal, in the plugin settings you can enable goal progress stats to be displayed as a [bar chart](https://mitcheljager.github.io/svelte-tiny-linked-charts) below the goal:
-
-![](./images/daily-goal-stats.png)
-
-
 ## Updating a goal
 You can update goals in 3 ways:
 1. Using the add/update command.
@@ -45,6 +39,15 @@ You can view the goal set for the current note or for any file or folder using a
 Goal progress should update in real-time as you type. Text added to any file within a folder with a goal (including folders within folders, recursively) will go towards that goal.
 
 ![](./images/reaching-goal-demo.gif)
+
+## Goal stats
+In the plugin settings you can enable goal progress stats to be displayed as a [bar chart](https://mitcheljager.github.io/svelte-tiny-linked-charts) below goals and daily goals:
+
+![](./images/daily-goal-stats.png)
+
+You can also use a command to view all of your goal stats in a single view. This view also allows you to edit the goals and navigate to the note for each respective goal:
+
+![](./images/stats-page.png)
 
 ## Excluding a note from word count
 You can exclude a note from contributing to word counts towards parent folders and other folders higher up the filer hierarchy.
