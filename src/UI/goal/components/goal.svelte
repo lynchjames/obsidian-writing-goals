@@ -1,4 +1,5 @@
 <script lang="ts">
+    import GoalProgress from './goal-progress.svelte';
     import Nav from './nav.svelte';
     import  GoalSummary from './goal-summary.svelte';
     import  Stats from '../../stats/components/stats.svelte';
@@ -85,7 +86,7 @@
       goal = goals[path];     
       loadGoal();
     }
-
+    
     function loadGoal() {
       percent = getPercent(goal.wordCount, goal.goalCount);
       dailyPercent = getPercent(getDailyDifference(goal), goal.dailyGoalCount);
@@ -111,31 +112,10 @@
       return per;
     }
 
-    function getLineCap(per:number) {
-      return  per < 95 ? 'round' : 'butt';
-    }
-
     function getDailyDifference(goal){
       return goal.wordCount - goal.startCount;
     }
 
-    function getCompletedClass(percent) {
-      return percent == 100 ? 'note-goal-completed' : '';
-    }
-
-    function getDailyCompletedClass(dailyPercent) {
-      return dailyPercent == 100 ? 'daily-note-goal-completed' : '';
-    }
-
-    function getWordCount(goal:NoteGoal) {
-      const count = goal.dailyGoalCount > 0 ? 
-        goal.wordCount - goal.startCount : goal.wordCount;
-      return count.toLocaleString();
-    }
-
-    function getWordsText(goal:NoteGoal) {
-      return goal.dailyGoalCount > 0 ? 'words today' : 'words'; 
-    }
 
     function onNextClick() {
       updateGoal(1);
@@ -145,10 +125,6 @@
     function onPreviousClick() {
       updateGoal(-1);
       onNavClick(path)
-    }
-
-    function onClick() {
-      onGoalClick(path);
     }
 
 </script>
@@ -163,26 +139,30 @@
         showArrows={keys.length > 1} goal={goal} 
         onNextClick={onNextClick} 
         onPreviousClick={onPreviousClick}
-        />
-      <svg on:click={onClick} class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
-        <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
-          stroke-dashoffset="{progress}"></circle>
-          {#if goal.dailyGoalCount > 0}
-          <circle class="wg-daily-background {getDailyCompletedClass(dailyPercent)}" r="75" cx="100" cy="100"></circle>
-            <circle class="wg-daily-bar" r="75" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="471.23" stroke-linecap="{getLineCap(dailyPercent)}" 
-              stroke="{dGColor}" stroke-dashoffset="{dailyProgress}"></circle>
-          {/if}
-        <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{getWordCount(goal)}</text>
-        <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
-      </svg>
-      <GoalSummary goal={goal} percent={percent} dailyPercent={dailyPercent} color={gColor} dailyColor={dGColor} />
-        <Stats 
-          {path}
-          showProgress={showProgressChart}
-          color={goal.dailyGoalCount > 0 ? dGColor : gColor}
-          chartData={chartData}
-          />
+      />
+      
+      <GoalProgress
+        {path}
+        goal={goals[path]}
+        {color}
+        {dailyColor}
+        {onGoalClick}
+      />
+      
+      <GoalSummary 
+        goal={goal} 
+        percent={percent} 
+        dailyPercent={dailyPercent} 
+        color={gColor} 
+        dailyColor={dGColor} 
+      />
+
+      <Stats 
+        {path}
+        showProgress={showProgressChart}
+        color={goal.dailyGoalCount > 0 ? dGColor : gColor}
+        chartData={chartData}
+      />
     </div>
 {/if}
 
@@ -191,51 +171,6 @@
       margin: auto;
       max-width: 400px;
       cursor: pointer;
-  }
-
-  .note-goal-completed .note-goal-text {
-      fill: var(--text-on-accent-inverted);
-      font-weight: bold;
-  }
-
-  .note-goal-text {
-      fill: var(--text-normal);
-  }
-
-  .writing-goals {
-      padding: 0 40px;
-  }
-
-  .writing-goals .wg-bar {
-      stroke-width: 18px;
-  }
-
-  .writing-goals .wg-daily-bar {
-      stroke-width: 10px;
-  }
-
-  .wg-daily-goal .writing-goals .wg-bar{
-      stroke-width: 10px;
-  }
-
-  .wg-bar, .wg-simple .wg-bar {
-      transition: stroke-dashoffset 0.5s linear;
-  }
-
-  .wg-daily-bar, .wg-daily-bar {
-      transition: stroke-dashoffset 0.5s linear;
-  }
-
-  .wg-background, .wg-daily-background {
-      fill: var(--background-primary);
-  }
-
-  .note-goal-completed, .daily-note-goal-completed {
-      fill: var(--background-modifier-success);
-  }
-
-  .workspace-split.mod-root .writing-goals .background {
-      fill: var(--background-secondary-alt);
   }
 
 </style>

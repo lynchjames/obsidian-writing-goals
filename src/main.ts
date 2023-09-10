@@ -7,7 +7,7 @@ import {
 } from 'obsidian';
 
 import { WritingGoalsSettings } from './core/settings/settings';
-import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL } from './core/constants';
+import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS_DETAIL } from './core/constants';
 import GoalView from './UI/goal/goal-view';
 import { WritingGoalsSettingsTab } from './core/settings/settings-tab';
 import { NoteGoalHelper, Notes } from './core/note-goal';
@@ -18,6 +18,7 @@ import GoalModal from './UI/modals/goal-modal';
 import { FileLabels } from './UI/goal/file-labels';
 import { GoalHistoryHelper } from './core/goal-history/history';
 import { FrontmatterHelper } from './IO/frontmapper-helper';
+import StatsDetaillView from './UI/stats/stats-detail-view';
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
@@ -42,10 +43,14 @@ export default class WritingGoals extends Plugin {
       VIEW_TYPE_GOAL,
       (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
       );
-      this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
-      this.setupEvents();
-      this.initialFrontmatterGoalIndex();
-    }
+    this.registerView(
+      VIEW_TYPE_STATS_DETAIL,
+      (leaf) => new StatsDetaillView(leaf, this, this.goalHistoryHelper)
+      );
+    this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
+    this.setupEvents();
+    this.initialFrontmatterGoalIndex();
+  }
 
     initialFrontmatterGoalIndex() {
       const files = this.app.vault.getMarkdownFiles();
@@ -83,7 +88,20 @@ export default class WritingGoals extends Plugin {
           new GoalTargetModal(this, new GoalModal(this, this.goalHistoryHelper)).open();
         },
         hotkeys: []
-      });   
+      }); 
+      
+      this.addCommand({
+        id: 'view-writing-goal-stats',
+        name: 'View all your writing goal stats',
+        callback: async () => {
+          const statsLeaf = await this.app.workspace.getLeaf(true);
+          await statsLeaf.setViewState({
+            type: VIEW_TYPE_STATS_DETAIL,
+            active: true
+          });
+        },
+        hotkeys: []
+      });  
     }
 
     setupEvents() {

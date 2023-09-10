@@ -3,10 +3,20 @@
     height: auto;
 }
 
-.linked-chart-container .tiny-linked-charts-value {
+.tiny-linked-charts-value {
     text-align: center;
 }
 
 .nav-file-title, .nav-folder-title {
     justify-content: space-between;
+}
+
+.stats-detail svg {
+    width: 100%;
+    height: auto;
+    padding: 0 !important;
+}
+
+.stats-detail-item h3 {
+    text-align: left !important;
 }
