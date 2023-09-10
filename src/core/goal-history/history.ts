@@ -96,6 +96,16 @@ export class GoalHistoryHelper {
         await this.saveGoal(path, item);
     }
 
+    async renameHistoryEntry(path:string, oldPath:string){
+        const history = await this.loadHistory();
+        const existingEntries = history[oldPath];
+        if(existingEntries) {
+            history[path] = existingEntries;
+            delete history[oldPath];
+        }
+        await this.goalFile.saveJson(this.historyPath(), history);
+    }
+
     goalItemForDate(goalHistory:GoalHistory, path: string, date: string): GoalHistoryItem {
         return goalHistory[path]?.filter(gh => gh.date == date)[0];
     }

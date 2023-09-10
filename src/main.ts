@@ -186,10 +186,11 @@ export default class WritingGoals extends Plugin {
           this.app.vault.on("rename", (file, oldPath) => {
             this.settings.rename(file, oldPath);
             this.saveData(this.settings);
-            this.loadNoteGoalData(true, file.path);
+            this.goalHistoryHelper.renameHistoryEntry(file.path, oldPath);
+            this.loadNoteGoalData(true);
           })
         );
-
+ 
         this.registerEvent(
           this.app.vault.on("delete", async (file) => {
             this.settings.removeGoal(file);
