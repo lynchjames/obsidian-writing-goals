@@ -1,6 +1,7 @@
 import type { CachedMetadata } from "obsidian";
 import type { WritingGoalsSettings } from "../core/settings/settings";
-import removeMd from 'remove-markdown';
+import {remark} from 'remark'
+import strip from 'strip-markdown'
 
 export class ObsidianFileHelper {
     settings: WritingGoalsSettings;
@@ -10,18 +11,18 @@ export class ObsidianFileHelper {
     }
 
     async countWords(fileContents:string, metadata: CachedMetadata) {
-        const meaningfulContent = this.getMeaningfulContent(fileContents, metadata);
+        const meaningfulContent = await this.getMeaningfulContent(fileContents, metadata);
         return (meaningfulContent.match(/[^\s]+/g) || []).length;
     }
 
-    private getMeaningfulContent(content: string, metadata: CachedMetadata): string {
+    private async getMeaningfulContent(content: string, metadata: CachedMetadata): Promise<string> {
         let meaningfulContent = content;
         meaningfulContent = this.excludeFrontMatter(metadata, meaningfulContent);
 
         if (this.settings.excludeComments) {
                 meaningfulContent = this.removeCommentsRegex(new RegExp("(%%.*?%%|<!--.*?-->)", "gmis"), meaningfulContent);
         }
-        meaningfulContent = removeMd(meaningfulContent);
+        meaningfulContent = (await remark().use(strip).process(meaningfulContent)).toString();
         return meaningfulContent;
     }
 
