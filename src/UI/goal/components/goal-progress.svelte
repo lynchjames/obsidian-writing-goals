@@ -102,7 +102,7 @@
   }
 
   .writing-goals .wg-bar {
-      stroke-width: 18px;
+      stroke-width: 14px;
   }
 
   .writing-goals .wg-daily-bar {
