@@ -100,6 +100,26 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
             }));
 
       new Setting(containerEl)
+      .setName('Additional file types')
+      .setDesc('Markdown files are included in word counts by default. Add other file types to include in word counts. Comma delimited with only file extension')
+      .addButton(button =>
+        button
+        .setButtonText("Reindex")
+        .setCta()
+        .onClick(evt => {
+          this.plugin.loadNoteGoalData(true);
+        }))
+      .addTextArea(text =>
+        text
+          .setValue(this.plugin.settings.additionalFileTypes?.join(','))
+          .setPlaceholder('md,')
+          .onChange(async (value:string) => {
+            this.plugin.settings.additionalFileTypes = 
+                      value.split(',').map(v => v.trim()).filter(v => v && v.length > 0);
+            await this.plugin.saveData(this.plugin.settings);
+          }));
+
+      new Setting(containerEl)
       .setName('Exclude comments')
       .setDesc('Exclude markdown (%% %%) and HTML (<!-- -->) comments when counting words')
       .addToggle(toggle =>

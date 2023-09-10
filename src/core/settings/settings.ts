@@ -17,6 +17,7 @@ export class WritingGoalsSettings {
   allowNegativeGoalProgress: boolean= false;
   customGoalBarColor: string = GOAL_BAR_COLOR;
   customDailyGoalBarColor: string = DAILY_GOAL_BAR_COLOR;
+  additionalFileTypes: string[];
 
   noGoal(path:string): boolean{
     return !this.noteGoals.contains(path) && this.folderGoals.filter(fg => fg.path == path).length == 0;

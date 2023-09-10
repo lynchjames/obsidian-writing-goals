@@ -50,7 +50,7 @@ export class NoteGoalHelper {
         const todaysDailyGoal = await this.goalHistoryHelper.todaysGoalItem(fileOrFolder.path);
         const result = {
             path: fileOrFolder.path,
-            title: fileOrFolder.name.replace('.md', ''),
+            title: fileOrFolder.name.split('.')[0],
             goalType: isFile ? GoalType.Note : GoalType.Folder,
             goalCount: goalCount,
             dailyGoalCount: dailyGoalCount,
@@ -98,6 +98,10 @@ export class NoteGoalHelper {
     }
 
     isFile(fileOrFolder:TAbstractFile){
-        return fileOrFolder instanceof TFile && fileOrFolder.extension == "md";
+        return fileOrFolder instanceof TFile && (fileOrFolder.extension == "md" || this.additionalFileTypes(fileOrFolder));
+    }
+
+    additionalFileTypes(file:TFile) {
+        return this.settings.additionalFileTypes.contains(file.extension);
     }
 }
