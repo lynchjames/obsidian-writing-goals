@@ -56,73 +56,78 @@
     }
     
 </script>
-
-<div class="stats-detail-container">
-  {#each keys as key}
-     
-  <div class="stats-detail-item">
-    <div class="stats-detail-title">
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-      <h3 on:click={onTitleClick(key)}>{goals[key].title}</h3>
-
-      <div class="linked-chart-date-label">
-        <LinkedLabel linked="link-stats-details-1" />
-      </div>
-    </div>
-    
-    <div class="stats-detail">
+{#if keys.length > 0}
+  <div class="stats-detail-container">
+    <h1>{keys.length} writing goals</h1>
+    {#each keys as key}
       
-      <div class="stats-detail-goal">
-          <GoalProgress 
-            path={key} 
-            goal={goals[key]}
-            color={color}
-            dailyColor={dailyColor}  
-            {onGoalClick}
-            goalData={loadGoal(goals[key])}
-          />
+    <div class="stats-detail-item">
+      <div class="stats-detail-title">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+        <h3 on:click={onTitleClick(key)}>{goals[key].title}</h3>
 
+        <div class="linked-chart-date-label">
+          <LinkedLabel linked="link-stats-details-1" />
+        </div>
       </div>
+      
+      <div class="stats-detail">
+        
+        <div class="stats-detail-goal">
+            <GoalProgress 
+              path={key} 
+              goal={goals[key]}
+              color={color}
+              dailyColor={dailyColor}  
+              {onGoalClick}
+              goalData={loadGoal(goals[key])}
+            />
+
+        </div>
+      
     
-  
-      <div class="linked-chart-stats-detail">
-          
-        <LinkedChart 
-          data={transform(chartData[key])}
-          linked="link-stats-details-1"
-          showValue
-          fadeOpacity={0.3}
-          barMinWidth={2}
-          gap={1}
-          grow={false}
-          align="left"
-          valuePrepend=""
-          valueAppend="words"  
-          valuePosition="top"
-          barMinHeight={2}
-          hideBarBelow={1}
-          fill="{goals[key].dailyGoalCount > 0 ? dGColor : gColor}"
-          transition={500}
-        />
+        <div class="linked-chart-stats-detail">
+            
+          <LinkedChart 
+            data={transform(chartData[key])}
+            linked="link-stats-details-1"
+            showValue
+            fadeOpacity={0.3}
+            barMinWidth={2}
+            gap={1}
+            grow={false}
+            align="left"
+            valuePrepend=""
+            valueAppend="words"  
+            valuePosition="top"
+            barMinHeight={2}
+            hideBarBelow={1}
+            fill="{goals[key].dailyGoalCount > 0 ? dGColor : gColor}"
+            transition={500}
+          />
+        </div>
       </div>
+
+      <GoalSummary 
+        goal={goals[key]} 
+        goalData={loadGoal(goals[key])}
+        color={gColor} 
+        dailyColor={dGColor} 
+      />
+
     </div>
-
-    <GoalSummary 
-      goal={goals[key]} 
-      goalData={loadGoal(goals[key])}
-      color={gColor} 
-      dailyColor={dGColor} 
-    />
-
+    {/each}
   </div>
-  {/each}
-</div>
+{/if}
+
 <style>
   .stats-detail-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    max-width: var(--file-line-width);
+    margin: auto;
   }
 
   .stats-detail-item {
@@ -130,7 +135,6 @@
     flex-direction: column;
     background-color: var(--background-secondary);
     border-radius: 8px;
-    max-width: var(--file-line-width);
     margin: 8px auto;
     padding: 8px 32px;
     width: 100%;
