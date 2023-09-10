@@ -145,7 +145,7 @@
   .stats-detail-item .stats-detail {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;    
+    justify-content: flex-start;    
   }
 
   .stats-detail-goal {
@@ -156,7 +156,8 @@
 
   .linked-chart-stats-detail {
     flex: 1;
-    margin: 8px 8px 0 40px;
+    margin: 8px 8px 0 32px;
+    min-width: 180px;
   }
 
   .stats-detail-item h3 {

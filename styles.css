@@ -20,3 +20,7 @@
 .stats-detail-item h3 {
     text-align: left !important;
 }
+
+.stats-detail-goal .note-goal-text {
+    font-size: 18px;
+}

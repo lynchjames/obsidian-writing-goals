@@ -73,8 +73,8 @@
     <circle class="wg-daily-bar" r="75" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="471.23" stroke-linecap="{getLineCap(goalData.dailyPercent)}" 
         stroke="{dGColor}" stroke-dashoffset="{goalData.dailyProgress}"></circle>
     {/if}
-<text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{getWordCount(goal)}</text>
-<text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
+<text class="note-goal-figure" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{getWordCount(goal)}</text>
+<text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="18" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
 </svg>
 
 <style>
@@ -84,9 +84,13 @@
       cursor: pointer;
   }
 
-  .note-goal-completed .note-goal-text {
+  .note-goal-completed .note-goal-figure, .note-goal-completed .note-goal-text {
       fill: var(--text-on-accent-inverted);
       font-weight: bold;
+  }
+
+  .note-goal-figure {
+      fill: var(--text-normal);
   }
 
   .note-goal-text {
