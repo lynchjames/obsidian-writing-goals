@@ -11,7 +11,7 @@
     let showMessage: boolean = true;
 
     function getOverallGoalCountText(goal:NoteGoal) {
-      return goal.dailyGoalCount > 0 ? goal.wordCount.toLocaleString() + ' of' : '';
+      return goal.wordCount.toLocaleString() + ' of';
     }
 
     const unsubNShowGoalMessage = showGoalMessage.subscribe(val => {
