@@ -140,6 +140,10 @@
     width: 100%;
   }
 
+  .stats-detail-item:last-child {
+    margin-bottom: 56px;
+  }
+
   .stats-detail-title {
     display: flex;
     flex-direction: row;
