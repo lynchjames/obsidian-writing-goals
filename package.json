@@ -1,6 +1,6 @@
 {
 	"name": "writing-goals",
-	"version": "0.7.8",
+	"version": "0.8.0",
 	"private": true,
 	"scripts": {
 		"dev": "rollup --config rollup.config.js -w",
