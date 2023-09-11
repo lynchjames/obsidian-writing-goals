@@ -52,11 +52,12 @@ export default class WritingGoals extends Plugin {
     this.initialFrontmatterGoalIndex();
   }
 
-    initialFrontmatterGoalIndex() {
+    async initialFrontmatterGoalIndex() {
       const files = this.app.vault.getMarkdownFiles();
-      files.forEach(async (file) => {
+      await files.forEach(async (file) => {
         await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file);
       });
+      this.loadNoteGoalData(true);
     }
   
     setupCommands() {
