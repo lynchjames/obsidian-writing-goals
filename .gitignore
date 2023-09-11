@@ -2,6 +2,7 @@
 node_modules
 /build
 /dist
+main.js
 /test-vault
 */.obsidian
 /.svelte-kit
