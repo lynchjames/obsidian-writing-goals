@@ -14,7 +14,7 @@ on:
 
 env:
   # IMPORTANT: Update this with the name of your plugin
-  PLUGIN_NAME: Writing Goals
+  PLUGIN_NAME: writing-goals
 
 jobs:
   release:
