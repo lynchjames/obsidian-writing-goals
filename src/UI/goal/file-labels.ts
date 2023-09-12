@@ -50,6 +50,14 @@ export class FileLabels {
       });
     }
 
+    resetAllFileLabels() {
+      const fileExplorer = this.app.workspace.getLeavesOfType(VIEW_TYPE_FILE_EXPLORER)[0];
+        const fileItems: { [path: string]: FileItem } = (
+          fileExplorer.view as any
+        ).fileItems;
+      this.resetFileLabels(fileItems);
+    }
+
     resetFileLabels(fileItems:any, pathForLabel?:string) {
       for (let key in fileItems) {
         const item = fileItems[key];

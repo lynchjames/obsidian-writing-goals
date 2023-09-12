@@ -22,37 +22,41 @@ import { FrontmatterHelper } from './IO/frontmapper-helper';
 import StatsDetaillView from './UI/stats/stats-detail-view';
 
 export default class WritingGoals extends Plugin {
-  settings: WritingGoalsSettings = new WritingGoalsSettings;
-  goalView: GoalView | undefined;
-  fileLabels: FileLabels;
-  fileHelper: ObsidianFileHelper;
-  frontmatterHelper: FrontmatterHelper;
-  goalHistoryHelper: GoalHistoryHelper;
-  noteGoalHelper: NoteGoalHelper;
-  goalLeaves: string[];
-  
-  async onload() {
-    this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
-    this.fileHelper = new ObsidianFileHelper(this.settings);
-    this.frontmatterHelper =  new FrontmatterHelper(this.app);
-    this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings, this.manifest);
-    this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
-    this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
-    this.fileLabels = new FileLabels(this.app, this.settings);
-    this.setupCommands();
-    addIcon(GOAL_ICON, GOAL_ICON_SVG);
-    this.registerView(
-      VIEW_TYPE_GOAL,
-      (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
-      );
-    this.registerView(
-      VIEW_TYPE_STATS_DETAIL,
-      (leaf) => new StatsDetaillView(leaf, this, this.goalHistoryHelper)
-      );
-    this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
-    this.setupEvents();
-    this.initialFrontmatterGoalIndex();
-  }
+    settings: WritingGoalsSettings = new WritingGoalsSettings;
+    goalView: GoalView | undefined;
+    fileLabels: FileLabels;
+    fileHelper: ObsidianFileHelper;
+    frontmatterHelper: FrontmatterHelper;
+    goalHistoryHelper: GoalHistoryHelper;
+    noteGoalHelper: NoteGoalHelper;
+    goalLeaves: string[];
+    
+    async onload() {
+      this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
+      this.fileHelper = new ObsidianFileHelper(this.settings);
+      this.frontmatterHelper =  new FrontmatterHelper(this.app);
+      this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings, this.manifest);
+      this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
+      this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
+      this.fileLabels = new FileLabels(this.app, this.settings);
+      this.setupCommands();
+      addIcon(GOAL_ICON, GOAL_ICON_SVG);
+      this.registerView(
+        VIEW_TYPE_GOAL,
+        (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
+        );
+      this.registerView(
+        VIEW_TYPE_STATS_DETAIL,
+        (leaf) => new StatsDetaillView(leaf, this, this.goalHistoryHelper)
+        );
+      this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
+      this.setupEvents();
+      this.initialFrontmatterGoalIndex();
+    }
+
+    async onunload() {
+      this.fileLabels.resetAllFileLabels();
+    }
 
     async initialFrontmatterGoalIndex() {
       const files = this.app.vault.getMarkdownFiles();
