@@ -7,10 +7,6 @@
     text-align: center;
 }
 
-.nav-file-title, .nav-folder-title {
-    flex-grow: 1;
-}
-
 .stats-detail svg {
     width: 100%;
     height: auto;
