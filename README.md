@@ -75,7 +75,23 @@ You should now be able to make changes to the code and debug within Obsidian.
 
 
 ## Thanks
+
+### Plugin references
 A big thanks to [@isaaclyman](https://github.com/isaaclyman). I based my code for calculating word counts and displaying content alongside files/folders in the file explorer on his [Novel word count plugin](https://github.com/isaaclyman/novel-word-count-obsidian).
+
+Thanks also to [@lukeleppan](https://github.com/lukeleppan) whose [Better Word Count plugin](https://github.com/lukeleppan/better-word-count) helped me resolve some language specific word count issues.
+
+### Contributors
+- [@danieltomasz](https://github.com/danieltomasz)
+  - Pull requests to exlcude markdown comments and HTML comments from word counts.
+
+### Beta testers
+Thanks to all those who have tried out the plugin Beta and particularly those who have raised bugs and feature requests:
+- [@danieltomasz](https://github.com/danieltomasz)
+- [@FeralFlora](https://github.com/FeralFlora)
+- [@lucastucious](https://github.com/lucastucious)
+- [@giseledute](https://github.com/giseledute)
+- [@Rhettica](https://github.com/Rhettica)
 
 ## Donating
 This plugin is provided free of charge.
