@@ -19,6 +19,9 @@ export class FileLabels {
 
     initFileLabels(pathForLabel?:string) {
         const fileExplorer = this.app.workspace.getLeavesOfType(VIEW_TYPE_FILE_EXPLORER)[0];
+        if(fileExplorer == null) {
+          return;
+        }
         const fileItems: { [path: string]: FileItem } = (
           fileExplorer.view as any
         ).fileItems;

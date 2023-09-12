@@ -63,7 +63,7 @@ export default class StatsDetaillView extends ItemView {
     async setStats() {
         const goalHistory = await this.historyHelper.loadHistory();
         const linkedChartData = await this.historyHelper.transformHistory(goalHistory);
-        const {customGoalBarColor, customDailyGoalBarColor, showProgressChart} = this.plugin.settings;
+        const {customGoalBarColor, customDailyGoalBarColor } = this.plugin.settings;
         const isMobile = Platform.isMobile;
         const onHistoryUpdate = this.onHistoryUpdate;
         const onGoalClick = this.onGoalClick;

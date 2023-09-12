@@ -40,6 +40,9 @@ export class NoteGoalHelper {
     }
 
     async createGoal(settings:WritingGoalsSettings, fileOrFolder: TAbstractFile, goalCount?: number, dailyGoalCount?: number): Promise<NoteGoal> {
+        if(fileOrFolder == null){
+            return undefined;
+        }
         const isFile = this.isFile(fileOrFolder);
         if(isFile) {
             goalCount = this.getGoalCount(settings.customGoalFrontmatterKey, fileOrFolder);
