@@ -8,7 +8,7 @@
 }
 
 .nav-file-title, .nav-folder-title {
-    justify-content: space-between;
+    flex-grow: 1;
 }
 
 .stats-detail svg {

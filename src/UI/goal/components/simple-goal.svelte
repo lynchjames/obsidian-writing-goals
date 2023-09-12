@@ -114,7 +114,7 @@
     .writing-goals-simple-container {
       align-self: center;
       flex: 1;
-      margin: -10px 0 0 10px;
+      margin: -10px 0 0 auto;
       max-width: 25px;
       min-width: 25px;
       max-height: 15px;
