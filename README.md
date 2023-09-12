@@ -90,6 +90,7 @@ Thanks to all those who have tried out the plugin Beta and particularly those wh
 - [@danieltomasz](https://github.com/danieltomasz)
 - [@FeralFlora](https://github.com/FeralFlora)
 - [@lucastucious](https://github.com/lucastucious)
+- [@isaaclyman](https://github.com/isaaclyman)
 - [@giseledute](https://github.com/giseledute)
 - [@Rhettica](https://github.com/Rhettica)
 
