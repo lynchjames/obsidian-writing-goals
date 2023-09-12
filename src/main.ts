@@ -3,11 +3,12 @@ import {
   Plugin,
   TAbstractFile,
   TFile,
-  TFolder
+  TFolder,
+  addIcon
 } from 'obsidian';
 
 import { WritingGoalsSettings } from './core/settings/settings';
-import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS_DETAIL } from './core/constants';
+import { GOAL_ICON, GOAL_ICON_SVG, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS_DETAIL } from './core/constants';
 import GoalView from './UI/goal/goal-view';
 import { WritingGoalsSettingsTab } from './core/settings/settings-tab';
 import { NoteGoalHelper, Notes } from './core/note-goal';
@@ -39,6 +40,7 @@ export default class WritingGoals extends Plugin {
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.fileLabels = new FileLabels(this.app, this.settings);
     this.setupCommands();
+    addIcon(GOAL_ICON, GOAL_ICON_SVG);
     this.registerView(
       VIEW_TYPE_GOAL,
       (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)

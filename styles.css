@@ -20,3 +20,12 @@
 .stats-detail-item h3 {
     text-align: left !important;
 }
+
+.svg-icon.writing-goals-radar {
+    color: var(--icon-color);
+    fill: transparent;
+    opacity: var(--icon-opacity);
+    stroke: var(--icon-color);
+    transform: scale(4.166666666666667);
+    transform-origin: 0 0;
+}
