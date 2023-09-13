@@ -1,5 +1,6 @@
 <script lang="ts">
     import GoalProgress from './components/goal-progress.svelte';
+    import Nav from '../nav/components/nav.svelte';
     import  GoalSummary from './components/goal-summary.svelte';
     import  Stats from '../stats/components/stats.svelte';
     import { onDestroy, onMount } from "svelte";
@@ -8,7 +9,6 @@
 	  import type { GoalHistory } from '../../core/goal-history/history';
 	  import type { HistoryStatsItem, HistoryStatsItems } from '../../core/goal-history/history-stats';
   	import { loadGoal } from './goal-helper.js';
-	import Nav from '../nav/components/nav.svelte';
     
     export let path: string;
     export let isMobile: boolean;
@@ -40,7 +40,7 @@
           return;
         }
         goals = val;
-        keys = Object.keys(goals);
+        keys = Object.keys(goals).sort((a, b) => goals[a].title.localeCompare(goals[b].title));
         currentIndex = keys.indexOf(path);
         updateGoal();
     });
