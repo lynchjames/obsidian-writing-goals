@@ -51,7 +51,6 @@ export default class WritingGoals extends Plugin {
         );
       this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
       this.setupEvents();
-      this.initialFrontmatterGoalIndex();
     }
 
     async onunload() {
@@ -207,23 +206,20 @@ export default class WritingGoals extends Plugin {
           })
         );
 
-        this.registerEvent(
-          this.app.workspace.on("layout-change", (async () => {
-            this.goalLeaves = this.settings.goalLeaves.map(x => x);
-            await this.loadNoteGoalData(true);
-          }))
-        );
-
         this.app.workspace.onLayoutReady((async () => {
           this.goalLeaves = this.settings.goalLeaves.map(x => x);
-          await this.loadNoteGoalData();
+          this.initialFrontmatterGoalIndex();
         }));
         
         this.registerInterval(
           window.setInterval(() => {
             const goalLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL);
-            this.settings.goalLeaves = goalLeaves.map(gl => (gl.view as GoalView).path);
-            this.saveData(this.settings);
+            const updatedLeaves = goalLeaves.map(gl => (gl.view as GoalView).path);
+            const match = this.settings.goalLeaves.length == updatedLeaves.length && this.settings.goalLeaves.every((v, i) => v == updatedLeaves[i]);
+            if(!match){
+              this.settings.goalLeaves = updatedLeaves;
+              this.saveData(this.settings);
+            }
           }, 5000)
         );
     }

@@ -50,8 +50,6 @@ export default class GoalView extends ItemView {
     }
 
     async updatePath(path:string) {
-        this.plugin.settings.goalLeaves.push(path);
-        this.plugin.saveData(this.plugin.settings);
         this.path = path;
         await this.setGoal();
     }
@@ -62,8 +60,6 @@ export default class GoalView extends ItemView {
     }
 
     onNavClick = (path:string) => {
-        this.plugin.settings.goalLeaves.push(path);
-        this.plugin.saveData(this.plugin.settings);
         this.path = path;    
     }
 
