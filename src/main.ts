@@ -11,9 +11,8 @@ import { WritingGoalsSettings } from "./core/settings/settings";
 import { GOAL_ICON, GOAL_ICON_SVG, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS_DETAIL } from "./core/constants";
 import GoalView from "./UI/goal/goal-view";
 import { WritingGoalsSettingsTab } from "./core/settings/settings-tab";
-import { NoteGoalHelper, Notes } from "./core/note-goal";
+import { GoalHelper } from "./core/goal-helper";
 import { ObsidianFileHelper } from "./IO/obsidian-file";
-import { wgcolors, goalHistory, noteGoals } from "./UI/stores/goal-store";
 import GoalTargetModal from "./UI/modals/goal-target-modal";
 import GoalModal from "./UI/modals/goal-modal";
 import { FileLabels } from "./UI/goal/file-labels";
@@ -28,29 +27,22 @@ export default class WritingGoals extends Plugin {
   fileHelper: ObsidianFileHelper;
   frontmatterHelper: FrontmatterHelper;
   goalHistoryHelper: GoalHistoryHelper;
-  noteGoalHelper: NoteGoalHelper;
+  noteGoalHelper: GoalHelper;
   goalLeaves: string[];
 
   async onload() {
     this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
     this.fileHelper = new ObsidianFileHelper(this.settings);
-    this.frontmatterHelper = new FrontmatterHelper(this.app);
+    this.frontmatterHelper = new FrontmatterHelper(this.app, this.settings);
     this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings, this.manifest);
-    this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
+    this.noteGoalHelper = new GoalHelper(this.app, this.settings, this.goalHistoryHelper);
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.fileLabels = new FileLabels(this.app, this.settings);
     this.settings.migrateSettings();
     this.saveData(this.settings);
     this.setupCommands();
     addIcon(GOAL_ICON, GOAL_ICON_SVG);
-    this.registerView(
-      VIEW_TYPE_GOAL,
-      (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
-    );
-    this.registerView(
-      VIEW_TYPE_STATS_DETAIL,
-      (leaf) => new StatsDetaillView(leaf, this, this.goalHistoryHelper)
-    );
+    this.registerViews();
     this.addSettingTab(new WritingGoalsSettingsTab(this.app, this));
     this.setupEvents();
   }
@@ -59,12 +51,15 @@ export default class WritingGoals extends Plugin {
     this.fileLabels.resetAllFileLabels();
   }
 
-  async initialFrontmatterGoalIndex() {
-    const files = this.app.vault.getMarkdownFiles();
-    await files.forEach(async (file) => {
-      await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file);
-    });
-    this.loadNoteGoalData(true);
+  private registerViews() {
+    this.registerView(
+      VIEW_TYPE_GOAL,
+      (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
+    );
+    this.registerView(
+      VIEW_TYPE_STATS_DETAIL,
+      (leaf) => new StatsDetaillView(leaf, this, this.goalHistoryHelper)
+    );
   }
 
   setupCommands() {
@@ -172,17 +167,7 @@ export default class WritingGoals extends Plugin {
             .onClick(async () => {
               this.settings.removeGoal(fileOrFolder);
               await this.saveData(this.settings);
-              if (fileOrFolder instanceof TFile) {
-                const file = fileOrFolder as TFile;
-                await this.app.fileManager.processFrontMatter(file as TFile, (frontMatter) => {
-                  try {
-                    delete frontMatter[this.settings.customGoalFrontmatterKey];
-                    delete frontMatter[this.settings.customDailyGoalFrontmatterKey];
-                  } catch (error) {
-                    new Notice("Error removing goal frontmatter for " + file.name);
-                  }
-                });
-              }
+              await this.frontmatterHelper.removeFrontmatter(fileOrFolder);
               this.detachGoalViewLeaf(fileOrFolder.path);
               await this.loadNoteGoalData(true, fileOrFolder.path);
             });
@@ -210,7 +195,6 @@ export default class WritingGoals extends Plugin {
 
     this.app.workspace.onLayoutReady((async () => {
       this.goalLeaves = this.settings.goalLeaves.map(x => x);
-      wgcolors.set(this.settings.customColors);
       this.initialFrontmatterGoalIndex();
     }));
 
@@ -225,6 +209,14 @@ export default class WritingGoals extends Plugin {
         }
       }, 5000)
     );
+  }
+
+  async initialFrontmatterGoalIndex() {
+    const files = this.app.vault.getMarkdownFiles();
+    files.forEach(async (file) => {
+      await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file);
+    });
+    this.loadNoteGoalData(true);
   }
 
   async openGoalModal(fileOrFolder: TAbstractFile, openGoalOnSubmit?: boolean) {
@@ -261,24 +253,9 @@ export default class WritingGoals extends Plugin {
   }
 
   async loadNoteGoalData(requiresGoalLabelUpdate?: boolean, pathForLabel?: string) {
-    let notes = new Notes();
-    for (let index = 0; index < this.settings.noteGoals.length; index++) {
-      const noteGoal = this.settings.noteGoals[index];
-      const file = this.app.vault.getAbstractFileByPath(noteGoal);
-      const goal = await this.noteGoalHelper.createGoal(this.settings, file);
-      notes[noteGoal] = goal;
-    }
-    for (let index = 0; index < this.settings.folderGoals.length; index++) {
-      const folderGoal = this.settings.folderGoals[index];
-      const folder = this.app.vault.getAbstractFileByPath(folderGoal.path);
-      const goal = await this.noteGoalHelper.createGoal(this.settings, folder, folderGoal.goalCount, folderGoal.dailyGoalCount);
-      notes[folderGoal.path] = goal;
-    }
-    noteGoals.set(notes);
-    goalHistory.set(await this.goalHistoryHelper.loadHistory());
+    await this.noteGoalHelper.updateGoalsFromSettings();
     if (requiresGoalLabelUpdate) {
-      await this.fileLabels.initFileLabels(pathForLabel);
+      this.fileLabels.initFileLabels(pathForLabel);
     }
   }
-
 }

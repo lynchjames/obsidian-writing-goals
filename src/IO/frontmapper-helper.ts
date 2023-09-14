@@ -1,11 +1,14 @@
-import { TFolder, type App, TFile } from "obsidian";
+import { TFolder, type App, TFile, TAbstractFile, Notice } from "obsidian";
 import type WritingGoals from "../main";
+import { WritingGoalsSettings } from "../core/settings/settings";
 
 export class FrontmatterHelper {
   app: App;
+  settings: WritingGoalsSettings;
 
-  constructor(app: App) {
+  constructor(app: App, settings: WritingGoalsSettings) {
     this.app = app;
+    this.settings = settings;
   }
 
   get(key: string, path: string) {
@@ -38,5 +41,19 @@ export class FrontmatterHelper {
     }
     // Returns true when frontmatter causes a change to a goal
     return ((wordGoal || dailWwordGoal) && !exists) || (!wordGoal && !dailWwordGoal && exists);
+  }
+
+  async removeFrontmatter(fileOrFolder: TAbstractFile) {
+    if (fileOrFolder instanceof TFile) {
+      const file = fileOrFolder as TFile;
+      await this.app.fileManager.processFrontMatter(file as TFile, (frontMatter) => {
+        try {
+          delete frontMatter[this.settings.customGoalFrontmatterKey];
+          delete frontMatter[this.settings.customDailyGoalFrontmatterKey];
+        } catch (error) {
+          new Notice("Error removing goal frontmatter for " + file.name);
+        }
+      });
+    }
   }
 }

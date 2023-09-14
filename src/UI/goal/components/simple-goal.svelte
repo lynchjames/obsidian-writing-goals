@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { wgcolors, noteGoals } from '../../stores/goal-store';
-	import type { NoteGoal, Notes } from '../../../core/note-goal';
 	import type { WritingGoalColors } from '../../../core/settings/colors';
+	import { WritingGoal, WritingGoals } from '../../../core/goal-entities';
 
 	export let path: string;
 	export let colors: WritingGoalColors;
 
-	let goals: Notes;
+	let goals: WritingGoals;
 	let keys: string[];
-	let goal: NoteGoal;
+	let goal: WritingGoal;
 	let percent: number = 0;
 	let dailyPercent: number = 0;
 	let progress: number = 0;

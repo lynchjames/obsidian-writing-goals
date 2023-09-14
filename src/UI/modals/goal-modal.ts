@@ -1,5 +1,5 @@
 import { Modal, Setting, TAbstractFile, TFile, TFolder } from "obsidian";
-import { NoteGoalHelper } from "../../core/note-goal";
+import { GoalHelper } from "../../core/goal-helper";
 import type WritingGoals from "../../main";
 import { GoalHistoryHelper } from "../../core/goal-history/history";
 import type { WritingGoalsSettings } from "../../core/settings/settings";
@@ -12,16 +12,16 @@ export default class GoalModal extends Modal {
   userSubmittedDailyGoalCount: string = "0";
   frontmatterHelper: FrontmatterHelper;
   goalHistoryHelper: GoalHistoryHelper;
-  noteGoalHelper: NoteGoalHelper;
+  noteGoalHelper: GoalHelper;
   openGoalOnSubmit: boolean = false;
 
   constructor(plugin: WritingGoals, goalHistoryHelper: GoalHistoryHelper) {
     super(plugin.app);
     this.plugin = plugin;
     this.settings = this.plugin.settings;
-    this.frontmatterHelper = new FrontmatterHelper(this.plugin.app);
+    this.frontmatterHelper = new FrontmatterHelper(this.plugin.app, this.settings);
     this.goalHistoryHelper = goalHistoryHelper;
-    this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
+    this.noteGoalHelper = new GoalHelper(this.app, this.settings, this.goalHistoryHelper);
     this.goalHistoryHelper = new GoalHistoryHelper(this.plugin.app, this.plugin.settings, this.plugin.manifest);
   }
 

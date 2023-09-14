@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import { showGoalMessage } from '../../stores/goal-store';
-	import type { NoteGoal } from '../../../core/note-goal';
 	import type { WritingGoalColors } from '../../../core/settings/colors';
+	import { WritingGoal } from '../../../core/goal-entities';
 
-	export let goal: NoteGoal;
+	export let goal: WritingGoal;
 	export let goalData: {
 		percent: number;
 		dailyPercent: number;
@@ -15,7 +15,7 @@
 
 	let showMessage: boolean = true;
 
-	function getOverallGoalCountText(goal: NoteGoal) {
+	function getOverallGoalCountText(goal: WritingGoal) {
 		return goal.wordCount.toLocaleString() + ' of';
 	}
 

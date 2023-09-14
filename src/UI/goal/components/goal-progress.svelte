@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import { wgcolors } from '../../stores/goal-store';
-	import type { NoteGoal } from '../../../core/note-goal';
 	import type { WritingGoalColors } from '../../../core/settings/colors';
+	import { WritingGoal } from '../../../core/goal-entities';
 
 	export let path: string;
-	export let goal: NoteGoal;
+	export let goal: WritingGoal;
 	export let goalData: {
 		percent: number;
 		dailyPercent: number;
@@ -31,12 +31,12 @@
 		return per < 95 ? 'round' : 'butt';
 	}
 
-	function getWordCount(goal: NoteGoal) {
+	function getWordCount(goal: WritingGoal) {
 		const count = goal.dailyGoalCount > 0 ? goal.wordCount - goal.startCount : goal.wordCount;
 		return count.toLocaleString();
 	}
 
-	function getWordsText(goal: NoteGoal) {
+	function getWordsText(goal: WritingGoal) {
 		return goal.dailyGoalCount > 0 ? 'words today' : 'words';
 	}
 

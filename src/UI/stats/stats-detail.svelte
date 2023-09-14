@@ -4,11 +4,11 @@
 	import { LinkedChart, LinkedLabel } from 'svelte-tiny-linked-charts';
 	import { wgcolors, goalHistory, noteGoals } from '../stores/goal-store';
 	import { onDestroy, onMount } from 'svelte';
-	import type { Notes } from '../../core/note-goal';
 	import type { GoalHistory } from '../../core/goal-history/history';
 	import type { HistoryStatsItem, HistoryStatsItems } from '../../core/goal-history/history-stats';
-	import { loadGoal } from '../goal/goal-helper.js';
+	import { loadGoal } from '../goal/progress-helper.js';
 	import type { WritingGoalColors } from '../../core/settings/colors';
+	import { WritingGoals } from '../../core/goal-entities';
 
 	export let chartData: HistoryStatsItems;
 	export let colors: WritingGoalColors;
@@ -16,7 +16,7 @@
 	export let onGoalClick: (path: string) => void;
 	export let onTitleClick: (path: string) => void;
 
-	let goals: Notes;
+	let goals: WritingGoals;
 	let keys: string[];
 	let goalColors: WritingGoalColors;
 

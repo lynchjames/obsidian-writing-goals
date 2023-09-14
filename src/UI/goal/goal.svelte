@@ -5,11 +5,11 @@
     import  Stats from "../stats/components/stats.svelte";
     import { onDestroy, onMount } from "svelte";
 	  import { wgcolors, goalHistory, noteGoals } from "../stores/goal-store";
-	  import type { NoteGoal, Notes } from "../../core/note-goal";
 	  import type { GoalHistory } from "../../core/goal-history/history";
 	  import type { HistoryStatsItem, HistoryStatsItems } from "../../core/goal-history/history-stats";
-  	import { loadGoal } from "./goal-helper.js";
+  	import { loadGoal } from "./progress-helper.js";
 	  import type { WritingGoalColors } from "../../core/settings/colors";
+	import { WritingGoal, WritingGoals } from "../../core/goal-entities";
     
     export let path: string;
     export let isMobile: boolean;
@@ -20,9 +20,9 @@
     export let onNavClick: (path:string) => void;
     export let onHistoryUpdate: (val:GoalHistory) => any;
 
-    let goals: Notes;
+    let goals: WritingGoals;
     let keys: string[];
-    let goal: NoteGoal;
+    let goal: WritingGoal;
     let chartData: any;
     let currentIndex: number;
     let goalColors: WritingGoalColors;
