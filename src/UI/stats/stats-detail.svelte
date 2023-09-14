@@ -2,29 +2,27 @@
     import GoalProgress from "../goal/components/goal-progress.svelte";
     import GoalSummary from "../goal/components/goal-summary.svelte";
     import { LinkedChart, LinkedLabel} from "svelte-tiny-linked-charts"
-    import { dailyGoalColor, goalColor, goalHistory, noteGoals } from "../stores/goal-store";
+    import { wgcolors, goalHistory, noteGoals } from "../stores/goal-store";
     import { onDestroy, onMount } from "svelte";
 	  import type { Notes } from '../../core/note-goal';
 	  import type { GoalHistory } from "../../core/goal-history/history";
 	  import type { HistoryStatsItem, HistoryStatsItems } from "../../core/goal-history/history-stats";
 	  import { loadGoal } from "../goal/goal-helper.js";
+	import type { WritingGoalColors } from "../../core/settings/colors";
 
     export let chartData:HistoryStatsItems;
-    export let color: string;
-    export let dailyColor: string;
+    export let colors: WritingGoalColors;
     export let onHistoryUpdate: (val:GoalHistory) => HistoryStatsItems
     export let onGoalClick: (path:string) => void;
     export let onTitleClick: (path:string) => void;
 
     let goals: Notes;
     let keys: string[];
-    let gColor: string;
-    let dGColor: string;
+    let goalColors: WritingGoalColors;
     
 
     onMount(() => {
-      gColor = color;
-      dGColor = dailyColor;
+      goalColors = colors;
     })
 
     const unsubNoteGoals = noteGoals.subscribe(val => {
@@ -38,18 +36,13 @@
       }
     });
 
-    const unsubGoalColor = goalColor.subscribe(val => {
-      gColor = val
-    });
-
-    const unsubDailyGoalColor = dailyGoalColor.subscribe(val => {
-      dGColor = val
+    const unsubColors = wgcolors.subscribe(val => {
+      goalColors = val;
     });
 
     onDestroy(unsubNoteGoals);
     onDestroy(unsubHistory);
-    onDestroy(unsubGoalColor);
-    onDestroy(unsubDailyGoalColor);
+    onDestroy(unsubColors);
 
     function transform(stats: HistoryStatsItem[]) {
       return stats ? Object.fromEntries(stats.map(s => [s.date, s.value])) : {};
@@ -78,8 +71,7 @@
               <GoalProgress 
                 path={key} 
                 goal={goals[key]}
-                color={color}
-                dailyColor={dailyColor}  
+                colors={goalColors}  
                 {onGoalClick}
                 goalData={loadGoal(goals[key])}
               />
@@ -103,7 +95,7 @@
               valuePosition="top"
               barMinHeight={2}
               hideBarBelow={1}
-              fill="{goals[key].dailyGoalCount > 0 ? dGColor : gColor}"
+              fill="{goals[key].dailyGoalCount > 0 ? goalColors.dailyGoalColor : goalColors.goalColor}"
               transition={500}
             />
           </div>
@@ -112,8 +104,7 @@
         <GoalSummary 
           goal={goals[key]} 
           goalData={loadGoal(goals[key])}
-          color={gColor} 
-          dailyColor={dGColor} 
+          colors={goalColors}
         />
 
       </div>

@@ -4,16 +4,16 @@
     import  GoalSummary from './components/goal-summary.svelte';
     import  Stats from '../stats/components/stats.svelte';
     import { onDestroy, onMount } from "svelte";
-	  import { dailyGoalColor, goalColor, goalHistory, noteGoals } from '../stores/goal-store';
+	  import { wgcolors, goalHistory, noteGoals } from '../stores/goal-store';
 	  import type { NoteGoal, Notes } from '../../core/note-goal';
 	  import type { GoalHistory } from '../../core/goal-history/history';
 	  import type { HistoryStatsItem, HistoryStatsItems } from '../../core/goal-history/history-stats';
   	import { loadGoal } from './goal-helper.js';
+	  import type { WritingGoalColors } from '../../core/settings/colors';
     
     export let path: string;
     export let isMobile: boolean;
-    export let color: string;
-    export let dailyColor: string;
+    export let colors: WritingGoalColors;
     export let linkedChartData: HistoryStatsItems;
     export let showProgressChart: boolean;
     export let onGoalClick: (path:string) => void;
@@ -25,12 +25,10 @@
     let goal: NoteGoal;
     let chartData: any;
     let currentIndex: number;
-    let gColor: string;
-    let dGColor: string;
+    let goalColors: WritingGoalColors;
 
     onMount(() => {
-      gColor = color;
-      dGColor = dailyColor;
+      goalColors = colors;
     })
 
     $: transform(linkedChartData[path]);
@@ -51,18 +49,13 @@
       }
     });
 
-    const unsubGoalColor = goalColor.subscribe(val => {
-      gColor = val
-    });
-
-    const unsubDailyGoalColor = dailyGoalColor.subscribe(val => {
-      dGColor = val
+    const unsubColors = wgcolors.subscribe(val => {
+      goalColors = val;
     });
 
     onDestroy(unsubNoteGoals);
     onDestroy(unsubHistory);
-    onDestroy(unsubGoalColor);
-    onDestroy(unsubDailyGoalColor);
+    onDestroy(unsubColors);
 
     function transform(stats: HistoryStatsItem[]) {
       chartData = stats ? Object.fromEntries(stats.map(s => [s.date, s.value])) : {};
@@ -110,22 +103,20 @@
         {path}
         goal={goals[path]}
         goalData={loadGoal(goal)}
-        {color}
-        {dailyColor}
+        colors={goalColors}
         {onGoalClick}
       />
       
       <GoalSummary 
         goal={goal} 
         goalData={loadGoal(goal)}
-        color={gColor} 
-        dailyColor={dGColor} 
+        colors={goalColors} 
       />
 
       <Stats 
         {path}
         showProgress={showProgressChart}
-        color={goal.dailyGoalCount > 0 ? dGColor : gColor}
+        color={goal.dailyGoalCount > 0 ? goalColors.dailyGoalColor : goalColors.goalColor}
         chartData={chartData}
       />
     </div>

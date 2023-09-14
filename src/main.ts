@@ -13,7 +13,7 @@ import GoalView from './UI/goal/goal-view';
 import { WritingGoalsSettingsTab } from './core/settings/settings-tab';
 import { NoteGoalHelper, Notes } from './core/note-goal';
 import { ObsidianFileHelper } from './IO/obsidian-file';
-import { goalHistory, noteGoals } from './UI/stores/goal-store';
+import { wgcolors, goalHistory, noteGoals } from './UI/stores/goal-store';
 import GoalTargetModal from './UI/modals/goal-target-modal';
 import GoalModal from './UI/modals/goal-modal';
 import { FileLabels } from './UI/goal/file-labels';
@@ -39,6 +39,8 @@ export default class WritingGoals extends Plugin {
       this.noteGoalHelper = new NoteGoalHelper(this.app, this.settings, this.goalHistoryHelper);
       this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
       this.fileLabels = new FileLabels(this.app, this.settings);
+      this.settings.migrateSettings();
+      this.saveData(this.settings);
       this.setupCommands();
       addIcon(GOAL_ICON, GOAL_ICON_SVG);
       this.registerView(
@@ -208,6 +210,7 @@ export default class WritingGoals extends Plugin {
 
         this.app.workspace.onLayoutReady((async () => {
           this.goalLeaves = this.settings.goalLeaves.map(x => x);
+          wgcolors.set(this.settings.customColors);
           this.initialFrontmatterGoalIndex();
         }));
         

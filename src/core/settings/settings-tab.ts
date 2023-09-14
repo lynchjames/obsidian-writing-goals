@@ -5,14 +5,12 @@ import {
 } from 'obsidian';
 import type WritingGoals from '../../main';
 import { FileLabels } from '../../UI/goal/file-labels';
-import { dailyGoalColor, goalColor, showGoalMessage, showProgressChart } from '../../UI/stores/goal-store';
+import { wgcolors, showGoalMessage, showProgressChart } from '../../UI/stores/goal-store';
 import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_FRONTMATTER_KEY, VIEW_TYPE_GOAL } from '../constants';
 
   export class WritingGoalsSettingsTab extends PluginSettingTab {
     plugin: WritingGoals;
     fileLabels: FileLabels;
-    defaultGoalColor: string;
-    defaultDailyGoalColor: string;
 
     constructor(app: App, plugin: WritingGoals) {
       super(app, plugin);
@@ -168,13 +166,12 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
             }))
             .addColorPicker(color =>
             color
-              .setValue(this.plugin.settings.customGoalBarColor)
+              .setValue(this.plugin.settings.customColors?.goalColor)
               .onChange(async (value:string) => {
                 const defaultColor = GOAL_BAR_COLOR
                 value = value != '' ? value : defaultColor;
-                this.plugin.settings.customGoalBarColor = value;
-                await this.plugin.saveData(this.plugin.settings);
-                goalColor.set(value);
+                this.plugin.settings.customColors.goalColor = value;
+                this.updateColors();
               }));
 
         const dailyColorSetting = new Setting(containerEl)
@@ -190,13 +187,18 @@ import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_
           }))
         .addColorPicker(color =>
           color
-            .setValue(this.plugin.settings.customDailyGoalBarColor)
+            .setValue(this.plugin.settings.customColors.dailyGoalColor)
             .onChange(async (value:string) => {
               const defaultColor = DAILY_GOAL_BAR_COLOR
               value = value != '' ? value : defaultColor;
-              this.plugin.settings.customDailyGoalBarColor = value;
-              await this.plugin.saveData(this.plugin.settings);
-              dailyGoalColor.set(value);
+              this.plugin.settings.customColors.dailyGoalColor = value;
+              this.updateColors();
             }));
+    }
+
+    updateColors(){
+      const customColors = this.plugin.settings.customColors;
+      this.plugin.saveData(this.plugin.settings);
+      wgcolors.set(customColors);
     }
   }

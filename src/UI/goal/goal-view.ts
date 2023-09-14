@@ -72,7 +72,7 @@ export default class GoalView extends ItemView {
 
     async setGoal() {
         const linkedChartData = await this.historyHelper.getStats();
-        const {customGoalBarColor, customDailyGoalBarColor, showProgressChart} = this.plugin.settings;
+        const {customColors, showProgressChart} = this.plugin.settings;
         const isMobile = Platform.isMobile;
         const onGoalClick = this.onGoalClick;
         const onNavClick = this.onNavClick;
@@ -87,8 +87,7 @@ export default class GoalView extends ItemView {
             props: {
                 path: this.path,
                 isMobile: isMobile,
-                color: customGoalBarColor,
-                dailyColor: customDailyGoalBarColor,
+                colors: customColors,
                 linkedChartData: linkedChartData,
                 showProgressChart: showProgressChart,
                 onGoalClick: onGoalClick,

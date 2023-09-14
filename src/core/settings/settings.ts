@@ -1,5 +1,6 @@
 import type { TAbstractFile } from "obsidian";
 import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BAR_COLOR, GOAL_FRONTMATTER_KEY } from "../constants";
+import { WritingGoalColors } from "./colors";
 
 export class WritingGoalsSettings {
 
@@ -15,9 +16,24 @@ export class WritingGoalsSettings {
   showProgressChart: boolean = false;
   excludeComments: boolean = true;
   allowNegativeGoalProgress: boolean= false;
-  customGoalBarColor: string = GOAL_BAR_COLOR;
-  customDailyGoalBarColor: string = DAILY_GOAL_BAR_COLOR;
+  customColors: WritingGoalColors = new WritingGoalColors()
+  //Deprecated
+  customGoalBarColor: string;
+  //Deprecated
+  customDailyGoalBarColor: string;
   additionalFileTypes: string[];
+
+  migrateSettings() {
+    //Migrate existing settings to new data structure
+    if(this.customGoalBarColor) {
+      this.customColors.goalColor = this.customGoalBarColor;
+      this.customGoalBarColor = undefined;
+    }
+    if(this.customDailyGoalBarColor) {
+      this.customColors.dailyGoalColor = this.customDailyGoalBarColor;
+      this.customDailyGoalBarColor = undefined;
+    }
+  }
 
   noGoal(path:string): boolean{
     return !this.noteGoals.contains(path) && this.folderGoals.filter(fg => fg.path == path).length == 0;

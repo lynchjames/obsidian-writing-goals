@@ -47,8 +47,7 @@ export class FileLabels {
         target: itemEl,
         props: {
           path: path,
-          color: this.settings.customGoalBarColor,
-          dailyColor: this.settings.customDailyGoalBarColor,
+          colors: this.settings.customColors,
         },
       });
     }

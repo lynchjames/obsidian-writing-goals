@@ -2,11 +2,11 @@
     import { onDestroy } from "svelte";
     import { showGoalMessage } from '../../stores/goal-store';
     import type { NoteGoal } from '../../../core/note-goal';
+	import type { WritingGoalColors } from "../../../core/settings/colors";
 
     export let goal: NoteGoal;
     export let goalData: { percent: number, dailyPercent: number, progress: number, dailyProgress: number};
-    export let color: string;
-    export let dailyColor: string;
+    export let colors: WritingGoalColors;
 
     let showMessage: boolean = true;
 
@@ -32,7 +32,7 @@
         {#if goalData.percent >= 100}
             {goal.goalCount.toLocaleString()} <span class="note-goal note-goal-completed">word goal completed!</span>
         {:else}
-            {getOverallGoalCountText(goal)} {goal.goalCount.toLocaleString()}&nbsp;<span class="note-goal" style="{getColorStyle(color)}">word goal</span> 
+            {getOverallGoalCountText(goal)} {goal.goalCount.toLocaleString()}&nbsp;<span class="note-goal" style="{getColorStyle(colors.goalColor)}">word goal</span> 
         {/if}
     </h3>
     {/if}
@@ -41,7 +41,7 @@
         {#if goalData.dailyPercent >= 100}
             {goal.dailyGoalCount.toLocaleString()} <span class="note-daily-goal note-goal-completed">daily word goal</span> completed!
         {:else}
-            {goal.dailyGoalCount.toLocaleString()} <span class="note-daily-goal" style="{getColorStyle(dailyColor)}">daily word goal</span>
+            {goal.dailyGoalCount.toLocaleString()} <span class="note-daily-goal" style="{getColorStyle(colors.dailyGoalColor)}">daily word goal</span>
         {/if}
     </h3>
     {/if}
