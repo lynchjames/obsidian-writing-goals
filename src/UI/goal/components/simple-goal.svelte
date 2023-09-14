@@ -80,25 +80,17 @@
       return goal.wordCount - goal.startCount;
     }
 
-    function getCompletedClass(percent) {
-      return percent == 100 ? 'note-goal-completed' : '';
-    }
-
-    function getDailyCompletedClass(dailyPercent) {
-      return dailyPercent == 100 ? 'daily-note-goal-completed' : '';
-    }
-
 </script>
 
  <div class="writing-goals-simple-container" data-path="{path}" title="{getPercentText(percent, dailyPercent)}">
-    <svg class="writing-goals-simple" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
+    <svg class="writing-goals-simple" viewBox="0 0 200 200" fill={goalColors.backgroundColor} version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <circle class="wg-background" fill="{percent == 100 ? goalColors.successColor : goalColors.backgroundColor}" r="100" cx="100" cy="100"></circle>
         <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" 
-        stroke="{colors.goalColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" stroke-dashoffset="{progress}"></circle>
+        stroke="{goalColors.goalColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" stroke-dashoffset="{progress}"></circle>
         {#if goal.dailyGoalCount > 0}
-            <circle r="50" class="wg-daily-background {getDailyCompletedClass(dailyPercent)}"  cx="100" cy="100"></circle>
+            <circle r="50" class="wg-daily-background" fill="{dailyPercent == 100 ? goalColors.successColor : goalColors.backgroundColor}"  cx="100" cy="100"></circle>
             <circle class="wg-daily-bar" r="50" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="314.15" stroke-linecap="{getLineCap(dailyPercent)}" 
-            stroke="{colors.dailyGoalColor}" stroke-dashoffset="{simpleDailyProgress}"></circle>
+            stroke="{goalColors.dailyGoalColor}" stroke-dashoffset="{simpleDailyProgress}"></circle>
         {/if}
     </svg>
 </div>
@@ -113,10 +105,6 @@
       max-height: 15px;
       min-height: 15px;
       order: 8;
-    }
-    
-    .writing-goals-simple {
-        fill: var(--background-primary);
     }
     
     .writing-goals-simple .wg-bar { 

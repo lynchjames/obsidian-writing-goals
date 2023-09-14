@@ -12,9 +12,9 @@ export const LABEL_PATH_DATA_ATTR = "data-path";
 
 export const GOAL_BAR_COLOR = "#a882ff";
 export const DAILY_GOAL_BAR_COLOR = "#e9973f";
-export const GOAL_TEXT_COLOR = "#fff";
-export const GOAL_BACKGROUND_COLOR = "#000";
-export const GOAL_SUCCESS_COLOR = "green";
+export const GOAL_TEXT_COLOR = "#ffffff";
+export const GOAL_BACKGROUND_COLOR = "#171717";
+export const GOAL_SUCCESS_COLOR = "#308b4b";
 
 export const DEFAULT_GOAL_HISTORY_PATH =
   "goal-history.json";
