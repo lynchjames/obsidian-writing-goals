@@ -5,13 +5,12 @@ import { DEFAULT_GOAL_HISTORY_PATH as GOAL_HISTORY_PATH } from "../constants";
 import moment from "moment";
 import type { WritingGoalsSettings } from "../settings/settings";
 
-export interface GoalHistoryItem
-{
-    date?:string,
-    dailyGoal:number,
-    goal:number,
-    startCount:number,
-    endCount:number
+export interface GoalHistoryItem {
+    date?: string,
+    dailyGoal: number,
+    goal: number,
+    startCount: number,
+    endCount: number
 }
 
 export class GoalHistory {
@@ -19,13 +18,13 @@ export class GoalHistory {
 }
 
 export class GoalHistoryHelper {
-    
+
     app: App;
     settings: WritingGoalsSettings;
     manifest: PluginManifest;
     goalFile: WritingGoalsFile;
 
-    constructor(app:App, settings:WritingGoalsSettings, manifest:PluginManifest) {
+    constructor(app: App, settings: WritingGoalsSettings, manifest: PluginManifest) {
         this.app = app;
         this.settings = settings;
         this.manifest = manifest;
@@ -35,8 +34,8 @@ export class GoalHistoryHelper {
 
     async init() {
         const historyExists = await this.historyExists();
-        if(!historyExists) {
-            if(this.app.vault.adapter instanceof FileSystemAdapter) {
+        if (!historyExists) {
+            if (this.app.vault.adapter instanceof FileSystemAdapter) {
                 await this.goalFile.saveJson(this.historyPath(), new GoalHistory);
             }
         }
@@ -50,9 +49,9 @@ export class GoalHistoryHelper {
     async historyExists() {
         return await this.goalFile.exists(this.historyPath());
     }
-    
-    async todaysGoalItem(path:string): Promise<GoalHistoryItem> {
-        if(!this.historyExists()) {
+
+    async todaysGoalItem(path: string): Promise<GoalHistoryItem> {
+        if (!this.historyExists()) {
             return undefined;
         }
         const goalHistory = await this.loadHistory();
@@ -61,27 +60,27 @@ export class GoalHistoryHelper {
     }
 
 
-    async loadHistory():Promise<GoalHistory> {
+    async loadHistory(): Promise<GoalHistory> {
         return await this.goalFile.loadJson(this.historyPath()) as GoalHistory;
     }
 
-    async updateGoalForToday(path: string, goalCount: number, dailyGoalCount:number, wordCount: number) {
+    async updateGoalForToday(path: string, goalCount: number, dailyGoalCount: number, wordCount: number) {
         let item = await this.todaysGoalItem(path);
-        if(item != null) {
+        if (item != null) {
             item.dailyGoal = dailyGoalCount;
             item.goal = goalCount;
             item.endCount = wordCount;
         } else {
-           item = {dailyGoal: dailyGoalCount, goal:goalCount, startCount: wordCount, endCount: wordCount}; 
+            item = { dailyGoal: dailyGoalCount, goal: goalCount, startCount: wordCount, endCount: wordCount };
         }
-        if(!this.settings.allowNegativeGoalProgress && item.endCount - item.startCount < 0){
+        if (!this.settings.allowNegativeGoalProgress && item.endCount - item.startCount < 0) {
             item.startCount = item.endCount;
         }
         item.date = this.today();
         await this.saveGoal(path, item)
     }
 
-    async saveGoal(path:string, item:GoalHistoryItem) {
+    async saveGoal(path: string, item: GoalHistoryItem) {
         const history = await this.loadHistory();
         let historyForPath = history[path] ?? [];
         historyForPath = historyForPath.filter(ghi => ghi.date != item.date);
@@ -96,17 +95,17 @@ export class GoalHistoryHelper {
         await this.saveGoal(path, item);
     }
 
-    async renameHistoryEntry(path:string, oldPath:string){
+    async renameHistoryEntry(path: string, oldPath: string) {
         const history = await this.loadHistory();
         const existingEntries = history[oldPath];
-        if(existingEntries) {
+        if (existingEntries) {
             history[path] = existingEntries;
             delete history[oldPath];
         }
         await this.goalFile.saveJson(this.historyPath(), history);
     }
 
-    goalItemForDate(goalHistory:GoalHistory, path: string, date: string): GoalHistoryItem {
+    goalItemForDate(goalHistory: GoalHistory, path: string, date: string): GoalHistoryItem {
         return goalHistory[path]?.filter(gh => gh.date == date)[0];
     }
 
@@ -114,15 +113,15 @@ export class GoalHistoryHelper {
         return moment().startOf('day').toString();
     }
 
-    async getStats(path?:string) {
+    async getStats(path?: string) {
         const history = await this.loadHistory();
         return this.transformHistory(history, path);
     }
 
-    transformHistory(history: GoalHistory, path?:string) {
+    transformHistory(history: GoalHistory, path?: string) {
         const transformResult = new HistoryStatsItems();
-        for(let historyPath in history){
-            if(path == null || path == historyPath){
+        for (let historyPath in history) {
+            if (path == null || path == historyPath) {
                 const item = history[historyPath];
                 transformResult[historyPath] = [];
                 const sortedDateCounts = item.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -130,11 +129,11 @@ export class GoalHistoryHelper {
                 const take = sortedDateCounts.reverse().slice(0, 90).reverse();
                 const statsItems = take
                     .map(d => new HistoryStatsItem(
-                            historyPath, 
-                            //TODO: Convert this format to a plugin setting
-                            moment(new Date(d.date)).format("ddd DD MMM YYYY"), 
-                            this.calculateWordsWritten(d)
-                        ));
+                        historyPath,
+                        //TODO: Convert this format to a plugin setting
+                        moment(new Date(d.date)).format("ddd DD MMM YYYY"),
+                        this.calculateWordsWritten(d)
+                    ));
                 transformResult[historyPath].push(...statsItems);
             }
         }

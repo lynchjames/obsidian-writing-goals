@@ -7,15 +7,15 @@ import type { GoalHistory, GoalHistoryHelper } from '../../core/goal-history/his
 
 
 export default class GoalView extends ItemView {
-   
+
     settings: WritingGoalsSettings;
-    path:string;
+    path: string;
     plugin: WritingGoals;
     goal: any;
     historyHelper: GoalHistoryHelper;
     linkedListData: { [key: string]: number; };
 
-    constructor(leaf: WorkspaceLeaf, plugin:WritingGoals, historyHelper:GoalHistoryHelper){
+    constructor(leaf: WorkspaceLeaf, plugin: WritingGoals, historyHelper: GoalHistoryHelper) {
         super(leaf);
         this.plugin = plugin;
         this.historyHelper = historyHelper;
@@ -32,16 +32,16 @@ export default class GoalView extends ItemView {
     getIcon() {
         return GOAL_ICON;
     }
-    
+
     async onload(): Promise<void> {
-        if(this.goal != undefined){
+        if (this.goal != undefined) {
             return;
         }
         const path = this.plugin.goalLeaves.pop();
-        if(!path){
+        if (!path) {
             return;
         }
-        this.path = path; 
+        this.path = path;
         await this.setGoal();
     }
 
@@ -49,22 +49,22 @@ export default class GoalView extends ItemView {
         await this.setGoal();
     }
 
-    async updatePath(path:string) {
+    async updatePath(path: string) {
         this.path = path;
         await this.setGoal();
     }
 
-    onGoalClick = (path:string) => {
+    onGoalClick = (path: string) => {
         const fileOrFolder = this.app.vault.getAbstractFileByPath(path);
         this.plugin.openGoalModal(fileOrFolder);
     }
 
-    onNavClick = (path:string) => {
-        this.path = path;    
+    onNavClick = (path: string) => {
+        this.path = path;
     }
 
     onHistoryUpdate = (val: GoalHistory) => {
-        if(val != null){
+        if (val != null) {
             const historyStats = this.historyHelper.transformHistory(val);
             return historyStats;
         }
@@ -72,14 +72,14 @@ export default class GoalView extends ItemView {
 
     async setGoal() {
         const linkedChartData = await this.historyHelper.getStats();
-        const {customColors, showProgressChart} = this.plugin.settings;
+        const { customColors, showProgressChart } = this.plugin.settings;
         const isMobile = Platform.isMobile;
         const onGoalClick = this.onGoalClick;
         const onNavClick = this.onNavClick;
         const onHistoryUpdate = this.onHistoryUpdate;
 
         //Goal svelte componet creation must happen immediately after existing component is destroyed.
-        if(this.goal != null) {
+        if (this.goal != null) {
             this.goal.$destroy();
         }
         this.goal = new Goal({
@@ -94,7 +94,7 @@ export default class GoalView extends ItemView {
                 onNavClick: onNavClick,
                 onHistoryUpdate: onHistoryUpdate
             }
-        });    
+        });
     }
 }
 

@@ -31,7 +31,7 @@ export class NoteGoalHelper {
     goalHistoryHelper: GoalHistoryHelper;
     frontmatterHelper: FrontmatterHelper;
 
-    constructor(app:App, settings:WritingGoalsSettings, goalHistoryHelper:GoalHistoryHelper) {
+    constructor(app: App, settings: WritingGoalsSettings, goalHistoryHelper: GoalHistoryHelper) {
         this.app = app;
         this.settings = settings;
         this.fileHelper = new ObsidianFileHelper(this.settings);
@@ -39,12 +39,12 @@ export class NoteGoalHelper {
         this.frontmatterHelper = new FrontmatterHelper(this.app);
     }
 
-    async createGoal(settings:WritingGoalsSettings, fileOrFolder: TAbstractFile, goalCount?: number, dailyGoalCount?: number): Promise<NoteGoal> {
-        if(fileOrFolder == null){
+    async createGoal(settings: WritingGoalsSettings, fileOrFolder: TAbstractFile, goalCount?: number, dailyGoalCount?: number): Promise<NoteGoal> {
+        if (fileOrFolder == null) {
             return undefined;
         }
         const isFile = this.isFile(fileOrFolder);
-        if(isFile) {
+        if (isFile) {
             goalCount = this.getGoalCount(settings.customGoalFrontmatterKey, fileOrFolder);
             dailyGoalCount = this.getGoalCount(settings.customDailyGoalFrontmatterKey, fileOrFolder);
         }
@@ -63,19 +63,19 @@ export class NoteGoalHelper {
         return result;
     }
 
-    getGoalCount(frontMatterKey:string, file:TAbstractFile){
+    getGoalCount(frontMatterKey: string, file: TAbstractFile) {
         const metadata = this.app.metadataCache.getFileCache(file as TFile);
-        if(metadata && metadata.frontmatter){
+        if (metadata && metadata.frontmatter) {
             return metadata.frontmatter[frontMatterKey] ?? 0;
         }
         return 0;
     }
 
-    async getWordCount(fileOrFolder:TAbstractFile){
+    async getWordCount(fileOrFolder: TAbstractFile) {
         const isFile = this.isFile(fileOrFolder);
-        if(isFile) {
+        if (isFile) {
             const include = this.frontmatterHelper.get(WORD_COUNT_INCLUDE_FRONTMATTER_KEY, fileOrFolder.path);
-            if(include != null && (include == "false" || !include)) {
+            if (include != null && (include == "false" || !include)) {
                 return 0;
             }
             const fileContents = await this.app.vault.cachedRead(fileOrFolder as TFile);
@@ -86,11 +86,11 @@ export class NoteGoalHelper {
         }
     }
 
-    async getWordCountRecursive(fileOrFolder: TAbstractFile){
+    async getWordCountRecursive(fileOrFolder: TAbstractFile) {
         let count = 0;
-        if(this.isFile(fileOrFolder)){
+        if (this.isFile(fileOrFolder)) {
             count = count + await this.getWordCount(fileOrFolder);
-        } else if(fileOrFolder instanceof TFolder) {
+        } else if (fileOrFolder instanceof TFolder) {
             const children = (fileOrFolder as TFolder).children
             for (let index = 0; index < children.length; index++) {
                 const child = children[index];
@@ -100,11 +100,11 @@ export class NoteGoalHelper {
         return count;
     }
 
-    isFile(fileOrFolder:TAbstractFile){
+    isFile(fileOrFolder: TAbstractFile) {
         return fileOrFolder instanceof TFile && (fileOrFolder.extension == "md" || this.additionalFileTypes(fileOrFolder));
     }
 
-    additionalFileTypes(file:TFile) {
+    additionalFileTypes(file: TFile) {
         return this.settings.additionalFileTypes.contains(file.extension);
     }
 }

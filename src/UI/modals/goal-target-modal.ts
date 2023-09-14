@@ -5,9 +5,9 @@ import type GoalModal from './goal-modal';
 const EMPTY_TEXT = 'No files found to append content. Enter to create a new one.'
 const PLACEHOLDER_TEXT = 'Type file to append to or create';
 const instructions = [
-    {command: '↑↓', purpose: 'to navigate'},
-    {command: '↵', purpose: 'to select note or folder for goal'},
-    {command: 'esc', purpose: 'to dismiss'}
+    { command: '↑↓', purpose: 'to navigate' },
+    { command: '↵', purpose: 'to select note or folder for goal' },
+    { command: 'esc', purpose: 'to dismiss' }
 ];
 
 export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
@@ -20,7 +20,7 @@ export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
     plugin: WritingGoals;
     goalModal: GoalModal;
 
-    constructor(plugin:WritingGoals, goalModal:GoalModal) {
+    constructor(plugin: WritingGoals, goalModal: GoalModal) {
         super(plugin.app);
         this.goalModal = goalModal;
         this.plugin = plugin;
@@ -38,25 +38,25 @@ export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
 
     getItems(): TAbstractFile[] {
         const inputName = this.inputEl.value;
-        if(inputName.length == 0 || this.files.filter(f => this.isMatch(f.path, inputName + '.md')).length > 0){
+        if (inputName.length == 0 || this.files.filter(f => this.isMatch(f.path, inputName + '.md')).length > 0) {
             return this.files;
         }
-        const newFile: TFile = {basename: this.inputEl.value, path: undefined, stat: undefined, vault: undefined, extension: undefined, parent: undefined, name: undefined};
+        const newFile: TFile = { basename: this.inputEl.value, path: undefined, stat: undefined, vault: undefined, extension: undefined, parent: undefined, name: undefined };
         newFile.path = this.inputEl.value;
         return [newFile, ...this.files];
     }
-    
+
     getItemText(item: TAbstractFile): string {
         this.noSuggestion = false;
         return item.path;
     }
-    
+
     onChooseItem(item: TAbstractFile, evt: MouseEvent | KeyboardEvent): void {
-        if(this.goalModal != null) {
+        if (this.goalModal != null) {
             this.goalModal.init(this.plugin, item);
             this.close();
             this.goalModal.open();
-        } else if(this.settings.showGoalOnCreateAndUpdate) {
+        } else if (this.settings.showGoalOnCreateAndUpdate) {
             this.plugin.initLeaf(item.path);
         }
     }
@@ -72,8 +72,8 @@ export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
         resultEl.appendChild(el);
     }
 
-    isMatch(input: string, match: string){
+    isMatch(input: string, match: string) {
         return input.toLocaleLowerCase() == match.toLocaleLowerCase()
     }
-    
+
 }

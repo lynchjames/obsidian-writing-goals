@@ -7,15 +7,15 @@ import type { GoalHistory, GoalHistoryHelper } from '../../core/goal-history/his
 
 
 export default class StatsDetaillView extends ItemView {
-   
+
     settings: WritingGoalsSettings;
-    path:string;
+    path: string;
     plugin: WritingGoals;
     statsDetail: any;
     historyHelper: GoalHistoryHelper;
     linkedListData: { [key: string]: number; };
 
-    constructor(leaf: WorkspaceLeaf, plugin:WritingGoals, historyHelper:GoalHistoryHelper){
+    constructor(leaf: WorkspaceLeaf, plugin: WritingGoals, historyHelper: GoalHistoryHelper) {
         super(leaf);
         this.plugin = plugin;
         this.historyHelper = historyHelper;
@@ -32,7 +32,7 @@ export default class StatsDetaillView extends ItemView {
     getIcon() {
         return GOAL_ICON;
     }
-    
+
     async onload(): Promise<void> {
 
     }
@@ -41,13 +41,13 @@ export default class StatsDetaillView extends ItemView {
         await this.setStats();
     }
 
-    onGoalClick = (path:string) => {
+    onGoalClick = (path: string) => {
         const fileOrFolder = this.app.vault.getAbstractFileByPath(path);
         this.plugin.openGoalModal(fileOrFolder);
     }
 
     onHistoryUpdate = (val: GoalHistory) => {
-        if(val != null){
+        if (val != null) {
             const historyStats = this.historyHelper.transformHistory(val);
             return historyStats;
         }
@@ -55,7 +55,7 @@ export default class StatsDetaillView extends ItemView {
 
     onTitleClick = (path: string) => {
         const isFile = this.app.vault.getAbstractFileByPath(path) instanceof TFile;
-        if(isFile){
+        if (isFile) {
             this.app.workspace.openLinkText('', path, "tab");
         }
     }
@@ -69,7 +69,7 @@ export default class StatsDetaillView extends ItemView {
         const onTitleClick = this.onTitleClick;
 
         //Goal svelte componet creation must happen immediately after existing component is destroyed.
-        if(this.statsDetail != null) {
+        if (this.statsDetail != null) {
             this.statsDetail.$destroy();
         }
         this.statsDetail = new StatsDetail({
@@ -81,7 +81,7 @@ export default class StatsDetaillView extends ItemView {
                 onGoalClick: onGoalClick,
                 onTitleClick: onTitleClick
             }
-        });    
+        });
     }
 }
 
