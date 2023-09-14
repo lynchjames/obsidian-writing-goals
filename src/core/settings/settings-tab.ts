@@ -1,5 +1,6 @@
 import {
   App,
+  Notice,
   PluginSettingTab,
   Setting
 } from 'obsidian';
@@ -223,8 +224,10 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
         button
           .setButtonText("Reindex")
           .setCta()
-          .onClick(evt => {
-            this.plugin.loadNoteGoalData(true);
+          .onClick(async evt => {
+            new Notice("Starting writing goals reindexing", 5000);
+            await this.plugin.loadNoteGoalData(true);
+            new Notice("Writing goals reindexed", 5000);
           }))
       .addTextArea(text =>
         text
