@@ -142,7 +142,7 @@
   }
 
   .stats-detail-item:last-child {
-    margin-bottom: 56px;
+    margin-bottom: 64px;
   }
 
   .stats-detail-title {
