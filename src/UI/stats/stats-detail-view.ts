@@ -1,9 +1,9 @@
-import { ItemView, WorkspaceLeaf, Platform, TFile } from 'obsidian';
-import StatsDetail from './stats-detail.svelte';
-import type { WritingGoalsSettings } from '../../core/settings/settings';
-import { GOAL_ICON, VIEW_TYPE_STATS_DETAIL } from '../../core/constants';
-import type WritingGoals from '../../main';
-import type { GoalHistory, GoalHistoryHelper } from '../../core/goal-history/history';
+import { ItemView, WorkspaceLeaf, Platform, TFile } from "obsidian";
+import StatsDetail from "./stats-detail.svelte";
+import type { WritingGoalsSettings } from "../../core/settings/settings";
+import { GOAL_ICON, VIEW_TYPE_STATS_DETAIL } from "../../core/constants";
+import type WritingGoals from "../../main";
+import type { GoalHistory, GoalHistoryHelper } from "../../core/goal-history/history";
 
 
 export default class StatsDetaillView extends ItemView {
@@ -26,7 +26,7 @@ export default class StatsDetaillView extends ItemView {
     }
 
     getDisplayText(): string {
-        return 'Writing goal stats';
+        return "Writing goal stats";
     }
 
     getIcon() {
@@ -56,7 +56,7 @@ export default class StatsDetaillView extends ItemView {
     onTitleClick = (path: string) => {
         const isFile = this.app.vault.getAbstractFileByPath(path) instanceof TFile;
         if (isFile) {
-            this.app.workspace.openLinkText('', path, "tab");
+            this.app.workspace.openLinkText("", path, "tab");
         }
     }
 

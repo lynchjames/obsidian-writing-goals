@@ -1,5 +1,5 @@
 import typescript from '@rollup/plugin-typescript';
-import {nodeResolve} from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 import svelte from "rollup-plugin-svelte";
@@ -19,9 +19,9 @@ export default {
   plugins: [
     svelte({
       emitCss: false,
-       preprocess: autoPreprocess()
+      preprocess: autoPreprocess()
     }),
-    nodeResolve({browser: true}),
+    nodeResolve({ browser: true }),
     commonjs(),
     typescript(),
     copy({

@@ -53,7 +53,7 @@ export class NoteGoalHelper {
         const todaysDailyGoal = await this.goalHistoryHelper.todaysGoalItem(fileOrFolder.path);
         const result = {
             path: fileOrFolder.path,
-            title: fileOrFolder.name.split('.')[0],
+            title: fileOrFolder.name.split(".")[0],
             goalType: isFile ? GoalType.Note : GoalType.Folder,
             goalCount: goalCount,
             dailyGoalCount: dailyGoalCount,

@@ -5,21 +5,21 @@ import {
   TFile,
   TFolder,
   addIcon
-} from 'obsidian';
+} from "obsidian";
 
-import { WritingGoalsSettings } from './core/settings/settings';
-import { GOAL_ICON, GOAL_ICON_SVG, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS_DETAIL } from './core/constants';
-import GoalView from './UI/goal/goal-view';
-import { WritingGoalsSettingsTab } from './core/settings/settings-tab';
-import { NoteGoalHelper, Notes } from './core/note-goal';
-import { ObsidianFileHelper } from './IO/obsidian-file';
-import { wgcolors, goalHistory, noteGoals } from './UI/stores/goal-store';
-import GoalTargetModal from './UI/modals/goal-target-modal';
-import GoalModal from './UI/modals/goal-modal';
-import { FileLabels } from './UI/goal/file-labels';
-import { GoalHistoryHelper } from './core/goal-history/history';
-import { FrontmatterHelper } from './IO/frontmapper-helper';
-import StatsDetaillView from './UI/stats/stats-detail-view';
+import { WritingGoalsSettings } from "./core/settings/settings";
+import { GOAL_ICON, GOAL_ICON_SVG, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS_DETAIL } from "./core/constants";
+import GoalView from "./UI/goal/goal-view";
+import { WritingGoalsSettingsTab } from "./core/settings/settings-tab";
+import { NoteGoalHelper, Notes } from "./core/note-goal";
+import { ObsidianFileHelper } from "./IO/obsidian-file";
+import { wgcolors, goalHistory, noteGoals } from "./UI/stores/goal-store";
+import GoalTargetModal from "./UI/modals/goal-target-modal";
+import GoalModal from "./UI/modals/goal-modal";
+import { FileLabels } from "./UI/goal/file-labels";
+import { GoalHistoryHelper } from "./core/goal-history/history";
+import { FrontmatterHelper } from "./IO/frontmapper-helper";
+import StatsDetaillView from "./UI/stats/stats-detail-view";
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
@@ -69,8 +69,8 @@ export default class WritingGoals extends Plugin {
 
   setupCommands() {
     this.addCommand({
-      id: 'view-writing-goal-for-note',
-      name: 'View writing goal for the current note',
+      id: "view-writing-goal-for-note",
+      name: "View writing goal for the current note",
       callback: async () => {
         await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, this.app.workspace.getActiveFile());
         if (this.settings.showGoalOnCreateAndUpdate) {
@@ -81,8 +81,8 @@ export default class WritingGoals extends Plugin {
     });
 
     this.addCommand({
-      id: 'view-writing-goal',
-      name: 'View writing goal for any note or folder',
+      id: "view-writing-goal",
+      name: "View writing goal for any note or folder",
       callback: async () => {
         new GoalTargetModal(this, null).open();
       },
@@ -90,8 +90,8 @@ export default class WritingGoals extends Plugin {
     });
 
     this.addCommand({
-      id: 'add-writing-goal',
-      name: 'Add or update a writing goal for a note or folder',
+      id: "add-writing-goal",
+      name: "Add or update a writing goal for a note or folder",
       callback: async () => {
         new GoalTargetModal(this, new GoalModal(this, this.goalHistoryHelper)).open();
       },
@@ -99,8 +99,8 @@ export default class WritingGoals extends Plugin {
     });
 
     this.addCommand({
-      id: 'view-writing-goal-stats',
-      name: 'View all your writing goal stats',
+      id: "view-writing-goal-stats",
+      name: "View all your writing goal stats",
       callback: async () => {
         const statsLeaf = await this.app.workspace.getLeaf(true);
         await statsLeaf.setViewState({

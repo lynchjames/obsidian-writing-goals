@@ -23,10 +23,8 @@ export class FrontmatterHelper {
 
   async updateNoteGoalsFromFrontmatter(plugin: WritingGoals, file: TFile): Promise<boolean> {
     const metadata = plugin.app.metadataCache.getCache(file.path);
-    const wordGoal = metadata && metadata.frontmatter
-      && metadata.frontmatter[plugin.settings.customGoalFrontmatterKey];
-    const dailWwordGoal = metadata && metadata.frontmatter
-      && metadata.frontmatter[plugin.settings.customDailyGoalFrontmatterKey];
+    const wordGoal = metadata && metadata.frontmatter && metadata.frontmatter[plugin.settings.customGoalFrontmatterKey];
+    const dailWwordGoal = metadata && metadata.frontmatter && metadata.frontmatter[plugin.settings.customDailyGoalFrontmatterKey];
     const exists = plugin.settings.noteGoals.contains(file.path);
     plugin.settings.noteGoals = [...new Set(plugin.settings.noteGoals)];
     if (exists) {

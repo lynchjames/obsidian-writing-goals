@@ -110,7 +110,7 @@ export class GoalHistoryHelper {
     }
 
     today(): string {
-        return moment().startOf('day').toString();
+        return moment().startOf("day").toString();
     }
 
     async getStats(path?: string) {

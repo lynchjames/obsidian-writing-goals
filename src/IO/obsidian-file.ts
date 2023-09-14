@@ -1,7 +1,7 @@
 import type { CachedMetadata } from "obsidian";
 import type { WritingGoalsSettings } from "../core/settings/settings";
-import { remark } from 'remark'
-import strip from 'strip-markdown'
+import { remark } from "remark"
+import strip from "strip-markdown"
 
 export class ObsidianFileHelper {
   settings: WritingGoalsSettings;
@@ -54,15 +54,14 @@ export class ObsidianFileHelper {
       const frontmatterPos = (metadata as any).frontmatterPosition || metadata.frontmatter.position;
       content =
         frontmatterPos && frontmatterPos.start && frontmatterPos.end
-          ? content.slice(0, frontmatterPos.start.offset) +
-          content.slice(frontmatterPos.end.offset)
+          ? content.slice(0, frontmatterPos.start.offset) + content.slice(frontmatterPos.end.offset)
           : content;
     }
     return content;
   }
 
   removeCommentsRegex(commentRegex: RegExp, content: string): string {
-    const replaced = content.replace(commentRegex, '');
+    const replaced = content.replace(commentRegex, "");
     return replaced;
   }
 

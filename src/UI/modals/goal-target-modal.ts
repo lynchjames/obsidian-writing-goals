@@ -1,13 +1,13 @@
-import { FuzzySuggestModal, TAbstractFile, TFile, type FuzzyMatch } from 'obsidian';
-import type { WritingGoalsSettings } from '../../core/settings/settings';
-import type WritingGoals from '../../main';
-import type GoalModal from './goal-modal';
-const EMPTY_TEXT = 'No files found to append content. Enter to create a new one.'
-const PLACEHOLDER_TEXT = 'Type file to append to or create';
+import { FuzzySuggestModal, TAbstractFile, TFile, type FuzzyMatch } from "obsidian";
+import type { WritingGoalsSettings } from "../../core/settings/settings";
+import type WritingGoals from "../../main";
+import type GoalModal from "./goal-modal";
+const EMPTY_TEXT = "No files found to append content. Enter to create a new one."
+const PLACEHOLDER_TEXT = "Type file to append to or create";
 const instructions = [
-    { command: '↑↓', purpose: 'to navigate' },
-    { command: '↵', purpose: 'to select note or folder for goal' },
-    { command: 'esc', purpose: 'to dismiss' }
+    { command: "↑↓", purpose: "to navigate" },
+    { command: "↵", purpose: "to select note or folder for goal" },
+    { command: "esc", purpose: "to dismiss" }
 ];
 
 export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
@@ -38,7 +38,7 @@ export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
 
     getItems(): TAbstractFile[] {
         const inputName = this.inputEl.value;
-        if (inputName.length == 0 || this.files.filter(f => this.isMatch(f.path, inputName + '.md')).length > 0) {
+        if (inputName.length == 0 || this.files.filter(f => this.isMatch(f.path, inputName + ".md")).length > 0) {
             return this.files;
         }
         const newFile: TFile = { basename: this.inputEl.value, path: undefined, stat: undefined, vault: undefined, extension: undefined, parent: undefined, name: undefined };
@@ -62,12 +62,12 @@ export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
     }
 
     renderSuggestion(item: FuzzyMatch<TAbstractFile>, el: HTMLElement) {
-        el.innerText = item.item.path.replace('.md', '');
+        el.innerText = item.item.path.replace(".md", "");
     }
 
     itemInstructionMessage(resultEl: HTMLElement, message: string) {
-        const el = document.createElement('kbd');
-        el.addClass('suggestion-hotkey');
+        const el = document.createElement("kbd");
+        el.addClass("suggestion-hotkey");
         el.innerText = message;
         resultEl.appendChild(el);
     }
@@ -75,5 +75,4 @@ export default class GoalTargetModal extends FuzzySuggestModal<TAbstractFile>{
     isMatch(input: string, match: string) {
         return input.toLocaleLowerCase() == match.toLocaleLowerCase()
     }
-
 }

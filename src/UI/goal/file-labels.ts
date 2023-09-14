@@ -1,5 +1,5 @@
 import type { App } from "obsidian";
-import SimpleGoal from './components/simple-goal.svelte';
+import SimpleGoal from "./components/simple-goal.svelte";
 import type { WritingGoalsSettings } from "../../core/settings/settings";
 import { LABEL_PATH_DATA_ATTR, VIEW_TYPE_FILE_EXPLORER } from "../../core/constants";
 
@@ -84,6 +84,6 @@ export class FileLabels {
   }
 
   containsLabel(el: any, pathForLabel?: string) {
-    return el?.className?.contains('writing-goals-simple-container') && (!pathForLabel || el?.getAttr(LABEL_PATH_DATA_ATTR) == pathForLabel)
+    return el?.className?.contains("writing-goals-simple-container") && (!pathForLabel || el?.getAttr(LABEL_PATH_DATA_ATTR) == pathForLabel)
   }
 }

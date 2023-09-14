@@ -1,15 +1,15 @@
 <script lang="ts">
-    import GoalProgress from './components/goal-progress.svelte';
-    import Nav from '../nav/components/nav.svelte';
-    import  GoalSummary from './components/goal-summary.svelte';
-    import  Stats from '../stats/components/stats.svelte';
+    import GoalProgress from "./components/goal-progress.svelte";
+    import Nav from "../nav/components/nav.svelte";
+    import  GoalSummary from "./components/goal-summary.svelte";
+    import  Stats from "../stats/components/stats.svelte";
     import { onDestroy, onMount } from "svelte";
-	  import { wgcolors, goalHistory, noteGoals } from '../stores/goal-store';
-	  import type { NoteGoal, Notes } from '../../core/note-goal';
-	  import type { GoalHistory } from '../../core/goal-history/history';
-	  import type { HistoryStatsItem, HistoryStatsItems } from '../../core/goal-history/history-stats';
-  	import { loadGoal } from './goal-helper.js';
-	  import type { WritingGoalColors } from '../../core/settings/colors';
+	  import { wgcolors, goalHistory, noteGoals } from "../stores/goal-store";
+	  import type { NoteGoal, Notes } from "../../core/note-goal";
+	  import type { GoalHistory } from "../../core/goal-history/history";
+	  import type { HistoryStatsItem, HistoryStatsItems } from "../../core/goal-history/history-stats";
+  	import { loadGoal } from "./goal-helper.js";
+	  import type { WritingGoalColors } from "../../core/settings/colors";
     
     export let path: string;
     export let isMobile: boolean;
@@ -91,14 +91,14 @@
 
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
+    <div class="writing-goals-container {goal.dailyGoalCount > 0 ? "wg-daily-goal" : ""}">
       <Nav 
         {isMobile}
         showArrows={keys.length > 1} goal={goal} 
         onNextClick={onNextClick} 
         onPreviousClick={onPreviousClick}
       />
-      
+
       <GoalProgress
         {path}
         goal={goals[path]}
@@ -106,7 +106,7 @@
         colors={goalColors}
         {onGoalClick}
       />
-      
+
       <GoalSummary 
         goal={goal} 
         goalData={loadGoal(goal)}

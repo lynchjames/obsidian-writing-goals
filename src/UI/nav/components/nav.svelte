@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { NoteGoal } from '../../../core/note-goal';
-	import Arrow from './arrow.svelte';
+	import type { NoteGoal } from "../../../core/note-goal";
+	import Arrow from "./arrow.svelte";
     
     export let showArrows: boolean;
     export let goal: NoteGoal;
