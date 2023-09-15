@@ -35,7 +35,7 @@
 		<h3>
 			{#if goalData.percent >= 100}
 				{goal.goalCount.toLocaleString()}
-				<span class="note-goal note-goal-completed">word goal completed!</span>
+				<span class="note-goal" style="{getColorStyle(colors.successColor)}">word goal completed!</span>
 			{:else}
 				{getOverallGoalCountText(goal)}
 				{goal.goalCount.toLocaleString()}&nbsp;<span
@@ -49,7 +49,7 @@
 		<h3>
 			{#if goalData.dailyPercent >= 100}
 				{goal.dailyGoalCount.toLocaleString()}
-				<span class="note-daily-goal note-goal-completed">daily word goal</span> completed!
+				<span class="note-daily-goal" style="{getColorStyle(colors.successColor)}">daily word goal completed!</span>
 			{:else}
 				{goal.dailyGoalCount.toLocaleString()}
 				<span class="note-daily-goal" style={getColorStyle(colors.dailyGoalColor)}
@@ -66,9 +66,5 @@
 		text-align: center;
 		font-size: 1em;
 		margin: 4px 0;
-	}
-
-	.note-goal-completed {
-		color: var(--text-success);
 	}
 </style>
