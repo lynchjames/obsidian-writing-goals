@@ -8,10 +8,16 @@ import type WritingGoals from "../../main";
 import { FileLabels } from "../../UI/goal/file-labels";
 import { wgcolors, showGoalMessage, showProgressChart } from "../../UI/stores/goal-store";
 import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BACKGROUND_COLOR, GOAL_BAR_COLOR, GOAL_FRONTMATTER_KEY, GOAL_SUCCESS_COLOR, GOAL_TEXT_COLOR, VIEW_TYPE_GOAL } from "../constants";
+import { WritingGoalColors } from "./colors";
 
 export class WritingGoalsSettingsTab extends PluginSettingTab {
   plugin: WritingGoals;
   fileLabels: FileLabels;
+  colorSetting: Setting;
+  dailyColorSetting: Setting;
+  textColorSetting: Setting;
+  backgroundColorSetting: Setting;
+  successColorSetting: Setting;
 
   constructor(app: App, plugin: WritingGoals) {
     super(app, plugin);
@@ -104,116 +110,6 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
           }));
 
     new Setting(containerEl)
-      .setName("Colors")
-      .setHeading();
-
-    const colorSetting = new Setting(containerEl)
-      .setName("Goal progress bar color")
-      .setDesc("Set a custom color for the goal progress bar")
-      .addButton(button =>
-        button
-          .setIcon("lucide-rotate-ccw")
-          .onClick(evt => {
-            const input = colorSetting.controlEl.children[1] as HTMLInputElement;
-            input.value = GOAL_BAR_COLOR;
-            input.trigger("change");
-
-          }))
-      .addColorPicker(color =>
-        color
-          .setValue(this.plugin.settings.customColors?.goalColor)
-          .onChange(async (value: string) => {
-            const defaultColor = GOAL_BAR_COLOR
-            value = value != "" ? value : defaultColor;
-            this.plugin.settings.customColors.goalColor = value;
-            this.updateColors();
-          }));
-
-    const dailyColorSetting = new Setting(containerEl)
-      .setName("Daily goal progress bar color")
-      .setDesc("Set a custom color for the daily goal progress bar")
-      .addButton(button =>
-        button
-          .setIcon("lucide-rotate-ccw")
-          .onClick(evt => {
-            const input = dailyColorSetting.controlEl.children[1] as HTMLInputElement;
-            input.value = DAILY_GOAL_BAR_COLOR;
-            input.trigger("change");
-          }))
-      .addColorPicker(color =>
-        color
-          .setValue(this.plugin.settings.customColors.dailyGoalColor)
-          .onChange(async (value: string) => {
-            const defaultColor = DAILY_GOAL_BAR_COLOR
-            value = value != "" ? value : defaultColor;
-            this.plugin.settings.customColors.dailyGoalColor = value;
-            this.updateColors();
-          }));
-
-    const textColorSetting = new Setting(containerEl)
-      .setName("Goal progress text color")
-      .setDesc("Set a custom color for the text on the goal progress graphic")
-      .addButton(button =>
-        button
-          .setIcon("lucide-rotate-ccw")
-          .onClick(evt => {
-            const input = textColorSetting.controlEl.children[1] as HTMLInputElement;
-            input.value = GOAL_TEXT_COLOR;
-            input.trigger("change");
-          }))
-      .addColorPicker(color =>
-        color
-          .setValue(this.plugin.settings.customColors.textColor)
-          .onChange(async (value: string) => {
-            const defaultColor = GOAL_TEXT_COLOR
-            value = value != "" ? value : defaultColor;
-            this.plugin.settings.customColors.textColor = value;
-            this.updateColors();
-          }));
-
-    const backgroundColorSetting = new Setting(containerEl)
-      .setName("Goal progress background color")
-      .setDesc("Set a custom color for the background of the goal progress graphic")
-      .addButton(button =>
-        button
-          .setIcon("lucide-rotate-ccw")
-          .onClick(evt => {
-            const input = backgroundColorSetting.controlEl.children[1] as HTMLInputElement;
-            input.value = GOAL_BACKGROUND_COLOR;
-            input.trigger("change");
-          }))
-      .addColorPicker(color =>
-        color
-          .setValue(this.plugin.settings.customColors.backgroundColor)
-          .onChange(async (value: string) => {
-            const defaultColor = GOAL_BACKGROUND_COLOR
-            value = value != "" ? value : defaultColor;
-            this.plugin.settings.customColors.backgroundColor = value;
-            this.updateColors();
-          }));
-
-    const successColorSetting = new Setting(containerEl)
-      .setName("Completed goal progress color")
-      .setDesc("Set a custom color for the background the goal progress graphic when the goal is completed")
-      .addButton(button =>
-        button
-          .setIcon("lucide-rotate-ccw")
-          .onClick(evt => {
-            const input = successColorSetting.controlEl.children[1] as HTMLInputElement;
-            input.value = GOAL_SUCCESS_COLOR;
-            input.trigger("change");
-          }))
-      .addColorPicker(color =>
-        color
-          .setValue(this.plugin.settings.customColors.successColor)
-          .onChange(async (value: string) => {
-            const defaultColor = GOAL_SUCCESS_COLOR
-            value = value != "" ? value : defaultColor;
-            this.plugin.settings.customColors.successColor = value;
-            this.updateColors();
-          }));
-
-    new Setting(containerEl)
       .setName("File settings")
       .setHeading();
 
@@ -273,6 +169,109 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
             this.plugin.settings.customDailyGoalFrontmatterKey = value;
             await this.plugin.saveData(this.plugin.settings);
           }));
+
+    new Setting(containerEl)
+      .setName("Colors")
+      .setHeading();
+
+    const customColorsSettings = new Setting(containerEl)
+      .setName("Enable custom colors")
+      .setDesc("Enable custom colors to be used for goal progress")
+      .addToggle(toggle =>
+        toggle
+          .setValue(this.plugin.settings.enableCustomColors)
+          .onChange(async (value: boolean) => {
+            this.plugin.settings.enableCustomColors = value;
+            if (!this.plugin.settings.enableCustomColors) {
+              this.plugin.settings.customColors = new WritingGoalColors();
+            }
+            this.displayCustomColorPickers(containerEl);
+            await this.plugin.saveData(this.plugin.settings);
+          }));
+
+    this.displayCustomColorPickers(containerEl);
+  }
+
+  displayCustomColorPickers(containerEl) {
+    if (this.plugin.settings.enableCustomColors) {
+      this.colorSetting = new Setting(containerEl)
+        .setName("Goal progress bar color")
+        .setDesc("Set a custom color for the goal progress bar")
+        .addColorPicker(color =>
+          color
+            .setValue(this.plugin.settings.customColors?.goalColor)
+            .onChange(async (value: string) => {
+              const defaultColor = GOAL_BAR_COLOR
+              value = value != "" ? value : defaultColor;
+              this.plugin.settings.customColors.goalColor = value;
+              this.updateColors();
+            }));
+
+      this.dailyColorSetting = new Setting(containerEl)
+        .setName("Daily goal progress bar color")
+        .setDesc("Set a custom color for the daily goal progress bar")
+        .addColorPicker(color =>
+          color
+            .setValue(this.plugin.settings.customColors.dailyGoalColor)
+            .onChange(async (value: string) => {
+              const defaultColor = DAILY_GOAL_BAR_COLOR
+              value = value != "" ? value : defaultColor;
+              this.plugin.settings.customColors.dailyGoalColor = value;
+              this.updateColors();
+            }));
+
+      this.textColorSetting = new Setting(containerEl)
+        .setName("Goal progress text color")
+        .setDesc("Set a custom color for the text on the goal progress graphic")
+        .addColorPicker(color =>
+          color
+            .setValue(this.plugin.settings.customColors.textColor)
+            .onChange(async (value: string) => {
+              const defaultColor = GOAL_TEXT_COLOR
+              value = value != "" ? value : defaultColor;
+              this.plugin.settings.customColors.textColor = value;
+              this.updateColors();
+            }));
+
+      this.backgroundColorSetting = new Setting(containerEl)
+        .setName("Goal progress background color")
+        .setDesc("Set a custom color for the background of the goal progress graphic")
+        .addColorPicker(color =>
+          color
+            .setValue(this.plugin.settings.customColors.backgroundColor)
+            .onChange(async (value: string) => {
+              const defaultColor = GOAL_BACKGROUND_COLOR
+              value = value != "" ? value : defaultColor;
+              this.plugin.settings.customColors.backgroundColor = value;
+              this.updateColors();
+            }));
+
+      this.successColorSetting = new Setting(containerEl)
+        .setName("Completed goal progress color")
+        .setDesc("Set a custom color for the background the goal progress graphic when the goal is completed")
+        .addColorPicker(color =>
+          color
+            .setValue(this.plugin.settings.customColors.successColor)
+            .onChange(async (value: string) => {
+              const defaultColor = GOAL_SUCCESS_COLOR
+              value = value != "" ? value : defaultColor;
+              this.plugin.settings.customColors.successColor = value;
+              this.updateColors();
+            }));
+    } else {
+      [
+        this.colorSetting,
+        this.dailyColorSetting,
+        this.textColorSetting,
+        this.backgroundColorSetting,
+        this.successColorSetting
+      ].forEach(s => s?.settingEl.remove());
+      this.updateColors();
+    }
+  }
+
+  getColor(cssVar: string) {
+    return window.document.body.getCssPropertyValue(cssVar);
   }
 
   updateColors() {

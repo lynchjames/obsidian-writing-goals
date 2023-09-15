@@ -16,6 +16,7 @@ export class WritingGoalsSettings {
   showProgressChart: boolean = false;
   excludeComments: boolean = true;
   allowNegativeGoalProgress: boolean = false;
+  enableCustomColors: boolean = false;
   customColors: WritingGoalColors = new WritingGoalColors()
   //Deprecated
   customGoalBarColor: string;

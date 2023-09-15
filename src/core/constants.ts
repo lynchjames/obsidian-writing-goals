@@ -10,11 +10,17 @@ export const VIEW_TYPE_FILE_EXPLORER = "file-explorer"
 export const REMOVE_GOAL_ICON = "lucide-x";
 export const LABEL_PATH_DATA_ATTR = "data-path";
 
-export const GOAL_BAR_COLOR = "#a882ff";
-export const DAILY_GOAL_BAR_COLOR = "#e9973f";
-export const GOAL_TEXT_COLOR = "#ffffff";
-export const GOAL_BACKGROUND_COLOR = "#171717";
-export const GOAL_SUCCESS_COLOR = "#308b4b";
+// export const GOAL_BAR_COLOR = "";
+// export const DAILY_GOAL_BAR_COLOR = "";
+// export const GOAL_TEXT_COLOR = "";
+// export const GOAL_BACKGROUND_COLOR = "";
+// export const GOAL_SUCCESS_COLOR = "";
+
+export const GOAL_BAR_COLOR = "var(--interactive-accent)";
+export const DAILY_GOAL_BAR_COLOR = "var(--text-warning)";
+export const GOAL_TEXT_COLOR = "var(--text-normal)";
+export const GOAL_BACKGROUND_COLOR = "var(--background-primary)";
+export const GOAL_SUCCESS_COLOR = "var(--background-modifier-success)";
 
 export const DEFAULT_GOAL_HISTORY_PATH =
   "goal-history.json";

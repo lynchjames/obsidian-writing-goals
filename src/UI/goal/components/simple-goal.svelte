@@ -154,6 +154,11 @@
 		max-height: 15px;
 		min-height: 15px;
 		order: 8;
+		transition: max-width cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	}
+
+	.writing-goals-simple-container:hover {
+		max-width: 40px;
 	}
 
 	.writing-goals-simple .wg-bar {
