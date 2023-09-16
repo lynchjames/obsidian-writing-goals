@@ -1,5 +1,6 @@
 import {
   App,
+  HSL,
   Notice,
   PluginSettingTab,
   Setting
@@ -7,7 +8,7 @@ import {
 import type WritingGoals from "../../main";
 import { FileLabels } from "../../UI/goal/file-labels";
 import { wgcolors, showGoalMessage, showProgressChart } from "../../UI/stores/goal-store";
-import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BACKGROUND_COLOR, GOAL_BAR_COLOR, GOAL_FRONTMATTER_KEY, GOAL_SUCCESS_COLOR, GOAL_TEXT_COLOR, VIEW_TYPE_GOAL } from "../constants";
+import { DAILY_GOAL_BAR_COLOR, DAILY_GOAL_FRONTMATTER_KEY, GOAL_BACKGROUND_COLOR, GOAL_BAR_COLOR, GOAL_BAR_COLOR_HSL, GOAL_FRONTMATTER_KEY, GOAL_SUCCESS_COLOR, GOAL_TEXT_COLOR, VIEW_TYPE_GOAL } from "../constants";
 import { WritingGoalColors } from "./colors";
 
 export class WritingGoalsSettingsTab extends PluginSettingTab {
@@ -197,11 +198,12 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
       this.colorSetting = new Setting(containerEl)
         .setName("Goal progress bar color")
         .setDesc("Set a custom color for the goal progress bar")
-        .addColorPicker(color =>
+        .addColorPicker(color => 
           color
-            .setValue(this.plugin.settings.customColors?.goalColor)
+            .setValue(this.plugin.settings.customColors.goalColor)
+            .setValueHsl(this.plugin.settings.customColors.goalColor.startsWith("var") ? GOAL_BAR_COLOR_HSL : color.getValueHsl())
             .onChange(async (value: string) => {
-              const defaultColor = GOAL_BAR_COLOR
+              const defaultColor = GOAL_BAR_COLOR;
               value = value != "" ? value : defaultColor;
               this.plugin.settings.customColors.goalColor = value;
               this.updateColors();
@@ -212,9 +214,9 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
         .setDesc("Set a custom color for the daily goal progress bar")
         .addColorPicker(color =>
           color
-            .setValue(this.plugin.settings.customColors.dailyGoalColor)
+            .setValue(this.getColor(this.plugin.settings.customColors.dailyGoalColor))
             .onChange(async (value: string) => {
-              const defaultColor = DAILY_GOAL_BAR_COLOR
+              const defaultColor = DAILY_GOAL_BAR_COLOR;
               value = value != "" ? value : defaultColor;
               this.plugin.settings.customColors.dailyGoalColor = value;
               this.updateColors();
@@ -225,9 +227,9 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
         .setDesc("Set a custom color for the text on the goal progress graphic")
         .addColorPicker(color =>
           color
-            .setValue(this.plugin.settings.customColors.textColor)
+            .setValue(this.getColor(this.plugin.settings.customColors.textColor))
             .onChange(async (value: string) => {
-              const defaultColor = GOAL_TEXT_COLOR
+              const defaultColor = GOAL_TEXT_COLOR;
               value = value != "" ? value : defaultColor;
               this.plugin.settings.customColors.textColor = value;
               this.updateColors();
@@ -238,9 +240,9 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
         .setDesc("Set a custom color for the background of the goal progress graphic")
         .addColorPicker(color =>
           color
-            .setValue(this.plugin.settings.customColors.backgroundColor)
+            .setValue(this.getColor(this.plugin.settings.customColors.backgroundColor))
             .onChange(async (value: string) => {
-              const defaultColor = GOAL_BACKGROUND_COLOR
+              const defaultColor = GOAL_BACKGROUND_COLOR;
               value = value != "" ? value : defaultColor;
               this.plugin.settings.customColors.backgroundColor = value;
               this.updateColors();
@@ -251,9 +253,9 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
         .setDesc("Set a custom color for the background the goal progress graphic when the goal is completed")
         .addColorPicker(color =>
           color
-            .setValue(this.plugin.settings.customColors.successColor)
+            .setValue(this.getColor(this.plugin.settings.customColors.successColor))
             .onChange(async (value: string) => {
-              const defaultColor = GOAL_SUCCESS_COLOR
+              const defaultColor = GOAL_SUCCESS_COLOR;
               value = value != "" ? value : defaultColor;
               this.plugin.settings.customColors.successColor = value;
               this.updateColors();
@@ -270,8 +272,14 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
     }
   }
 
+  getHSLColor(cssVar: string): HSL {
+    return cssVar.startsWith("#") ? {h:0,s:0,l:0} : GOAL_BAR_COLOR_HSL;
+  }
+
   getColor(cssVar: string) {
-    return window.document.body.getCssPropertyValue(cssVar);
+    const regex = new RegExp(/var\(?(.+)\)/, "gi");
+    const val = cssVar.startsWith("var") ? regex.exec(cssVar)[1] : cssVar;
+    return window.document.body.getCssPropertyValue(val);
   }
 
   updateColors() {

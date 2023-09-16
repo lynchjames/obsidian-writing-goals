@@ -1,3 +1,5 @@
+import { HSL } from "obsidian";
+
 export const GOAL_FRONTMATTER_KEY = "word-goal";
 export const DAILY_GOAL_FRONTMATTER_KEY = "daily-word-goal";
 export const WORD_COUNT_INCLUDE_FRONTMATTER_KEY = "wordcount";
@@ -10,12 +12,7 @@ export const VIEW_TYPE_FILE_EXPLORER = "file-explorer"
 export const REMOVE_GOAL_ICON = "lucide-x";
 export const LABEL_PATH_DATA_ATTR = "data-path";
 
-// export const GOAL_BAR_COLOR = "";
-// export const DAILY_GOAL_BAR_COLOR = "";
-// export const GOAL_TEXT_COLOR = "";
-// export const GOAL_BACKGROUND_COLOR = "";
-// export const GOAL_SUCCESS_COLOR = "";
-
+export const GOAL_BAR_COLOR_HSL: HSL = {h:254, s:80, l:64.2};
 export const GOAL_BAR_COLOR = "var(--interactive-accent)";
 export const DAILY_GOAL_BAR_COLOR = "var(--text-warning)";
 export const GOAL_TEXT_COLOR = "var(--text-normal)";
