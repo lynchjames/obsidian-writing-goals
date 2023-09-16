@@ -7,9 +7,8 @@ import {
   addIcon
 } from "obsidian";
 
-<<<<<<< HEAD
 import { WritingGoalsSettings } from "./core/settings/settings";
-import { GOAL_ICON, GOAL_ICON_SVG, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS_DETAIL } from "./core/constants";
+import { GOAL_ICON, GOAL_ICON_SVG, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_GOAL_SPRINT, VIEW_TYPE_STATS_DETAIL } from "./core/constants";
 import GoalView from "./UI/goal/goal-view";
 import { WritingGoalsSettingsTab } from "./core/settings/settings-tab";
 import { GoalHelper } from "./core/goal-helper";
@@ -20,21 +19,7 @@ import { FileLabels } from "./UI/goal/file-labels";
 import { GoalHistoryHelper } from "./core/goal-history/history";
 import { FrontmatterHelper } from "./IO/frontmapper-helper";
 import StatsDetaillView from "./UI/stats/stats-detail-view";
-=======
-import { WritingGoalsSettings } from './core/settings/settings';
-import { GOAL_ICON, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_GOAL_SPRINT } from './core/constants';
-import GoalView from './UI/goal/goal-view';
-import { WritingGoalsSettingsTab } from './core/settings/settings-tab';
-import { NoteGoalHelper, Notes } from './core/note-goal';
-import { ObsidianFileHelper } from './IO/obsidian-file';
-import { goalHistory, noteGoals } from './UI/stores/goal-store';
-import GoalTargetModal from './UI/modals/goal-target-modal';
-import GoalModal from './UI/modals/goal-modal';
-import { FileLabels } from './UI/goal/file-labels';
-import { GoalHistoryHelper } from './core/goal-history/history';
-import { FrontmatterHelper } from './IO/frontmapper-helper';
-import SprintGoalView from './UI/goal/sprint-goal-view';
->>>>>>> 722af5d (Sprint goal PoC)
+import SprintGoalView from "./UI/goal/sprint-goal-view";
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;

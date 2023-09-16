@@ -1,237 +1,310 @@
 <script lang="ts">
-    import Nav from './nav.svelte';
-    import  GoalSummary from './goal-summary.svelte';
-    import  Stats from '../../stats/components/stats.svelte';
-    import { onDestroy, onMount } from "svelte";
-	  import { dailyGoalColor, goalColor, goalHistory, noteGoals } from '../../stores/goal-store';
-	  import type { NoteGoal, Notes } from '../../../core/note-goal';
-	  import type { GoalHistory } from '../../../core/goal-history/history';
-	  import type { HistoryStatsItem, HistoryStatsItems } from '../../../core/goal-history/history-stats';
+	import Nav from '../../nav/components/nav.svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import { noteGoals, wgcolors } from '../../stores/goal-store';
 	import moment from 'moment';
-    
-    export let path: string;
-    export let isMobile: boolean;
-    export let color: string;
-    export let dailyColor: string;
-    export let linkedChartData: HistoryStatsItems;
-    export let showProgressChart: boolean;
-    export let onGoalClick: (path:string) => void;
-    export let onHistoryUpdate: (val:GoalHistory) => any;
+	import { WritingGoalColors } from '../../../core/settings/colors';
+	import { WritingGoal, WritingGoals } from '../../../core/goal-entities';
 
-    let goals: Notes;
-    let keys: string[];
-    let goal: NoteGoal;
-    let currentIndex: number;
-    let percent: number = 0;
-    let dailyPercent: number = 0;
-    let progress: number = 0;
-    let dailyProgress: number = 0;
-    let simpleDailyProgress: number = 0;
-    let gColor: string;
-    let dGColor: string;
-    let start: any;
-    let future: any;
-    let secondsRemaining: number;
-    let minutesRemaining: number;
+	export let path: string;
+	export let isMobile: boolean;
+	export let colors: WritingGoalColors;
+	// export let onGoalClick: (path: string) => void;
 
-    onMount(() => {
-      gColor = color;
-      dGColor = dailyColor;
-      const now = moment() as any;
-      start = moment() as any;
-      future = now.add(5, 'minutes');
-    })
+	let goals: WritingGoals;
+	let keys: string[];
+	let goal: WritingGoal;
+	let currentIndex: number;
+	let percent: number = 0;
+	let dailyPercent: number = 0;
+	let progress: number = 0;
+	let dailyProgress: number = 0;
+	let simpleDailyProgress: number = 0;
+	let goalColors: WritingGoalColors;
+	let start: any;
+	let future: any;
+	let secondsRemaining: number;
+	let minutesRemaining: number;
+  let seconds: number;
 
-    const unsubNoteGoals = noteGoals.subscribe(val => {
-        if(!val[path]){
-          return;
-        }
-        goals = val;
-        keys = Object.keys(goals);
-        currentIndex = keys.indexOf(path);
-        updateGoal();
-    });
+	onMount(() => {
+		goalColors = colors;
+		const now = moment() as any;
+		start = moment() as any;
+		future = now.add(5, 'minutes');
+	});
 
-    const unsubGoalColor = goalColor.subscribe(val => {
-      gColor = val
-    });
+	const unsubNoteGoals = noteGoals.subscribe((val) => {
+		if (!val[path]) {
+			return;
+		}
+		goals = val;
+		keys = Object.keys(goals);
+		currentIndex = keys.indexOf(path);
+		updateGoal();
+	});
 
-    const unsubDailyGoalColor = dailyGoalColor.subscribe(val => {
-      dGColor = val
-    });
+	const unsubGoalColor = wgcolors.subscribe((val) => {
+		goalColors = val;
+	});
 
-    onDestroy(unsubNoteGoals);
-    onDestroy(unsubGoalColor);
-    onDestroy(unsubDailyGoalColor);
+	onDestroy(unsubNoteGoals);
+	onDestroy(unsubGoalColor);
 
-    function updateGoal(cursor?:number) {
-      if(cursor){
-        currentIndex += cursor;
-        if(currentIndex < 0){
-          currentIndex = keys.length - 1;
-        }
-        if(currentIndex > keys.length - 1) {
-          currentIndex = 0;
-        }
-      }
-      path = keys[currentIndex];
-      goal = goals[path];     
-      loadGoal();
-    }
+	function updateGoal(cursor?: number) {
+		if (cursor) {
+			currentIndex += cursor;
+			if (currentIndex < 0) {
+				currentIndex = keys.length - 1;
+			}
+			if (currentIndex > keys.length - 1) {
+				currentIndex = 0;
+			}
+		}
+		path = keys[currentIndex];
+		goal = goals[path];
+		loadGoal();
+	}
 
-    setInterval(() => {
-      const now = moment();
-      percent = getPercent(now as any - start, future - start);
-      progress = calculateProgress(90, percent);
-      secondsRemaining = moment(future).diff(now, 'seconds');
-      minutesRemaining = moment(future).diff(now, 'minutes')
-    }, 500)
+	setInterval(() => {
+		const now = moment();
+		percent = getPercent((now as any) - start, future - start);
+		progress = calculateProgress(90, percent);
+		secondsRemaining = moment(future).diff(now, 'seconds');
+		minutesRemaining = moment(future).diff(now, 'minutes');
+	}, 500);
 
-    function loadGoal() {
-      // percent = getPercent(now - start, future - start);
-      dailyPercent = getPercent(getDailyDifference(goal), goal.dailyGoalCount);
-      // progress = calculateProgress(90, percent);
-      dailyProgress = calculateProgress(75, dailyPercent);
-      simpleDailyProgress = calculateProgress(50, dailyPercent);
-    }
+	function loadGoal() {
+		// percent = getPercent(now - start, future - start);
+		dailyPercent = getPercent(getDailyDifference(goal), goal.dailyGoalCount);
+		// progress = calculateProgress(90, percent);
+		dailyProgress = calculateProgress(75, dailyPercent);
+		simpleDailyProgress = calculateProgress(50, dailyPercent);
+	}
 
-    function calculateProgress(rad, per) {
-      let c = Math.PI*(rad*2);
-    
-      if (per < 0) { per = 0;}
-      if (per > 100) { per = 100;}
-      
-      return ((100-per)/100)*c;
-    }
+	function calculateProgress(rad, per) {
+		let c = Math.PI * (rad * 2);
 
-    function getPercent(words, goal) {
-      if(goal == 0) { return 0; }
-      let per = (words/goal)*100;
-      if (per < 0) { per = 0;}
-      if (per > 100) { per = 100;}
-      return per;
-    }
+		if (per < 0) {
+			per = 0;
+		}
+		if (per > 100) {
+			per = 100;
+		}
 
-    function getLineCap(per:number) {
-      return  per < 95 ? 'round' : 'butt';
-    }
+		return ((100 - per) / 100) * c;
+	}
 
-    function getDailyDifference(goal){
-      return goal.wordCount - goal.startCount;
-    }
+	function getPercent(words, goal) {
+		if (goal == 0) {
+			return 0;
+		}
+		let per = (words / goal) * 100;
+		if (per < 0) {
+			per = 0;
+		}
+		if (per > 100) {
+			per = 100;
+		}
+		return per;
+	}
 
-    function getCompletedClass(percent) {
-      return percent == 100 ? 'note-goal-completed' : '';
-    }
+	function getLineCap(per: number) {
+		return per < 95 ? 'round' : 'butt';
+	}
 
-    function getDailyCompletedClass(dailyPercent) {
-      return dailyPercent == 100 ? 'daily-note-goal-completed' : '';
-    }
+	function getDailyDifference(goal) {
+		return goal.wordCount - goal.startCount;
+	}
 
-    function getWordCount(goal:NoteGoal) {
-      const count = goal.dailyGoalCount > 0 ? 
-        goal.wordCount - goal.startCount : goal.wordCount;
-      return count.toLocaleString();
-    }
+	function getCompletedClass(percent) {
+		return percent == 100 ? 'note-goal-completed' : '';
+	}
 
-    function getWordsText(goal:NoteGoal) {
-      return goal.dailyGoalCount > 0 ? 'words in sprint' : 'words'; 
-    }
+	function getDailyCompletedClass(dailyPercent) {
+		return dailyPercent == 100 ? 'daily-note-goal-completed' : '';
+	}
 
-    function onNextClick() {
-      updateGoal(1);
-    }
+	function getWordCount(goal: WritingGoal) {
+		const count = goal.dailyGoalCount > 0 ? goal.wordCount - goal.startCount : goal.wordCount;
+		return count.toLocaleString();
+	}
 
-    function onPreviousClick() {
-      updateGoal(-1);
-    }
+	function getWordsText(goal: WritingGoal) {
+		return goal.dailyGoalCount > 0 ? 'words in sprint' : 'words';
+	}
 
-    function onClick() {
-      onGoalClick(path);
-    }
+	function onNextClick() {
+		updateGoal(1);
+	}
+
+	function onPreviousClick() {
+		updateGoal(-1);
+	}
+
+	function onClick() {
+		// onGoalClick(path);
+	}
 
 </script>
 
 {#if goal && (goal.goalCount > 0 || goal.dailyGoalCount > 0)}
-
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
-      <Nav 
-        {isMobile}
-        showArrows={keys.length > 1} goal={goal} 
-        onNextClick={onNextClick} 
-        onPreviousClick={onPreviousClick}
-        />
-      <svg on:click={onClick} class="writing-goals {getCompletedClass(percent)}" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100"></circle>
-        <circle class="wg-bar" r="90" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke="{gColor}" stroke-dasharray="565.48" stroke-linecap="{getLineCap(percent)}" 
-          stroke-dashoffset="{progress}"></circle>
-          {#if goal.dailyGoalCount > 0}
-          <circle class="wg-daily-background {getDailyCompletedClass(dailyPercent)}" r="75" cx="100" cy="100"></circle>
-            <circle class="wg-daily-bar" r="75" cx="100" cy="100" transform="rotate(-90, 100, 100)" fill="transparent" stroke-dasharray="471.23" stroke-linecap="{getLineCap(dailyPercent)}" 
-              stroke="{dGColor}" stroke-dashoffset="{dailyProgress}"></circle>
-          {/if}
-        <text class="note-goal-text" stroke-width="0" x="100" y="100" id="svg_4" font-size="40" text-anchor="middle" xml:space="preserve" font-weight="bold">{getWordCount(goal)}</text>
-        <text class="note-goal-text" stroke-width="0" x="100" y="140" id="svg_8" font-size="16" text-anchor="middle" xml:space="preserve">{getWordsText(goal)}</text>
-      </svg>
-      <h3>
-        <span class="note-goal">{minutesRemaining}:{(secondsRemaining%60)} left</span> 
-      </h3>
-
-    </div>
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
+		<Nav {isMobile} showArrows={keys.length > 1} {goal} {onNextClick} {onPreviousClick} />
+		<svg
+			on:click={onClick}
+			class="writing-goals {getCompletedClass(percent)}"
+			viewBox="0 0 200 200"
+			version="1.1"
+			xmlns="http://www.w3.org/2000/svg"
+		>
+			<circle class="wg-background {getCompletedClass(percent)}" r="100" cx="100" cy="100" />
+			<circle
+				class="wg-bar"
+				r="90"
+				cx="100"
+				cy="100"
+				transform="rotate(-90, 100, 100)"
+				fill="transparent"
+				stroke={goalColors.goalColor}
+				stroke-dasharray="565.48"
+				stroke-linecap="butt"
+				stroke-dashoffset={progress}
+			/>
+      <line x1="0" y1="85" x2="0" y2="100" class="time-marker" style="transform: translate(100px, 100px) rotate(calc(({percent} * 3.6deg) - 180deg));" />
+			{#if goal.dailyGoalCount > 0}
+				<circle
+					class="wg-daily-background {getDailyCompletedClass(dailyPercent)}"
+					r="75"
+					cx="100"
+					cy="100"
+				/>
+				<circle
+					class="wg-daily-bar"
+					r="75"
+					cx="100"
+					cy="100"
+					transform="rotate(-90, 100, 100)"
+					fill="transparent"
+					stroke-dasharray="471.23"
+					stroke-linecap={getLineCap(dailyPercent)}
+					stroke={goalColors.dailyGoalColor}
+					stroke-dashoffset={dailyProgress}
+				/>
+			{/if}
+      <line x1="0" y1="0" x2="90" y2="0" class="seconds" style="--start-seconds: {60 - (secondsRemaining % 60)}" />
+			<circle cx="100" cy="100" r="3.5" class="pin" />
+			<text
+				class="note-goal-text"
+				stroke-width="0"
+				x="100"
+				y="90"
+				id="svg_4"
+				font-size="40"
+				text-anchor="middle"
+				xml:space="preserve"
+				font-weight="bold">{getWordCount(goal)}</text
+			>
+			<text
+				class="note-goal-text"
+				stroke-width="0"
+				x="100"
+				y="140"
+				id="svg_8"
+				font-size="16"
+				text-anchor="middle"
+				xml:space="preserve">{getWordsText(goal)}</text
+			>
+		</svg>
+		<h3>
+			<span class="note-goal">{minutesRemaining}:{secondsRemaining % 60} left</span>
+		</h3>
+	</div>
 {/if}
 
 <style>
-  .writing-goals-container {
-      margin: auto;
-      max-width: 400px;
-      cursor: pointer;
+	.writing-goals-container {
+		margin: auto;
+		max-width: 400px;
+		cursor: pointer;
+	}
+
+	.note-goal-completed .note-goal-text {
+		fill: var(--text-on-accent-inverted);
+		font-weight: bold;
+	}
+
+	.note-goal-text {
+		fill: var(--text-normal);
+	}
+
+	.writing-goals {
+		padding: 0 40px;
+	}
+
+	.writing-goals .wg-bar {
+		stroke-width: 18px;
+	}
+
+	.writing-goals .wg-daily-bar {
+		stroke-width: 10px;
+	}
+
+	.wg-daily-goal .writing-goals .wg-bar {
+		stroke-width: 10px;
+	}
+
+	.wg-bar,
+	.wg-simple .wg-bar {
+		transition: stroke-dashoffset 0.5s linear;
+	}
+
+	.wg-daily-bar,
+	.wg-daily-bar {
+		transition: stroke-dashoffset 0.5s linear;
+	}
+
+	.wg-background,
+	.wg-daily-background {
+		fill: var(--background-primary);
+	}
+
+	.note-goal-completed,
+	.daily-note-goal-completed {
+		fill: var(--background-modifier-success);
+	}
+
+	.workspace-split.mod-root .writing-goals .background {
+		fill: var(--background-secondary-alt);
+	}
+
+	.seconds {
+    stroke-width: 1.2;
+		stroke: #d00505;
+		transform: translate(100px, 100px) rotate(calc((var(--start-seconds) * 6deg) - 90deg));
+    transition: transform .1s linear;
+	}
+
+	.pin {
+		stroke: #d00505;
+		stroke-width: 1.2;
+	}
+
+  .time-marker {
+    stroke: var(--interactive-accent);
+    stroke-width: 7;
+    transform: translate(100px, 100px);
+    transition: transform 0.5s linear;
   }
 
-  .note-goal-completed .note-goal-text {
-      fill: var(--text-on-accent-inverted);
-      font-weight: bold;
-  }
-
-  .note-goal-text {
-      fill: var(--text-normal);
-  }
-
-  .writing-goals {
-      padding: 0 40px;
-  }
-
-  .writing-goals .wg-bar {
-      stroke-width: 18px;
-  }
-
-  .writing-goals .wg-daily-bar {
-      stroke-width: 10px;
-  }
-
-  .wg-daily-goal .writing-goals .wg-bar{
-      stroke-width: 10px;
-  }
-
-  .wg-bar, .wg-simple .wg-bar {
-      transition: stroke-dashoffset 0.5s linear;
-  }
-
-  .wg-daily-bar, .wg-daily-bar {
-      transition: stroke-dashoffset 0.5s linear;
-  }
-
-  .wg-background, .wg-daily-background {
-      fill: var(--background-primary);
-  }
-
-  .note-goal-completed, .daily-note-goal-completed {
-      fill: var(--background-modifier-success);
-  }
-
-  .workspace-split.mod-root .writing-goals .background {
-      fill: var(--background-secondary-alt);
-  }
-
+	@keyframes rotateSecondsHand {
+		from {
+			transform: translate(100px, 100px) rotate(calc(var(--start-seconds) * 6deg));
+		}
+		to {
+			transform: translate(100px, 100px) rotate(calc(var(--start-seconds) * 6deg + 360deg));
+		}
+	}
 </style>

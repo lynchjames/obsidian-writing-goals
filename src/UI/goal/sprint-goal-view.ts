@@ -57,7 +57,7 @@ export default class SprintGoalView extends ItemView {
     }
 
     async setGoal() {
-        const {customGoalBarColor, customDailyGoalBarColor, showProgressChart} = this.plugin.settings;
+        const {customColors} = this.plugin.settings;
         const isMobile = Platform.isMobile;
 
         //Goal svelte componet creation must happen immediately after existing component is destroyed.
@@ -69,8 +69,7 @@ export default class SprintGoalView extends ItemView {
             props: {
                 path: this.path,
                 isMobile: isMobile,
-                color: customGoalBarColor,
-                dailyColor: customDailyGoalBarColor,
+                colors: customColors,
             }
         });    
     }
