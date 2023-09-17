@@ -25,11 +25,6 @@ Using the same file explorer and command palette commands, you can also set a da
 
 The name for the frontmatter property is `daily-word-goal` by default. You can change the property name in the plugin settings.
 
-## Sprint goals
-Using file explorer and command pallette commands, you can also set a sprint goal for a note with a target word goal within a specific time limit. You can start, pause, edit and reset the sprint goal.
-
-![](./images/sprint-goal-demo.gif)
-
 ## Updating a goal
 You can update goals in 3 ways:
 1. Using the add/update command.
@@ -60,6 +55,11 @@ You can exclude a note from contributing to word counts towards parent folders a
 Set a frontmatter property in one of two formats:
 
 ![](./images/wordcount-frontmatter-bool.png) ![](./images/wordcount-frontmatter-string.png)
+
+## Sprint goals
+Using file explorer and command pallette commands, you can also set a sprint goal for a note with a target word goal within a specific time limit. You can start, pause, edit and reset the sprint goal.
+
+![](./images/sprint-goal-demo.gif)
 
 ## Compatibility
 This plugin is compatible with Obsidian v1.3.7 and targets API version v1.4.4.
