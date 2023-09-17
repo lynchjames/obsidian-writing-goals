@@ -5,6 +5,7 @@
 	import { WritingGoal, WritingSprintGoal } from '../../core/goal-entities';
 	import { getPercent, calculateProgress } from '../goal/progress-helper.js';
 	import { sprintGoals } from '../stores/sprint-goal-store';
+	import Nav from '../nav/components/nav.svelte';
 
 	export let path: string;
 	export let goal: WritingSprintGoal;
@@ -143,6 +144,7 @@
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div class="writing-goals-container {sprintGoal.sprintGoalCount > 0 ? 'wg-daily-goal' : ''}">
+		<Nav isMobile={false} showArrows={false} goal={sprintGoal} onNextClick={null} onPreviousClick={null}  />
 		<svg
 			on:click={onClick}
 			class="writing-goals {getCompletedClass(percent)}"
@@ -230,18 +232,20 @@
 			>
 		</svg>
 		<div class="spring-goal-controls">
-			<button class="lucide-play mod-cta" on:click={onClickStart}>{getStartButtonText(timerRunningState)}</button>
+			<button class="lucide-play mod-cta" on:click={onClickStart}
+				>{getStartButtonText(timerRunningState)}</button
+			>
 			<button on:click={onClickPause}>Pause</button>
 			<button class="mod-warning" on:click={onClickReset}>Reset</button>
 		</div>
 		{#if timerRunningState == PlayState.Reset}
 			<h3>
-				<span style={getColorStyle(colors.dailyGoalColor)}>
+				<span style={getColorStyle(goalColors.dailyGoalColor)}>
 					{sprintGoal.sprintGoalCount.toLocaleString()} word goal
 				</span>
 			</h3>
 			<h3>
-				<span style={getColorStyle(colors.goalColor)}>
+				<span style={getColorStyle(goalColors.goalColor)}>
 					{sprintGoal.sprintMinutes} minute sprint
 				</span>
 			</h3>
@@ -249,7 +253,7 @@
 		{#if goal && minutesRemaining && (timerRunningState == PlayState.Running || timerRunningState == PlayState.Paused)}
 			<h3>
 				{getWordCount(sprintGoal)} of
-				<span style={getColorStyle(colors.dailyGoalColor)}>
+				<span style={getColorStyle(goalColors.dailyGoalColor)}>
 					{sprintGoal.sprintGoalCount.toLocaleString()} word goal
 				</span>
 			</h3>
@@ -258,7 +262,7 @@
 					.toString()
 					.padStart(2, '0')}
 				left in
-				<span style={getColorStyle(colors.goalColor)}>
+				<span style={getColorStyle(goalColors.goalColor)}>
 					{sprintGoal.sprintMinutes} minute sprint
 				</span>
 			</h3>
