@@ -60,7 +60,9 @@
 	}
 
 	function onClickPause() {
-		timerRunningState = PlayState.Paused;
+		if (timerRunningState == PlayState.Running) {
+			timerRunningState = PlayState.Paused;
+		}
 	}
 
 	function onEditClick() {
@@ -136,7 +138,7 @@
 	}
 
 	function getStartButtonText(state: PlayState) {
-		return state == PlayState.Paused ? 'Resume' : 'Start';
+		return state == PlayState.Paused ? 'Play' : 'Start';
 	}
 </script>
 
@@ -144,7 +146,13 @@
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div class="writing-goals-container {sprintGoal.sprintGoalCount > 0 ? 'wg-daily-goal' : ''}">
-		<Nav isMobile={false} showArrows={false} goal={sprintGoal} onNextClick={null} onPreviousClick={null}  />
+		<Nav
+			isMobile={false}
+			showArrows={false}
+			goal={sprintGoal}
+			onNextClick={null}
+			onPreviousClick={null}
+		/>
 		<svg
 			on:click={onEditClick}
 			class="writing-goals {getCompletedClass(percent)}"
@@ -251,7 +259,7 @@
 				</span>
 			</h3>
 		{/if}
-		{#if (timerRunningState == PlayState.Running || timerRunningState == PlayState.Paused)}
+		{#if timerRunningState == PlayState.Running || timerRunningState == PlayState.Paused}
 			<h3>
 				{getWordCount(sprintGoal)} of
 				<span style={getColorStyle(goalColors.dailyGoalColor)}>
@@ -354,7 +362,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		height: auto;
-		justify-content: center;
+		justify-content: space-around;
 		margin: 16px auto;
 		padding: 8px;
 		text-align: center;

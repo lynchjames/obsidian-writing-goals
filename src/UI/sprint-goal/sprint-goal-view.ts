@@ -20,6 +20,7 @@ export default class SprintGoalView extends ItemView {
     constructor(leaf: WorkspaceLeaf, plugin: WritingGoals, sprintGoalHelper: SprintGoalHelper) {
         super(leaf);
         this.plugin = plugin;
+        this.settings = this.plugin.settings;
         this.sprintGoalHelper = sprintGoalHelper;
     }
 

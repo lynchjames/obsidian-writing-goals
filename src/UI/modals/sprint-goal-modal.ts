@@ -8,8 +8,6 @@ export default class SprintGoalModal extends Modal {
   settings: WritingGoalsSettings;
   sprintGoalCount: number;
   sprintMinutes: number;
-  userSubmittedSprintGoalCount: string = "0"
-  userSubmittedSprintMinutes: string = "0";
   sprintGoalHelper: SprintGoalHelper;
 
 
@@ -33,8 +31,8 @@ export default class SprintGoalModal extends Modal {
 
   private async setup() {
     const sprintGoal = await this.sprintGoalHelper.getSprintGoal(this.target);
-    this.userSubmittedSprintGoalCount = sprintGoal.sprintGoalCount.toString();
-    this.userSubmittedSprintMinutes = sprintGoal.sprintMinutes.toString();
+    this.sprintGoalCount = sprintGoal.sprintGoalCount;
+    this.sprintMinutes = sprintGoal.sprintMinutes;
     return sprintGoal;
   }
 
@@ -44,14 +42,20 @@ export default class SprintGoalModal extends Modal {
     const sprintGoalSetting = new Setting(contentEl)
       .setName("Sprint word goal (number)")
       .addText((text) => text.onChange((value) => {
-        this.userSubmittedSprintGoalCount = value;
+        const parsedValue = Number.parseInt(value);
+        if (value != null && value != '' && parsedValue > 0) {
+          this.sprintGoalCount = parsedValue;
+        }
       })
         .setValue(sprintGoalCount.toString()));
 
     const springMinutesSetting = new Setting(contentEl)
-      .setName("Sprint length (minutes)")
+      .setName("Sprint length in minutes (number)")
       .addText((text) => text.onChange((value) => {
-        this.userSubmittedSprintMinutes = value;
+        const parsedValue = Number.parseInt(value);
+        if (value != null && value != '' && parsedValue > 0) {
+          this.sprintMinutes = parsedValue;
+        }
       })
         .setValue(sprintMinutes.toString()));
 
@@ -65,8 +69,8 @@ export default class SprintGoalModal extends Modal {
   }
 
   async onSubmit() {
-    await this.sprintGoalHelper.createSprintGoal(this.target.path,
-      this.userSubmittedSprintGoalCount as any as number,
-      this.userSubmittedSprintMinutes as any as number);
+    if (this.sprintGoalCount != null && this.sprintMinutes != null) {
+      await this.sprintGoalHelper.createSprintGoal(this.target.path, this.sprintGoalCount, this.sprintMinutes);
+    }
   }
 }
