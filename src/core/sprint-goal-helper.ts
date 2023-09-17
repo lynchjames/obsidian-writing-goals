@@ -1,6 +1,6 @@
 import { App, TAbstractFile } from "obsidian";
 import { GoalHelper } from "./goal-helper";
-import { WritingSprintGoals } from "./goal-entities";
+import { WritingSprintGoal, WritingSprintGoals } from "./goal-entities";
 import { sprintGoals } from "../UI/stores/sprint-goal-store";
 
 export class SprintGoalHelper {
@@ -22,12 +22,15 @@ export class SprintGoalHelper {
         return sprintGoal;
     }
 
-    async updateSpringGoal(file: TAbstractFile) {
-        console.log(this.sprintGoals);
+    async updateSprintGoal(file: TAbstractFile) {
         const sprintGoal = this.sprintGoals[file.path];
         if (sprintGoal != null) {
             this.sprintGoals[file.path] = await this.goalHelper.createSprintGoal(file, sprintGoal.sprintGoalCount, sprintGoal.sprintMinutes, sprintGoal.startCount);
         }
         sprintGoals.set(this.sprintGoals);
+    }
+
+    async getSprintGoal(file: TAbstractFile): Promise<WritingSprintGoal>{
+        return this.sprintGoals[file.path];
     }
 }

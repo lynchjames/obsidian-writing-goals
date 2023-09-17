@@ -64,7 +64,7 @@
 	}
 
 	function onEditClick() {
-		onClickPause();
+		onClickReset();
 		onGoalClick(path);
 	}
 
@@ -251,7 +251,7 @@
 				</span>
 			</h3>
 		{/if}
-		{#if goal && minutesRemaining && (timerRunningState == PlayState.Running || timerRunningState == PlayState.Paused)}
+		{#if (timerRunningState == PlayState.Running || timerRunningState == PlayState.Paused)}
 			<h3>
 				{getWordCount(sprintGoal)} of
 				<span style={getColorStyle(goalColors.dailyGoalColor)}>

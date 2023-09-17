@@ -23,6 +23,8 @@ export class WritingGoalsSettings {
   //Deprecated
   customDailyGoalBarColor: string;
   additionalFileTypes: string[];
+  defaultSprintGoalCount: number = 500;
+  defaultSpringMinutes: number = 25;
 
   migrateSettings() {
     //Migrate existing settings to new data structure

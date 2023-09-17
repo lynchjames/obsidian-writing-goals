@@ -5,6 +5,7 @@ import { GOAL_ICON, VIEW_TYPE_GOAL_SPRINT } from '../../core/constants';
 import type WritingGoals from '../../main';
 import { GoalHelper } from '../../core/goal-helper';
 import { SprintGoalHelper } from '../../core/sprint-goal-helper';
+import SprintGoalModal from '../modals/sprint-goal-modal';
 
 
 export default class SprintGoalView extends ItemView {
@@ -58,8 +59,10 @@ export default class SprintGoalView extends ItemView {
     }
 
     onGoalClick = (path: string) => {
-        const fileOrFolder = this.app.vault.getAbstractFileByPath(path);
-        this.plugin.openGoalModal(fileOrFolder);
+        const file = this.app.vault.getAbstractFileByPath(path);
+        const modal = new SprintGoalModal(this.plugin, this.sprintGoalHelper);
+        modal.init(file);
+        modal.open();
     }
 
     onSprintReset = () => {
@@ -67,12 +70,16 @@ export default class SprintGoalView extends ItemView {
     }
 
     async setGoal() {
+        if(this.path == null){
+            return;
+        }
         const { customColors } = this.plugin.settings;
         const onGoalClick = this.onGoalClick;
         const onSprintReset = this.onSprintReset;
-        const sprintGoalCount = 1500;
-        const sprintMinutes = 1;
-        const sprintGoal = await this.sprintGoalHelper.createSprintGoal(this.path, sprintGoalCount, sprintMinutes);
+        const sprintGoalCount = this.settings.defaultSprintGoalCount;
+        const sprintMinutes = this.settings.defaultSpringMinutes;
+        const sprintGoal = await this.sprintGoalHelper.getSprintGoal(this.app.vault.getAbstractFileByPath(this.path)) ??
+            await this.sprintGoalHelper.createSprintGoal(this.path, sprintGoalCount, sprintMinutes);
 
         //Goal svelte componet creation must happen immediately after existing component is destroyed.
         if (this.goal != null) {

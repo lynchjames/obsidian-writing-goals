@@ -145,7 +145,7 @@ export default class WritingGoals extends Plugin {
       }
       await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile)
       await this.loadNoteGoalData(false);
-      await this.sprintGoalHelper.updateSpringGoal(file);
+      await this.sprintGoalHelper.updateSprintGoal(file);
     }));
 
     this.registerEvent(this.app.metadataCache.on("changed", async file => {
@@ -179,7 +179,7 @@ export default class WritingGoals extends Plugin {
         }
         menu.addItem((item) => {
           item
-            .setTitle("Sprint goal")
+            .setTitle("Add sprint goal")
             .setIcon(GOAL_ICON)
             .onClick(async () => {
               this.openSprintGoal(file);
