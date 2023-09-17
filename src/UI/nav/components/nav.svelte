@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { WritingGoal } from "../../../core/goal-entities";
+	import { TGoal } from "../../../core/goal-entities";
 	import Arrow from "./arrow.svelte";
     
     export let showArrows: boolean;
-    export let goal: WritingGoal;
+    export let goal: TGoal;
     export let isMobile: boolean;
     export let onPreviousClick: () => void;
     export let onNextClick: () => void;

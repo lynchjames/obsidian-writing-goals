@@ -8,7 +8,7 @@ import {
 } from "obsidian";
 
 import { WritingGoalsSettings } from "./core/settings/settings";
-import { GOAL_ICON, GOAL_ICON_SVG, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_STATS_DETAIL } from "./core/constants";
+import { GOAL_ICON, GOAL_ICON_SVG, REMOVE_GOAL_ICON, VIEW_TYPE_GOAL, VIEW_TYPE_GOAL_SPRINT, VIEW_TYPE_STATS_DETAIL } from "./core/constants";
 import GoalView from "./UI/goal/goal-view";
 import { WritingGoalsSettingsTab } from "./core/settings/settings-tab";
 import { GoalHelper } from "./core/goal-helper";
@@ -19,6 +19,8 @@ import { FileLabels } from "./UI/goal/file-labels";
 import { GoalHistoryHelper } from "./core/goal-history/history";
 import { FrontmatterHelper } from "./IO/frontmapper-helper";
 import StatsDetaillView from "./UI/stats/stats-detail-view";
+import SprintGoalView from "./UI/sprint-goal/sprint-goal-view";
+import { SprintGoalHelper } from "./core/sprint-goal-helper";
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
@@ -28,6 +30,7 @@ export default class WritingGoals extends Plugin {
   frontmatterHelper: FrontmatterHelper;
   goalHistoryHelper: GoalHistoryHelper;
   noteGoalHelper: GoalHelper;
+  sprintGoalHelper: SprintGoalHelper;
   goalLeaves: string[];
 
   async onload() {
@@ -36,6 +39,7 @@ export default class WritingGoals extends Plugin {
     this.frontmatterHelper = new FrontmatterHelper(this.app, this.settings);
     this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings, this.manifest);
     this.noteGoalHelper = new GoalHelper(this.app, this.settings, this.goalHistoryHelper);
+    this.sprintGoalHelper = new SprintGoalHelper(this.app, this.noteGoalHelper);
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.fileLabels = new FileLabels(this.app, this.settings);
     this.settings.migrateSettings();
@@ -56,9 +60,15 @@ export default class WritingGoals extends Plugin {
       VIEW_TYPE_GOAL,
       (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
     );
+
     this.registerView(
       VIEW_TYPE_STATS_DETAIL,
       (leaf) => new StatsDetaillView(leaf, this, this.goalHistoryHelper)
+    );
+
+    this.registerView(
+      VIEW_TYPE_GOAL_SPRINT,
+      (leaf) => new SprintGoalView(leaf, this, this.sprintGoalHelper)
     );
   }
 
@@ -80,6 +90,16 @@ export default class WritingGoals extends Plugin {
       name: "View writing goal for any note or folder",
       callback: async () => {
         new GoalTargetModal(this, null).open();
+      },
+      hotkeys: []
+    });
+
+    this.addCommand({
+      id: 'view-writing-sprint-goal-for-note',
+      name: 'View writing sprint goal for the current note',
+      callback: async () => {
+        const file = this.app.workspace.getActiveFile();
+        await this.openSprintGoal(file);
       },
       hotkeys: []
     });
@@ -107,6 +127,17 @@ export default class WritingGoals extends Plugin {
     });
   }
 
+  private async openSprintGoal(file: TFile) {
+    const goalLeaf = this.app.workspace.getRightLeaf(false);
+    await goalLeaf.setViewState({
+      type: VIEW_TYPE_GOAL_SPRINT,
+      active: true
+    });
+    const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL_SPRINT);
+    const view = leaves.last().view as SprintGoalView;
+    await view.updatePath(file.path);
+  }
+
   setupEvents() {
     this.registerEvent(this.app.vault.on("modify", async file => {
       if (file instanceof TFolder) {
@@ -114,6 +145,7 @@ export default class WritingGoals extends Plugin {
       }
       await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile)
       await this.loadNoteGoalData(false);
+      await this.sprintGoalHelper.updateSprintGoal(file);
     }));
 
     this.registerEvent(this.app.metadataCache.on("changed", async file => {
@@ -135,6 +167,22 @@ export default class WritingGoals extends Plugin {
             .setIcon(GOAL_ICON)
             .onClick(async () => {
               this.initLeaf(file.path);
+            });
+        });
+      })
+    );
+
+    this.registerEvent(
+      this.app.workspace.on("file-menu", (menu, file) => {
+        if (!(file instanceof TFile)) {
+          return;
+        }
+        menu.addItem((item) => {
+          item
+            .setTitle("Add sprint goal")
+            .setIcon(GOAL_ICON)
+            .onClick(async () => {
+              this.openSprintGoal(file);
             });
         });
       })

@@ -5,6 +5,11 @@ import { GOAL_ICON, VIEW_TYPE_GOAL } from "../../core/constants";
 import type WritingGoals from "../../main";
 import type { GoalHistory, GoalHistoryHelper } from "../../core/goal-history/history";
 
+export enum PlayState {
+    Paused,
+    Running,
+    Reset
+}
 
 export default class GoalView extends ItemView {
 

@@ -5,7 +5,7 @@ import type { GoalHistoryHelper } from "./goal-history/history"
 import { WORD_COUNT_INCLUDE_FRONTMATTER_KEY } from "./constants"
 import { FrontmatterHelper } from "../IO/frontmapper-helper"
 import { goalHistory, noteGoals } from "../UI/stores/goal-store"
-import { GoalType, WritingGoal, WritingGoals } from "./goal-entities"
+import { GoalType, WritingGoal, WritingGoals, WritingSprintGoal } from "./goal-entities"
 
 export class GoalHelper {
     app: App;
@@ -36,7 +36,7 @@ export class GoalHelper {
         const todaysDailyGoal = await this.goalHistoryHelper.todaysGoalItem(fileOrFolder.path);
         const result = {
             path: fileOrFolder.path,
-            title: fileOrFolder.name.split(".")[0],
+            title: this.getGoalTitle(fileOrFolder),
             goalType: isFile ? GoalType.Note : GoalType.Folder,
             goalCount: goalCount,
             dailyGoalCount: dailyGoalCount,
@@ -44,6 +44,29 @@ export class GoalHelper {
             wordCount: wordCount
         }
         return result;
+    }
+
+
+    async createSprintGoal(fileOrFolder: TAbstractFile, sprintGoalCount: number, sprintMinutes: number, startCount?: number): Promise<WritingSprintGoal> {
+        if (fileOrFolder == null) {
+            return undefined;
+        }
+        const isFile = this.isValidFile(fileOrFolder);
+        const wordCount = isFile ? await this.getWordCount(fileOrFolder) : await this.getWordCountRecursive(fileOrFolder)
+        const result = {
+            path: fileOrFolder.path,
+            title: this.getGoalTitle(fileOrFolder),
+            goalType: isFile ? GoalType.Note : GoalType.Folder,
+            startCount: startCount ?? wordCount,
+            wordCount: wordCount,
+            sprintGoalCount: sprintGoalCount,
+            sprintMinutes: sprintMinutes
+        }
+        return result;
+    }
+
+    private getGoalTitle(fileOrFolder: TAbstractFile) {
+        return fileOrFolder.name.split(".")[0]
     }
 
     getGoalCount(frontMatterKey: string, file: TAbstractFile) {
