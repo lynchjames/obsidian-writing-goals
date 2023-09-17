@@ -76,6 +76,7 @@
 	}
 
 	function resetTimer() {
+		timerRunningState = PlayState.Reset;
 		secondsRemaining = sprintGoal.sprintMinutes * 60;
 	}
 
@@ -100,9 +101,9 @@
 	}
 
 	function getSprintDifference(sprintGoal) {
-    if(goal == null || sprintGoal == null) {
-      return 0;
-    }
+		if (goal == null || sprintGoal == null) {
+			return 0;
+		}
 		return sprintGoal.wordCount - sprintGoal.startCount;
 	}
 
@@ -128,9 +129,9 @@
 		return `color: ${color}`;
 	}
 
-  function getStartButtonText(state: PlayState){
-    return state == PlayState.Paused ? "Resume" : "Start";
-  }
+	function getStartButtonText(state: PlayState) {
+		return state == PlayState.Paused ? 'Resume' : 'Start';
+	}
 
 	function onClick() {
 		onClickPause();
@@ -173,7 +174,6 @@
 				y1="85"
 				x2="0"
 				y2="100"
-				stroke={goalColors.goalColor}
 				class="time-marker"
 				style="transform: translate(100px, 100px) rotate(calc(({percent} * 3.6deg) - 180deg));"
 			/>
@@ -197,14 +197,14 @@
 				stroke-dashoffset={sprintProgress}
 			/>
 			<line
-				x1="0"
+				x1="3"
 				y1="0"
 				x2="90"
 				y2="0"
 				class={getSecondsClass(timerRunningState)}
 				style="--start-seconds: {seconds}"
 			/>
-			<circle cx="100" cy="100" r="3.5" class="pin" />
+			<circle cx="100" cy="100" r="3" class="pin" />
 			<text
 				class="note-goal-text"
 				stroke-width="0"
@@ -230,9 +230,9 @@
 			>
 		</svg>
 		<div class="spring-goal-controls">
-			<button on:click={onClickStart}>{getStartButtonText(timerRunningState)}</button>
+			<button class="lucide-play mod-cta" on:click={onClickStart}>{getStartButtonText(timerRunningState)}</button>
 			<button on:click={onClickPause}>Pause</button>
-			<button on:click={onClickReset}>Reset</button>
+			<button class="mod-warning" on:click={onClickReset}>Reset</button>
 		</div>
 		{#if timerRunningState == PlayState.Reset}
 			<h3>
@@ -246,7 +246,7 @@
 				</span>
 			</h3>
 		{/if}
-		{#if  goal && minutesRemaining && (timerRunningState == PlayState.Running || timerRunningState == PlayState.Paused)}
+		{#if goal && minutesRemaining && (timerRunningState == PlayState.Running || timerRunningState == PlayState.Paused)}
 			<h3>
 				{getWordCount(sprintGoal)} of
 				<span style={getColorStyle(colors.dailyGoalColor)}>
@@ -302,8 +302,8 @@
 	.seconds-paused,
 	.seconds-running,
 	.seconds-reset {
-		stroke-width: 1.2;
-		stroke: #d00505;
+		stroke-width: 1;
+		stroke: var(--text-error);
 		transform: translate(100px, 100px) rotate(calc((var(--start-seconds) * 6deg)));
 		transition: transform 0.1s linear;
 		animation: rotateSecondsHand 60s steps(60) infinite;
@@ -322,12 +322,14 @@
 	}
 
 	.pin {
-		stroke: #d00505;
-		stroke-width: 1.2;
+		fill: transparent;
+		stroke: var(--text-error);
+		stroke-width: 0.8;
 	}
 
 	.time-marker {
-		stroke-width: 7;
+		stroke: var(--text-error);
+		stroke-width: 3;
 		transform: translate(100px, 100px);
 		transition: transform 0.5s linear;
 	}
@@ -339,5 +341,24 @@
 		to {
 			transform: translate(100px, 100px) rotate(calc((var(--start-seconds) * 6deg) + 360deg));
 		}
+	}
+
+	.spring-goal-controls {
+		background-color: var(--background-primary);
+		border-radius: 8px;
+		display: flex;
+		height: auto;
+		justify-content: space-around;
+		margin: 16px auto;
+		padding: 8px;
+		text-align: center;
+		width: 90%;
+	}
+
+	h3 {
+		color: var(--color-text-title);
+		text-align: center;
+		font-size: 1em;
+		margin: 4px 0;
 	}
 </style>
