@@ -1,4 +1,4 @@
-function calculateProgress(rad, per) {
+export function calculateProgress(rad, per) {
   let c = Math.PI * (rad * 2);
 
   if (per < 0) { per = 0; }
@@ -7,7 +7,7 @@ function calculateProgress(rad, per) {
   return ((100 - per) / 100) * c;
 }
 
-function getPercent(words, goal) {
+export function getPercent(words, goal) {
   if (goal == 0) { return 0; }
   let per = (words / goal) * 100;
   if (per < 0) { per = 0; }

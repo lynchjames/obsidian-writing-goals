@@ -19,7 +19,8 @@ import { FileLabels } from "./UI/goal/file-labels";
 import { GoalHistoryHelper } from "./core/goal-history/history";
 import { FrontmatterHelper } from "./IO/frontmapper-helper";
 import StatsDetaillView from "./UI/stats/stats-detail-view";
-import SprintGoalView from "./UI/goal/sprint-goal-view";
+import SprintGoalView from "./UI/sprint-goal/sprint-goal-view";
+import { SprintGoalHelper } from "./core/sprint-goal-helper";
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
@@ -29,6 +30,7 @@ export default class WritingGoals extends Plugin {
   frontmatterHelper: FrontmatterHelper;
   goalHistoryHelper: GoalHistoryHelper;
   noteGoalHelper: GoalHelper;
+  sprintGoalHelper: SprintGoalHelper;
   goalLeaves: string[];
 
   async onload() {
@@ -37,6 +39,7 @@ export default class WritingGoals extends Plugin {
     this.frontmatterHelper = new FrontmatterHelper(this.app, this.settings);
     this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings, this.manifest);
     this.noteGoalHelper = new GoalHelper(this.app, this.settings, this.goalHistoryHelper);
+    this.sprintGoalHelper = new SprintGoalHelper(this.app, this.noteGoalHelper);
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.fileLabels = new FileLabels(this.app, this.settings);
     this.settings.migrateSettings();
@@ -65,7 +68,7 @@ export default class WritingGoals extends Plugin {
 
     this.registerView(
       VIEW_TYPE_GOAL_SPRINT,
-      (leaf) => new SprintGoalView(leaf, this, this.goalHistoryHelper)
+      (leaf) => new SprintGoalView(leaf, this, this.sprintGoalHelper)
     );
   }
 
@@ -142,6 +145,7 @@ export default class WritingGoals extends Plugin {
       }
       await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile)
       await this.loadNoteGoalData(false);
+      await this.sprintGoalHelper.updateSpringGoal(file);
     }));
 
     this.registerEvent(this.app.metadataCache.on("changed", async file => {

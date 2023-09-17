@@ -68,7 +68,7 @@
 		cy="100"
 		transform="rotate(-90, 100, 100)"
 		fill="transparent"
-		stroke={colors.goalColor}
+		stroke={goalColors.goalColor}
 		stroke-dasharray="565.48"
 		stroke-linecap={getLineCap(goalData.percent)}
 		stroke-dashoffset={goalData.progress}
@@ -90,13 +90,13 @@
 			fill="transparent"
 			stroke-dasharray="471.23"
 			stroke-linecap={getLineCap(goalData.dailyPercent)}
-			stroke={colors.dailyGoalColor}
+			stroke={goalColors.dailyGoalColor}
 			stroke-dashoffset={goalData.dailyProgress}
 		/>
 	{/if}
 	<text
 		class="note-goal-figure"
-		fill={colors.textColor}
+		fill={goalColors.textColor}
 		stroke-width="0"
 		x="100"
 		y="100"
@@ -108,7 +108,7 @@
 	>
 	<text
 		class="note-goal-text"
-		fill={colors.textColor}
+		fill={goalColors.textColor}
 		stroke-width="0"
 		x="100"
 		y="140"
