@@ -63,6 +63,11 @@
 		timerRunningState = PlayState.Paused;
 	}
 
+	function onEditClick() {
+		onClickPause();
+		onGoalClick(path);
+	}
+
 	function onClickReset() {
 		timerRunningState = PlayState.Reset;
 		onSprintReset();
@@ -133,11 +138,6 @@
 	function getStartButtonText(state: PlayState) {
 		return state == PlayState.Paused ? 'Resume' : 'Start';
 	}
-
-	function onClick() {
-		onClickPause();
-		onGoalClick(path);
-	}
 </script>
 
 {#if goal && sprintGoal.sprintGoalCount > 0}
@@ -146,7 +146,7 @@
 	<div class="writing-goals-container {sprintGoal.sprintGoalCount > 0 ? 'wg-daily-goal' : ''}">
 		<Nav isMobile={false} showArrows={false} goal={sprintGoal} onNextClick={null} onPreviousClick={null}  />
 		<svg
-			on:click={onClick}
+			on:click={onEditClick}
 			class="writing-goals {getCompletedClass(percent)}"
 			viewBox="0 0 200 200"
 			version="1.1"
@@ -232,10 +232,11 @@
 			>
 		</svg>
 		<div class="spring-goal-controls">
-			<button class="lucide-play mod-cta" on:click={onClickStart}
-				>{getStartButtonText(timerRunningState)}</button
-			>
+			<button class="lucide-play mod-cta" on:click={onClickStart}>
+				{getStartButtonText(timerRunningState)}
+			</button>
 			<button on:click={onClickPause}>Pause</button>
+			<button on:click={onEditClick}>Edit</button>
 			<button class="mod-warning" on:click={onClickReset}>Reset</button>
 		</div>
 		{#if timerRunningState == PlayState.Reset}
@@ -351,12 +352,16 @@
 		background-color: var(--background-primary);
 		border-radius: 8px;
 		display: flex;
+		flex-wrap: wrap;
 		height: auto;
-		justify-content: space-around;
+		justify-content: center;
 		margin: 16px auto;
 		padding: 8px;
 		text-align: center;
-		width: 90%;
+	}
+
+	.spring-goal-controls button {
+		margin: 4px;
 	}
 
 	h3 {

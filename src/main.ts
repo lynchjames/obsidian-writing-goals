@@ -99,18 +99,7 @@ export default class WritingGoals extends Plugin {
       name: 'View writing sprint goal for the current note',
       callback: async () => {
         const file = this.app.workspace.getActiveFile();
-        const goalLeaf = this.app.workspace.getRightLeaf(false);
-        await goalLeaf.setViewState({
-          type: VIEW_TYPE_GOAL_SPRINT,
-          active: true
-        });
-        // try {
-        const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL_SPRINT);
-        const view = leaves.last().view as SprintGoalView;
-        await view.updatePath(file.path);
-        // } catch (error) {
-        //   new Notice("Failed to show goal for " + file.path);
-        // }
+        await this.openSprintGoal(file);
       },
       hotkeys: []
     });
@@ -136,6 +125,17 @@ export default class WritingGoals extends Plugin {
       },
       hotkeys: []
     });
+  }
+
+  private async openSprintGoal(file: TFile) {
+    const goalLeaf = this.app.workspace.getRightLeaf(false);
+    await goalLeaf.setViewState({
+      type: VIEW_TYPE_GOAL_SPRINT,
+      active: true
+    });
+    const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_GOAL_SPRINT);
+    const view = leaves.last().view as SprintGoalView;
+    await view.updatePath(file.path);
   }
 
   setupEvents() {
@@ -167,6 +167,22 @@ export default class WritingGoals extends Plugin {
             .setIcon(GOAL_ICON)
             .onClick(async () => {
               this.initLeaf(file.path);
+            });
+        });
+      })
+    );
+
+    this.registerEvent(
+      this.app.workspace.on("file-menu", (menu, file) => {
+        if (!(file instanceof TFile)) {
+          return;
+        }
+        menu.addItem((item) => {
+          item
+            .setTitle("Sprint goal")
+            .setIcon(GOAL_ICON)
+            .onClick(async () => {
+              this.openSprintGoal(file);
             });
         });
       })
