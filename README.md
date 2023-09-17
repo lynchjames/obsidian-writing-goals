@@ -25,6 +25,11 @@ Using the same file explorer and command palette commands, you can also set a da
 
 The name for the frontmatter property is `daily-word-goal` by default. You can change the property name in the plugin settings.
 
+## Spring goals
+Using file explorer and command pallette commands, you can also set a sprint goal for a note with a target word goal within a specific time limit. You can start, pause, edit and reset the sprint goal.
+
+![](./images/sprint-goal-demo.gif)
+
 ## Updating a goal
 You can update goals in 3 ways:
 1. Using the add/update command.
