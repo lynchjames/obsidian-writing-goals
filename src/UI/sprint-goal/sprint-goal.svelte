@@ -249,30 +249,31 @@
 		</div>
 		{#if timerRunningState == PlayState.Reset}
 			<h3>
+				{sprintGoal.sprintGoalCount.toLocaleString()} 
 				<span style={getColorStyle(goalColors.dailyGoalColor)}>
-					{sprintGoal.sprintGoalCount.toLocaleString()} word goal
+					word goal
 				</span>
 			</h3>
-			<h3>
+			<h3>{sprintGoal.sprintMinutes} 
 				<span style={getColorStyle(goalColors.goalColor)}>
-					{sprintGoal.sprintMinutes} minute sprint
+					minute sprint
 				</span>
 			</h3>
 		{/if}
 		{#if timerRunningState == PlayState.Running || timerRunningState == PlayState.Paused}
 			<h3>
-				{getWordCount(sprintGoal)} of
+				{getWordCount(sprintGoal)} of {sprintGoal.sprintGoalCount.toLocaleString()} 
 				<span style={getColorStyle(goalColors.dailyGoalColor)}>
-					{sprintGoal.sprintGoalCount.toLocaleString()} word goal
+					word goal
 				</span>
 			</h3>
 			<h3>
 				{minutesRemaining > 0 ? minutesRemaining.toFixed(0) : 0}:{(secondsRemaining % 60)
 					.toString()
 					.padStart(2, '0')}
-				left in
+				left in {sprintGoal.sprintMinutes}
 				<span style={getColorStyle(goalColors.goalColor)}>
-					{sprintGoal.sprintMinutes} minute sprint
+					minute sprint
 				</span>
 			</h3>
 		{/if}

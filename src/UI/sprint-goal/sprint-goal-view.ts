@@ -79,9 +79,8 @@ export default class SprintGoalView extends ItemView {
         const onSprintReset = this.onSprintReset;
         const sprintGoalCount = this.settings.defaultSprintGoalCount;
         const sprintMinutes = this.settings.defaultSpringMinutes;
-        const sprintGoal = await this.sprintGoalHelper.getSprintGoal(this.app.vault.getAbstractFileByPath(this.path)) ??
+        const sprintGoal = await this.sprintGoalHelper.resetStartCountForSpringGoal(this.app.vault.getAbstractFileByPath(this.path)) ??
             await this.sprintGoalHelper.createSprintGoal(this.path, sprintGoalCount, sprintMinutes);
-
         //Goal svelte componet creation must happen immediately after existing component is destroyed.
         if (this.goal != null) {
             this.goal.$destroy();
