@@ -1,5 +1,6 @@
 import {
   Notice,
+  Platform,
   Plugin,
   TAbstractFile,
   TFile,
@@ -66,6 +67,9 @@ export default class WritingGoals extends Plugin {
       (leaf) => new StatsDetaillView(leaf, this, this.goalHistoryHelper)
     );
 
+    if(Platform.isMobile) {
+      this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL_SPRINT);
+    }
     this.registerView(
       VIEW_TYPE_GOAL_SPRINT,
       (leaf) => new SprintGoalView(leaf, this, this.sprintGoalHelper)
@@ -128,6 +132,9 @@ export default class WritingGoals extends Plugin {
   }
 
   private async openSprintGoal(file: TFile) {
+    if(Platform.isMobile) {
+      this.app.workspace.detachLeavesOfType(VIEW_TYPE_GOAL_SPRINT);
+    }
     const goalLeaf = this.app.workspace.getRightLeaf(false);
     await goalLeaf.setViewState({
       type: VIEW_TYPE_GOAL_SPRINT,
