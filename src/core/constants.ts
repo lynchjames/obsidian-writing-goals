@@ -24,4 +24,12 @@ export const DEFAULT_GOAL_HISTORY_PATH =
   "goal-history.json";
 
 export const GOAL_ICON = "writing-goals-radar";
-export const GOAL_ICON_SVG = '<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/>';
+export const GOAL_ICON_SVG = 
+'<path style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;" d="M 19.069688 4.930312 C 15.868125 1.725 10.911562 1.0725 6.99 3.340313 " transform="matrix(4.166667,0,0,4.166667,0,0)"/>\
+<path style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;" d="M 4.000312 6 L 4.009688 6 " transform="matrix(4.166667,0,0,4.166667,0,0)"/>\
+<path style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;" d="M 2.290312 9.619687 C 1.260938 13.81125 3.036563 18.189375 6.694687 20.479688 C 10.352812 22.77 15.0675 22.455937 18.388125 19.699687 C 21.70875 16.943437 22.887187 12.3675 21.310312 8.350312 " transform="matrix(4.166667,0,0,4.166667,0,0)"/>\
+<path style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;" d="M 16.240312 7.759688 C 14.671875 6.182812 12.36 5.6025 10.23375 6.25125 C 8.106562 6.900937 6.512812 8.67375 6.092812 10.857188 C 5.672813 13.041562 6.495938 15.278437 8.230313 16.669687 " transform="matrix(4.166667,0,0,4.166667,0,0)"/>\
+<path style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;" d="M 12 18 L 12.010312 18 " transform="matrix(4.166667,0,0,4.166667,0,0)"/>\
+<path style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;" d="M 17.989687 11.659688 C 18.100312 13.59 17.274375 15.455625 15.769687 16.669687 " transform="matrix(4.166667,0,0,4.166667,0,0)"/>\
+<path style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;" d="M 13.999688 12 C 13.999688 13.104375 13.104375 13.999688 12 13.999688 C 10.895625 13.999688 10.000312 13.104375 10.000312 12 C 10.000312 10.895625 10.895625 10.000312 12 10.000312 C 13.104375 10.000312 13.999688 10.895625 13.999688 12 Z M 13.999688 12 " transform="matrix(4.166667,0,0,4.166667,0,0)"/>\
+<path style="stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;" d="M 13.41 10.59 L 19.069688 4.930312 " transform="matrix(4.166667,0,0,4.166667,0,0)"/>';

@@ -22,6 +22,4 @@
     fill: transparent;
     opacity: var(--icon-opacity);
     stroke: var(--icon-color);
-    transform: scale(4.166666666666667);
-    transform-origin: 0 0;
 }
