@@ -3,7 +3,6 @@ import SprintGoal from './sprint-goal.svelte';
 import type { WritingGoalsSettings } from '../../core/settings/settings';
 import { GOAL_ICON, VIEW_TYPE_GOAL_SPRINT } from '../../core/constants';
 import type WritingGoals from '../../main';
-import { GoalHelper } from '../../core/goal-helper';
 import { SprintGoalHelper } from '../../core/sprint-goal-helper';
 import SprintGoalModal from '../modals/sprint-goal-modal';
 
@@ -16,12 +15,15 @@ export default class SprintGoalView extends ItemView {
     goal: any;
     sprintGoalHelper: SprintGoalHelper;
     linkedListData: { [key: string]: number; };
+    timerInterval: number;
+    timerIntervalSet: boolean;
 
     constructor(leaf: WorkspaceLeaf, plugin: WritingGoals, sprintGoalHelper: SprintGoalHelper) {
         super(leaf);
         this.plugin = plugin;
         this.settings = this.plugin.settings;
         this.sprintGoalHelper = sprintGoalHelper;
+        this.timerIntervalSet = false;
     }
 
     getViewType(): string {
@@ -40,16 +42,10 @@ export default class SprintGoalView extends ItemView {
         if (this.goal != undefined) {
             return;
         }
-        // const path = this.plugin.goalLeaves.pop();
-        // if(!path){
-        //     return;
-        // }
-        // this.path = path; 
-        await this.setGoal();
     }
 
-    async onOpen() {
-        await this.setGoal();
+    protected async onClose(): Promise<void> {
+        window.clearInterval(this.timerInterval);
     }
 
     async updatePath(path: string) {
@@ -70,13 +66,26 @@ export default class SprintGoalView extends ItemView {
         this.setGoal();
     }
 
+    createInterval = (updateFunc: () => void) => {
+        if (this.timerIntervalSet) {
+            window.clearInterval(this.timerInterval);
+            this.timerIntervalSet = false
+        } else {
+            this.timerInterval = this.plugin.registerInterval(window.setInterval(() => {
+                updateFunc();
+            }, 1000));
+            this.timerIntervalSet = true;
+        }
+    }
+
     async setGoal() {
-        if(this.path == null){
+        if (this.path == null) {
             return;
         }
         const { customColors } = this.plugin.settings;
         const onGoalClick = this.onGoalClick;
         const onSprintReset = this.onSprintReset;
+        const createInterval = this.createInterval;
         const sprintGoalCount = this.settings.defaultSprintGoalCount;
         const sprintMinutes = this.settings.defaultSpringMinutes;
         const sprintGoal = await this.sprintGoalHelper.resetStartCountForSpringGoal(this.app.vault.getAbstractFileByPath(this.path)) ??
@@ -92,10 +101,13 @@ export default class SprintGoalView extends ItemView {
                 goal: sprintGoal,
                 colors: customColors,
                 onGoalClick: onGoalClick,
-                onSprintReset: onSprintReset
+                onSprintReset: onSprintReset,
+                createInterval: createInterval
             }
         });
     }
+
+
 }
 
 

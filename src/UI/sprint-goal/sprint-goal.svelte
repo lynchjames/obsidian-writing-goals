@@ -12,6 +12,7 @@
 	export let colors: WritingGoalColors;
 	export let onGoalClick: (path: string) => void;
 	export let onSprintReset: () => void;
+	export let createInterval: (updateFunc:() => void) => void;
 
 	enum PlayState {
 		Paused,
@@ -28,7 +29,6 @@
 	let secondsRemaining: number;
 	let minutesRemaining: number;
 	let seconds: number = -15;
-	let timerInterval: any;
 	let timerRunningState = PlayState.Reset;
 
 	$: getSecondsClass(timerRunningState);
@@ -36,6 +36,7 @@
 	onMount(() => {
 		goalColors = colors;
 		sprintGoal = goal;
+		createInterval(updateProgress);
 	});
 
 	const unsubSprintGoals = sprintGoals.subscribe((val) => {
@@ -52,7 +53,7 @@
 	onDestroy(unsubSprintGoals);
 	onDestroy(unsubGoalColor);
 
-	function onClickStart() {
+	function onClickStart(): void {
 		if (timerRunningState == PlayState.Reset) {
 			resetTimer();
 		}
@@ -73,11 +74,8 @@
 	function onClickReset() {
 		timerRunningState = PlayState.Reset;
 		onSprintReset();
+		createInterval(updateProgress);
 	}
-
-	timerInterval = window.setInterval(() => {
-		updateProgress();
-	}, 1000);
 
 	function onTimerEnd() {
 		resetTimer();
@@ -88,7 +86,7 @@
 		secondsRemaining = sprintGoal.sprintMinutes * 60;
 	}
 
-	function updateProgress() {
+	const updateProgress = () => {
 		if (timerRunningState != PlayState.Running) {
 			return;
 		}
@@ -249,32 +247,25 @@
 		</div>
 		{#if timerRunningState == PlayState.Reset}
 			<h3>
-				{sprintGoal.sprintGoalCount.toLocaleString()} 
-				<span style={getColorStyle(goalColors.dailyGoalColor)}>
-					word goal
-				</span>
+				{sprintGoal.sprintGoalCount.toLocaleString()}
+				<span style={getColorStyle(goalColors.dailyGoalColor)}> word goal </span>
 			</h3>
-			<h3>{sprintGoal.sprintMinutes} 
-				<span style={getColorStyle(goalColors.goalColor)}>
-					minute sprint
-				</span>
+			<h3>
+				{sprintGoal.sprintMinutes}
+				<span style={getColorStyle(goalColors.goalColor)}> minute sprint </span>
 			</h3>
 		{/if}
 		{#if timerRunningState == PlayState.Running || timerRunningState == PlayState.Paused}
 			<h3>
-				{getWordCount(sprintGoal)} of {sprintGoal.sprintGoalCount.toLocaleString()} 
-				<span style={getColorStyle(goalColors.dailyGoalColor)}>
-					word goal
-				</span>
+				{getWordCount(sprintGoal)} of {sprintGoal.sprintGoalCount.toLocaleString()}
+				<span style={getColorStyle(goalColors.dailyGoalColor)}> word goal </span>
 			</h3>
 			<h3>
 				{minutesRemaining > 0 ? minutesRemaining.toFixed(0) : 0}:{(secondsRemaining % 60)
 					.toString()
 					.padStart(2, '0')}
 				left in {sprintGoal.sprintMinutes}
-				<span style={getColorStyle(goalColors.goalColor)}>
-					minute sprint
-				</span>
+				<span style={getColorStyle(goalColors.goalColor)}> minute sprint </span>
 			</h3>
 		{/if}
 	</div>
