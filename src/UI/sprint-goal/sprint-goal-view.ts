@@ -16,14 +16,12 @@ export default class SprintGoalView extends ItemView {
     sprintGoalHelper: SprintGoalHelper;
     linkedListData: { [key: string]: number; };
     timerInterval: number;
-    timerIntervalSet: boolean;
 
     constructor(leaf: WorkspaceLeaf, plugin: WritingGoals, sprintGoalHelper: SprintGoalHelper) {
         super(leaf);
         this.plugin = plugin;
         this.settings = this.plugin.settings;
         this.sprintGoalHelper = sprintGoalHelper;
-        this.timerIntervalSet = false;
     }
 
     getViewType(): string {
@@ -49,8 +47,6 @@ export default class SprintGoalView extends ItemView {
     }
 
     async updatePath(path: string) {
-        this.plugin.settings.goalLeaves.push(path);
-        this.plugin.saveData(this.plugin.settings);
         this.path = path;
         await this.setGoal();
     }
@@ -67,14 +63,13 @@ export default class SprintGoalView extends ItemView {
     }
 
     createInterval = (updateFunc: () => void) => {
-        if (this.timerIntervalSet) {
+        if (this.timerInterval != null) {
             window.clearInterval(this.timerInterval);
-            this.timerIntervalSet = false
+            this.timerInterval = undefined;
         } else {
             this.timerInterval = this.plugin.registerInterval(window.setInterval(() => {
                 updateFunc();
             }, 1000));
-            this.timerIntervalSet = true;
         }
     }
 
@@ -82,14 +77,9 @@ export default class SprintGoalView extends ItemView {
         if (this.path == null) {
             return;
         }
-        const { customColors } = this.plugin.settings;
-        const onGoalClick = this.onGoalClick;
-        const onSprintReset = this.onSprintReset;
-        const createInterval = this.createInterval;
-        const sprintGoalCount = this.settings.defaultSprintGoalCount;
-        const sprintMinutes = this.settings.defaultSpringMinutes;
+        const { customColors, defaultSprintGoalCount, defaultSprintMinutes } = this.settings;
         const sprintGoal = await this.sprintGoalHelper.resetStartCountForSpringGoal(this.app.vault.getAbstractFileByPath(this.path)) ??
-            await this.sprintGoalHelper.createSprintGoal(this.path, sprintGoalCount, sprintMinutes);
+            await this.sprintGoalHelper.createSprintGoal(this.path, defaultSprintGoalCount, defaultSprintMinutes);
         //Goal svelte componet creation must happen immediately after existing component is destroyed.
         if (this.goal != null) {
             this.goal.$destroy();
@@ -100,9 +90,9 @@ export default class SprintGoalView extends ItemView {
                 path: this.path,
                 goal: sprintGoal,
                 colors: customColors,
-                onGoalClick: onGoalClick,
-                onSprintReset: onSprintReset,
-                createInterval: createInterval
+                onGoalClick: this.onGoalClick,
+                onSprintReset: this.onSprintReset,
+                createInterval: this.createInterval
             }
         });
     }
