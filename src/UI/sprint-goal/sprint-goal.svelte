@@ -12,7 +12,7 @@
 	export let colors: WritingGoalColors;
 	export let onGoalClick: (path: string) => void;
 	export let onSprintReset: () => void;
-	export let createInterval: (updateFunc:() => void) => void;
+	export let createInterval: (updateFunc: () => void) => void;
 
 	enum PlayState {
 		Paused,
@@ -53,16 +53,18 @@
 	onDestroy(unsubSprintGoals);
 	onDestroy(unsubGoalColor);
 
-	function onClickStart(): void {
-		if (timerRunningState == PlayState.Reset) {
-			resetTimer();
-		}
-		timerRunningState = PlayState.Running;
-	}
-
-	function onClickPause() {
-		if (timerRunningState == PlayState.Running) {
-			timerRunningState = PlayState.Paused;
+	function onClickStart() {
+		switch (timerRunningState) {
+			case PlayState.Paused:
+				timerRunningState = PlayState.Running;
+				break;
+			case PlayState.Running:
+				timerRunningState = PlayState.Paused;
+				break;
+			default:
+				resetTimer();
+				timerRunningState = PlayState.Running;
+				break;
 		}
 	}
 
@@ -100,7 +102,7 @@
 		if (percent == 100) {
 			onTimerEnd();
 		}
-	}
+	};
 
 	function getLineCap(per: number) {
 		return per < 95 ? 'round' : 'butt';
@@ -136,7 +138,7 @@
 	}
 
 	function getStartButtonText(state: PlayState) {
-		return state == PlayState.Paused ? 'Play' : 'Start';
+		return state == PlayState.Reset ? 'Start' : state == PlayState.Paused ? 'Resume' : 'Pause';
 	}
 </script>
 
@@ -152,7 +154,7 @@
 			onPreviousClick={null}
 		/>
 		<svg
-			on:click={onEditClick}
+			on:click={onClickStart}
 			class="writing-goals {getCompletedClass(percent)}"
 			viewBox="0 0 200 200"
 			version="1.1"
@@ -241,7 +243,6 @@
 			<button class="lucide-play mod-cta" on:click={onClickStart}>
 				{getStartButtonText(timerRunningState)}
 			</button>
-			<button on:click={onClickPause}>Pause</button>
 			<button on:click={onEditClick}>Edit</button>
 			<button class="mod-warning" on:click={onClickReset}>Reset</button>
 		</div>
