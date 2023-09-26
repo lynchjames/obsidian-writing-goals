@@ -43,8 +43,6 @@ export default class WritingGoals extends Plugin {
     this.sprintGoalHelper = new SprintGoalHelper(this.app, this.noteGoalHelper);
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.fileLabels = new FileLabels(this.app, this.settings);
-    this.settings.migrateSettings();
-    this.saveData(this.settings);
     this.setupCommands();
     addIcon(GOAL_ICON, GOAL_ICON_SVG);
     this.registerViews();

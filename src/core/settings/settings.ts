@@ -26,18 +26,6 @@ export class WritingGoalsSettings {
   defaultSprintGoalCount: number = 500;
   defaultSprintMinutes: number = 25;
 
-  migrateSettings() {
-    //Migrate existing settings to new data structure
-    if (this.customGoalBarColor) {
-      this.customColors.goalColor = this.customGoalBarColor;
-      this.customGoalBarColor = undefined;
-    }
-    if (this.customDailyGoalBarColor) {
-      this.customColors.dailyGoalColor = this.customDailyGoalBarColor;
-      this.customDailyGoalBarColor = undefined;
-    }
-  }
-
   noGoal(path: string): boolean {
     return !this.noteGoals.contains(path) && this.folderGoals.filter(fg => fg.path == path).length == 0;
   }

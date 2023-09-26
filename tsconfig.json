@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"allowJs": true,
 		"checkJs": true,
-		"esModuleInterop": true,
+		"esModuleInterop": false,
+		"moduleResolution": "Node",
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
