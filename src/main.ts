@@ -25,7 +25,6 @@ import { SprintGoalHelper } from "./core/sprint-goal-helper";
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
-  goalView: GoalView | undefined;
   fileLabels: FileLabels;
   fileHelper: ObsidianFileHelper;
   frontmatterHelper: FrontmatterHelper;
@@ -57,7 +56,7 @@ export default class WritingGoals extends Plugin {
   private registerViews() {
     this.registerView(
       VIEW_TYPE_GOAL,
-      (leaf) => this.goalView = new GoalView(leaf, this, this.goalHistoryHelper)
+      (leaf) => new GoalView(leaf, this, this.goalHistoryHelper)
     );
 
     this.registerView(
