@@ -1,4 +1,4 @@
-import { HSL } from "obsidian";
+import type { HSL } from "obsidian";
 
 export const GOAL_FRONTMATTER_KEY = "word-goal";
 export const DAILY_GOAL_FRONTMATTER_KEY = "daily-word-goal";

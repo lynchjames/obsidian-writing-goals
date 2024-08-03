@@ -1,10 +1,10 @@
 import {
   App,
-  HSL,
   Notice,
   PluginSettingTab,
   Setting
 } from "obsidian";
+import type { HSL } from "obsidian";
 import type WritingGoals from "../../main";
 import { FileLabels } from "../../UI/goal/file-labels";
 import { wgcolors, showGoalMessage, showProgressChart } from "../../UI/stores/goal-store";
