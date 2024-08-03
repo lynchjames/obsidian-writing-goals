@@ -73,7 +73,7 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Display single goal view")
-      .setDesc("Disaply a single view for the goal progress. This setting should be enabled on mobile devices with small screens.")
+      .setDesc("Display a single view for the goal progress. This setting should be enabled on mobile devices with small screens.")
       .addToggle(toggle =>
         toggle
           .setValue(this.plugin.settings.showSingleGoalView)
