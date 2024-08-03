@@ -152,7 +152,6 @@ export default class WritingGoals extends Plugin {
       }
       await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile)
       await this.loadNoteGoalData(false);
-      console.log("Modify");
       await this.sprintGoalHelper.updateSprintGoal(file);
     }));
 
@@ -162,7 +161,6 @@ export default class WritingGoals extends Plugin {
       }
       await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile);
       await this.loadNoteGoalData(true);
-      console.log("Changed");
     }));
 
     this.registerEvent(
