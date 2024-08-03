@@ -18,6 +18,7 @@ export class WritingGoalsSettings {
   showSingleGoalView: boolean = false;
   showProgressChart: boolean = false;
   excludeComments: boolean = true;
+  excludeCodeBlocks: boolean = true;
   allowNegativeGoalProgress: boolean = false;
   enableCustomColors: boolean = false;
   customColors: WritingGoalColors = new WritingGoalColors();

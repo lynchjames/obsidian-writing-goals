@@ -44,7 +44,12 @@ export class ObsidianFileHelper {
     if (this.settings.excludeComments) {
       meaningfulContent = this.removeCommentsRegex(new RegExp("(%%.*?%%|<!--.*?-->)", "gmis"), meaningfulContent);
     }
-    meaningfulContent = (await remark().use(strip).process(meaningfulContent)).toString();
+  
+    if(this.settings.excludeCodeBlocks) {
+      meaningfulContent = (await remark().use(strip).process(meaningfulContent)).toString();
+    } else {
+      meaningfulContent = (await remark().use(strip, {keep: ['code']}).process(meaningfulContent)).toString();
+    }
     return meaningfulContent;
   }
 

@@ -164,6 +164,17 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
           }));
 
     new Setting(containerEl)
+      .setName("Exclude code blocks")
+      .setDesc("Exclude markdown code blocks (```code```)")
+      .addToggle(toggle =>
+        toggle
+          .setValue(this.plugin.settings.excludeCodeBlocks)
+          .onChange(async (value: boolean) => {
+            this.plugin.settings.excludeCodeBlocks = value;
+            await this.plugin.saveData(this.plugin.settings);
+          }));
+
+    new Setting(containerEl)
       .setName("Goal frontmatter property name")
       .setDesc("The name for the frontmatter property to use for note goals (changing this setting will not update existing frontmatter)")
       .addText(text =>
