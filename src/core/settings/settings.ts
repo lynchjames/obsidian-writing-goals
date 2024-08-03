@@ -12,12 +12,14 @@ export class WritingGoalsSettings {
   goalLeaves: string[] = [];
   customGoalFrontmatterKey: string = GOAL_FRONTMATTER_KEY;
   customDailyGoalFrontmatterKey: string = DAILY_GOAL_FRONTMATTER_KEY;
+  enableCsvExport: boolean = false;
+  csvExportFileName: string = "writing-goals-history.csv";
   showSingleGoalView: boolean = false;
   showProgressChart: boolean = false;
   excludeComments: boolean = true;
   allowNegativeGoalProgress: boolean = false;
   enableCustomColors: boolean = false;
-  customColors: WritingGoalColors = new WritingGoalColors()
+  customColors: WritingGoalColors = new WritingGoalColors();
   //Deprecated
   customGoalBarColor: string;
   //Deprecated

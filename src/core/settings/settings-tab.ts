@@ -172,6 +172,20 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
           }));
 
     new Setting(containerEl)
+      .setName("Csv export")
+      .setDesc("Enable an export of goal history to writing-goals-history.csv in the root of your vault every 30 seconds")
+      .addToggle(toggle =>
+        toggle
+          .setValue(this.plugin.settings.enableCsvExport)
+          .onChange(async (value: boolean) => {
+            this.plugin.settings.enableCsvExport = value;
+            if(value) {
+              this.plugin.csvExporter.exportGoalHistory();
+            }
+            await this.plugin.saveData(this.plugin.settings);
+          }));
+
+    new Setting(containerEl)
       .setName("Colors")
       .setHeading();
 

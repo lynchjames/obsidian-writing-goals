@@ -15,6 +15,9 @@ export class CsvExport {
     }
 
     async exportGoalHistory() {
+        if(!this.settings.enableCsvExport) {
+            return;
+        }
         const history = await this.goalHistoryHelper.loadHistory();
         const preparedData = [];
         preparedData.push(["Path", "Folder", "File", "Date", "Daily Goal", "Goal", "Start Count", "End Count"]);
@@ -30,7 +33,7 @@ export class CsvExport {
         if(csvContent.length === 0) {
             return;
         }
-        await this.file.saveCsv("writing-goals-history.csv", csvContent);
+        await this.file.saveCsv(this.settings.csvExportFileName, csvContent);
     }
 
     getFileNameFromPath(path: string) {
