@@ -6,6 +6,8 @@ import { WORD_COUNT_INCLUDE_FRONTMATTER_KEY } from "./constants"
 import { FrontmatterHelper } from "../IO/frontmapper-helper"
 import { goalHistory, noteGoals } from "../UI/stores/goal-store"
 import { GoalType, WritingGoal, WritingGoals, WritingSprintGoal } from "./goal-entities"
+import { CountCache } from "./count-cache"
+import * as moment from "moment"
 
 export class GoalHelper {
     app: App;
@@ -13,13 +15,15 @@ export class GoalHelper {
     settings: WritingGoalsSettings;
     goalHistoryHelper: GoalHistoryHelper;
     frontmatterHelper: FrontmatterHelper;
+    countCache: CountCache
 
-    constructor(app: App, settings: WritingGoalsSettings, goalHistoryHelper: GoalHistoryHelper) {
+    constructor(app: App, settings: WritingGoalsSettings, goalHistoryHelper: GoalHistoryHelper, countCache: CountCache) {
         this.app = app;
         this.settings = settings;
         this.fileHelper = new ObsidianFileHelper(this.settings);
         this.goalHistoryHelper = goalHistoryHelper;
         this.frontmatterHelper = new FrontmatterHelper(this.app, this.settings);
+        this.countCache = countCache;
     }
 
     async createGoal(settings: WritingGoalsSettings, fileOrFolder: TAbstractFile, goalCount?: number, dailyGoalCount?: number): Promise<WritingGoal> {
@@ -84,12 +88,24 @@ export class GoalHelper {
             if (include != null && (include == "false" || !include)) {
                 return 0;
             }
-            const fileContents = await this.app.vault.cachedRead(fileOrFolder as TFile);
-            const metadata = this.app.metadataCache.getCache(fileOrFolder.path);
-            return await this.fileHelper.countWords(fileContents, metadata);
+            const file = fileOrFolder as TFile;
+            if(this.fileIsDirty(file)) {
+                const fileContents = await this.app.vault.cachedRead(file);
+                const metadata = this.app.metadataCache.getCache(fileOrFolder.path);
+                const count = await this.fileHelper.countWords(fileContents, metadata);
+                this.countCache[file.path] = count;
+                console.log("CC value", file.path, this.countCache[file.path]);
+                return count;
+            }
+            return this.countCache[file.path];
         } else {
             return await this.getWordCountRecursive(fileOrFolder);
         }
+    }
+
+    fileIsDirty(file: TFile) {
+        const diff = (moment.now() - file.stat.mtime)/1000;
+        return diff < 5 || this.countCache[file.path] == null;
     }
 
     async updateGoalsFromSettings() {

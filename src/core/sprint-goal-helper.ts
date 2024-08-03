@@ -26,8 +26,8 @@ export class SprintGoalHelper {
         const sprintGoal = this.sprintGoals[file.path];
         if (sprintGoal != null) {
             this.sprintGoals[file.path] = await this.goalHelper.createSprintGoal(file, sprintGoal.sprintGoalCount, sprintGoal.sprintMinutes, sprintGoal.startCount);
+            this.updateStore();
         }
-        this.updateStore();
     }
 
     async getSprintGoal(file: TAbstractFile): Promise<WritingSprintGoal> {

@@ -99,6 +99,22 @@ export class WritingGoalsSettingsTab extends PluginSettingTab {
           }));
 
     new Setting(containerEl)
+      .setName("Goal update time")
+      .setDesc("The time in seconds between goals updating")
+      .addSlider(slider =>
+        slider
+          .setLimits(1, 15, 1)
+          .setValue(this.plugin.settings.goalUpdateTime)
+          .onChange(async (value: number) => {
+            this.plugin.settings.goalUpdateTime = value;
+            await this.plugin.saveData(this.plugin.settings);
+            this.plugin.setGoalUpdateInterval();
+          })
+          .setDynamicTooltip()
+          .showTooltip()
+        );
+
+    new Setting(containerEl)
       .setName("Allow negative daily goal progress")
       .setDesc("Negative daily progress counts will be displayed if less words are in a note or under a folder than at the start of the day")
       .addToggle(toggle =>

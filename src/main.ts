@@ -23,24 +23,28 @@ import StatsDetaillView from "./UI/stats/stats-detail-view";
 import SprintGoalView from "./UI/sprint-goal/sprint-goal-view";
 import { SprintGoalHelper } from "./core/sprint-goal-helper";
 import { CsvExport } from "./IO/csv-export";
+import { CountCache } from "./core/count-cache";
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
   fileLabels: FileLabels;
   fileHelper: ObsidianFileHelper;
+  countCache: CountCache;
   frontmatterHelper: FrontmatterHelper;
   goalHistoryHelper: GoalHistoryHelper;
   noteGoalHelper: GoalHelper;
   sprintGoalHelper: SprintGoalHelper;
   csvExporter: CsvExport;
   goalLeaves: string[];
+  goalUpdateIntervalId: number;
 
   async onload() {
     this.settings = Object.assign(new WritingGoalsSettings(), await this.loadData());
     this.fileHelper = new ObsidianFileHelper(this.settings);
     this.frontmatterHelper = new FrontmatterHelper(this.app, this.settings);
     this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings, this.manifest);
-    this.noteGoalHelper = new GoalHelper(this.app, this.settings, this.goalHistoryHelper);
+    this.countCache = new CountCache();
+    this.noteGoalHelper = new GoalHelper(this.app, this.settings, this.goalHistoryHelper, this.countCache);
     this.sprintGoalHelper = new SprintGoalHelper(this.app, this.noteGoalHelper);
     this.csvExporter = new CsvExport(this.app, this.settings, this.goalHistoryHelper)
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
@@ -112,7 +116,7 @@ export default class WritingGoals extends Plugin {
       id: "add-writing-goal",
       name: "Add or update a writing goal for a note or folder",
       callback: async () => {
-        new GoalTargetModal(this, new GoalModal(this, this.goalHistoryHelper)).open();
+        new GoalTargetModal(this, new GoalModal(this, this.goalHistoryHelper, this.countCache)).open();
       },
       hotkeys: []
     });
@@ -150,17 +154,15 @@ export default class WritingGoals extends Plugin {
       if (file instanceof TFolder) {
         return;
       }
-      await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile)
-      await this.loadNoteGoalData(false);
-      await this.sprintGoalHelper.updateSprintGoal(file);
+      this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile)
+      this.sprintGoalHelper.updateSprintGoal(file);
     }));
 
     this.registerEvent(this.app.metadataCache.on("changed", async file => {
       if (file instanceof TFolder) {
         return;
       }
-      await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile);
-      await this.loadNoteGoalData(true);
+      this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile);
     }));
 
     this.registerEvent(
@@ -224,7 +226,7 @@ export default class WritingGoals extends Plugin {
               await this.saveData(this.settings);
               await this.frontmatterHelper.removeFrontmatter(fileOrFolder);
               this.detachGoalViewLeaf(fileOrFolder.path);
-              await this.loadNoteGoalData(true, fileOrFolder.path);
+              this.loadNoteGoalData(true, fileOrFolder.path);
             });
         });
       })
@@ -262,14 +264,31 @@ export default class WritingGoals extends Plugin {
           this.settings.goalLeaves = updatedLeaves;
           this.saveData(this.settings);
         }
-      }, 5000)
+      }, 10000)
     );
+
+    this.setGoalUpdateInterval();
 
     this.csvExporter.exportGoalHistory();
     this.registerInterval(
       window.setInterval(() => {
         this.csvExporter.exportGoalHistory();
       }, 30000)
+    );
+  }
+
+  async setGoalUpdateInterval() {
+    const updateGoalInterval = () => { 
+      this.loadNoteGoalData(true); 
+    }
+
+    try {
+      window.clearInterval(this.goalUpdateIntervalId);
+    } catch (error) {
+      
+    }
+    this.registerInterval(
+      this.goalUpdateIntervalId = window.setInterval(updateGoalInterval, this.settings.goalUpdateTime*1000)
     );
   }
 
@@ -282,7 +301,7 @@ export default class WritingGoals extends Plugin {
   }
 
   async openGoalModal(fileOrFolder: TAbstractFile, openGoalOnSubmit?: boolean) {
-    const modal = new GoalModal(this, this.goalHistoryHelper);
+    const modal = new GoalModal(this, this.goalHistoryHelper, this.countCache);
     modal.init(this, fileOrFolder, openGoalOnSubmit);
     modal.open();
   }

@@ -4,6 +4,7 @@ import type WritingGoals from "../../main";
 import { GoalHistoryHelper } from "../../core/goal-history/history";
 import type { WritingGoalsSettings } from "../../core/settings/settings";
 import { FrontmatterHelper } from "../../IO/frontmapper-helper";
+import { CountCache } from "../../core/count-cache";
 
 export default class GoalModal extends Modal {
   plugin: WritingGoals;
@@ -15,13 +16,13 @@ export default class GoalModal extends Modal {
   noteGoalHelper: GoalHelper;
   openGoalOnSubmit: boolean = false;
 
-  constructor(plugin: WritingGoals, goalHistoryHelper: GoalHistoryHelper) {
+  constructor(plugin: WritingGoals, goalHistoryHelper: GoalHistoryHelper, countCache: CountCache) {
     super(plugin.app);
     this.plugin = plugin;
     this.settings = this.plugin.settings;
     this.frontmatterHelper = new FrontmatterHelper(this.plugin.app, this.settings);
     this.goalHistoryHelper = goalHistoryHelper;
-    this.noteGoalHelper = new GoalHelper(this.app, this.settings, this.goalHistoryHelper);
+    this.noteGoalHelper = new GoalHelper(this.app, this.settings, this.goalHistoryHelper, countCache);
     this.goalHistoryHelper = new GoalHistoryHelper(this.plugin.app, this.plugin.settings, this.plugin.manifest);
   }
 
