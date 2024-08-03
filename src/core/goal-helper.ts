@@ -8,6 +8,7 @@ import { goalHistory, noteGoals } from "../UI/stores/goal-store"
 import { GoalType, WritingGoal, WritingGoals, WritingSprintGoal } from "./goal-entities"
 import { CountCache } from "./count-cache"
 import * as moment from "moment"
+import { CanvasHelper } from "../IO/canvas-helper"
 
 export class GoalHelper {
     app: App;
@@ -16,6 +17,7 @@ export class GoalHelper {
     goalHistoryHelper: GoalHistoryHelper;
     frontmatterHelper: FrontmatterHelper;
     countCache: CountCache
+    canvasHelper: CanvasHelper
 
     constructor(app: App, settings: WritingGoalsSettings, goalHistoryHelper: GoalHistoryHelper, countCache: CountCache) {
         this.app = app;
@@ -23,6 +25,7 @@ export class GoalHelper {
         this.fileHelper = new ObsidianFileHelper(this.settings);
         this.goalHistoryHelper = goalHistoryHelper;
         this.frontmatterHelper = new FrontmatterHelper(this.app, this.settings);
+        this.canvasHelper = new CanvasHelper();
         this.countCache = countCache;
     }
 
@@ -89,14 +92,17 @@ export class GoalHelper {
                 return 0;
             }
             const file = fileOrFolder as TFile;
-            if(this.fileIsDirty(file)) {
-                const fileContents = await this.app.vault.cachedRead(file);
-                const metadata = this.app.metadataCache.getCache(fileOrFolder.path);
-                const count = await this.fileHelper.countWords(fileContents, metadata);
-                this.countCache[file.path] = count;
-                return count;
+            if(!this.fileIsDirty(file)) {
+                return this.countCache[file.path];
             }
-            return this.countCache[file.path];
+            let fileContents = await this.app.vault.cachedRead(file);
+            if(this.fileIsCanvas(file)) {
+                fileContents = this.canvasHelper.getCanvasText(file, fileContents);
+            }
+            const metadata = this.app.metadataCache.getCache(fileOrFolder.path);
+            const count = await this.fileHelper.countWords(fileContents, metadata);
+            this.countCache[file.path] = count;
+            return count;
         } else {
             return await this.getWordCountRecursive(fileOrFolder);
         }
@@ -105,6 +111,10 @@ export class GoalHelper {
     fileIsDirty(file: TFile) {
         const diff = (moment.now() - file.stat.mtime)/1000;
         return diff < 5 || this.countCache[file.path] == null;
+    }
+
+    fileIsCanvas(file: TFile) {
+        return file.extension == "canvas"
     }
 
     async updateGoalsFromSettings() {
