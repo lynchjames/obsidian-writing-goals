@@ -3,6 +3,7 @@ import { WritingGoalsFile } from "../../IO/file";
 import { HistoryStatsItem, HistoryStatsItems } from "./history-stats";
 import { DEFAULT_GOAL_HISTORY_PATH as GOAL_HISTORY_PATH } from "../constants";
 import type { WritingGoalsSettings } from "../settings/settings";
+import { CsvExport } from "../../IO/csv-export";
 
 export interface GoalHistoryItem {
     date?: string,
@@ -22,12 +23,14 @@ export class GoalHistoryHelper {
     settings: WritingGoalsSettings;
     manifest: PluginManifest;
     goalFile: WritingGoalsFile;
+    csvExport: CsvExport;
 
     constructor(app: App, settings: WritingGoalsSettings, manifest: PluginManifest) {
         this.app = app;
         this.settings = settings;
         this.manifest = manifest;
         this.goalFile = new WritingGoalsFile(this.app);
+        this.csvExport = new CsvExport(this.settings, this.goalFile);
         this.init();
     }
 
@@ -86,6 +89,7 @@ export class GoalHistoryHelper {
         historyForPath.push(item);
         history[path] = historyForPath;
         await this.goalFile.saveJson(this.historyPath(), history);
+        await this.csvExport.exportGoalHistory(history);
     }
 
     async resetDailyProgress(path: string) {

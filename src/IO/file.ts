@@ -26,5 +26,9 @@ export class WritingGoalsFile {
     const dataToSave = JSON.stringify(data, null, 2);
     await this.app.vault.adapter.write(path, dataToSave);
   }
+  
+  async saveCsv(path: string, data: string): Promise<void> {
+    await this.app.vault.adapter.write(path, data);
+  }
 
 }
