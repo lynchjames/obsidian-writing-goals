@@ -94,7 +94,6 @@ export class GoalHelper {
                 const metadata = this.app.metadataCache.getCache(fileOrFolder.path);
                 const count = await this.fileHelper.countWords(fileContents, metadata);
                 this.countCache[file.path] = count;
-                console.log("CC value", file.path, this.countCache[file.path]);
                 return count;
             }
             return this.countCache[file.path];
