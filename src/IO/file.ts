@@ -28,7 +28,11 @@ export class WritingGoalsFile {
   }
   
   async saveCsv(path: string, data: string): Promise<void> {
-    await this.app.vault.adapter.write(path, data);
+    try {
+      await this.app.vault.adapter.write(path, data);
+    } catch (error) {
+      console.log("Writing Goals: error accessing csv file for history export - file may be in use")
+    }
   }
 
 }
