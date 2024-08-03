@@ -9,7 +9,8 @@
 	  import type { HistoryStatsItem, HistoryStatsItems } from "../../core/goal-history/history-stats";
   	import { loadGoal } from "./progress-helper.js";
 	  import type { WritingGoalColors } from "../../core/settings/colors";
-	import { WritingGoal, WritingGoals } from "../../core/goal-entities";
+	  import { WritingGoals } from "../../core/goal-entities";
+	  import type { WritingGoal } from "../../core/goal-entity-types";
     
     export let path: string;
     export let isMobile: boolean;
@@ -57,7 +58,7 @@
     onDestroy(unsubHistory);
     onDestroy(unsubColors);
 
-    function transform(stats: HistoryStatsItem[]) {
+    function transform(stats) {
       chartData = stats ? Object.fromEntries(stats.map(s => [s.date, s.value])) : {};
     }
     

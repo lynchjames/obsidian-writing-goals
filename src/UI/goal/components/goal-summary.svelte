@@ -2,7 +2,7 @@
 	import { onDestroy } from 'svelte';
 	import { showGoalMessage } from '../../stores/goal-store';
 	import type { WritingGoalColors } from '../../../core/settings/colors';
-	import { WritingGoal } from '../../../core/goal-entities';
+	import type { WritingGoal } from '../../../core/goal-entity-types';
 
 	export let goal: WritingGoal;
 	export let goalData: {

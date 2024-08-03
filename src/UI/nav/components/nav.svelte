@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TGoal } from "../../../core/goal-entities";
+	import type { TGoal } from "../../../core/goal-entity-types";
 	import Arrow from "./arrow.svelte";
     
     export let showArrows: boolean;

@@ -2,7 +2,8 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { wgcolors, noteGoals } from '../../stores/goal-store';
 	import type { WritingGoalColors } from '../../../core/settings/colors';
-	import { WritingGoal, WritingGoals } from '../../../core/goal-entities';
+	import { WritingGoals } from '../../../core/goal-entities';
+	import type { WritingGoal } from '../../../core/goal-entity-types';
 
 	export let path: string;
 	export let colors: WritingGoalColors;

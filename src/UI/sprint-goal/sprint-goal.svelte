@@ -2,7 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { noteGoals, wgcolors } from '../stores/goal-store';
 	import { WritingGoalColors } from '../../core/settings/colors';
-	import { WritingGoal, WritingSprintGoal } from '../../core/goal-entities';
+	import type { WritingGoal, WritingSprintGoal } from '../../../core/goal-entity-types';
 	import { getPercent, calculateProgress } from '../goal/progress-helper.js';
 	import { sprintGoals } from '../stores/sprint-goal-store';
 	import Nav from '../nav/components/nav.svelte';

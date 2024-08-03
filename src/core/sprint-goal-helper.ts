@@ -1,7 +1,8 @@
 import { App, TAbstractFile } from "obsidian";
 import { GoalHelper } from "./goal-helper";
-import { WritingSprintGoal, WritingSprintGoals } from "./goal-entities";
+import { WritingSprintGoals } from "./goal-entities";
 import { sprintGoals } from "../UI/stores/sprint-goal-store";
+import type { WritingSprintGoal } from "./goal-entity-types";
 
 export class SprintGoalHelper {
 

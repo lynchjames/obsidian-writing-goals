@@ -5,10 +5,11 @@ import type { GoalHistoryHelper } from "./goal-history/history"
 import { WORD_COUNT_INCLUDE_FRONTMATTER_KEY } from "./constants"
 import { FrontmatterHelper } from "../IO/frontmapper-helper"
 import { goalHistory, noteGoals } from "../UI/stores/goal-store"
-import { GoalType, WritingGoal, WritingGoals, WritingSprintGoal } from "./goal-entities"
+import { WritingGoals } from "./goal-entities"
 import { CountCache } from "./count-cache"
 import * as moment from "moment"
 import { CanvasHelper } from "../IO/canvas-helper"
+import { GoalType, type WritingGoal, type WritingSprintGoal } from "./goal-entity-types"
 
 export class GoalHelper {
     app: App;
@@ -102,6 +103,7 @@ export class GoalHelper {
             const metadata = this.app.metadataCache.getCache(fileOrFolder.path);
             const count = await this.fileHelper.countWords(fileContents, metadata);
             this.countCache[file.path] = count;
+            goalHistory.set(await this.goalHistoryHelper.loadHistory());
             return count;
         } else {
             return await this.getWordCountRecursive(fileOrFolder);

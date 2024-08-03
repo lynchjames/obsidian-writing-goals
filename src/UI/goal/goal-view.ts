@@ -69,6 +69,7 @@ export default class GoalView extends ItemView {
     }
 
     onHistoryUpdate = (val: GoalHistory) => {
+        console.log("onHistoryUpdate", val);
         if (val != null) {
             const historyStats = this.historyHelper.transformHistory(val);
             return historyStats;
@@ -76,7 +77,8 @@ export default class GoalView extends ItemView {
     }
 
     async setGoal() {
-        const linkedChartData = await this.historyHelper.getStats();
+        const chartData = await this.historyHelper.getStats();
+        console.log("goal-view.ts", chartData);
         const { customColors, showProgressChart } = this.plugin.settings;
         const isMobile = Platform.isMobile;
         const onGoalClick = this.onGoalClick;
@@ -93,7 +95,7 @@ export default class GoalView extends ItemView {
                 path: this.path,
                 isMobile: isMobile,
                 colors: customColors,
-                linkedChartData: linkedChartData,
+                linkedChartData: chartData,
                 showProgressChart: showProgressChart,
                 onGoalClick: onGoalClick,
                 onNavClick: onNavClick,
