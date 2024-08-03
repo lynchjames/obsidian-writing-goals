@@ -15,16 +15,28 @@ export class WritingGoalsFile {
     if (!(await this.exists(path))) {
       throw Error(`The file is not found: ${path}`);
     }
-    return await this.app.vault.adapter.read(path);
+    try {
+      return await this.app.vault.adapter.read(path);
+    } catch (error) {
+      console.log("Writing Goals: error reading file - file may be in use by another process")
+    }
   }
 
   async loadJson<T>(path: string): Promise<T> {
-    return JSON.parse(await this.loadFile(path)) as T;
+    try {
+      return JSON.parse(await this.loadFile(path)) as T;
+    } catch (error) {
+        console.log("Writing Goals: error reading JSON file at ", path)
+    }
   }
 
   async saveJson<T>(path: string, data: T): Promise<void> {
     const dataToSave = JSON.stringify(data, null, 2);
-    await this.app.vault.adapter.write(path, dataToSave);
+    try {
+      await this.app.vault.adapter.write(path, dataToSave);
+    } catch (error) {
+        console.log("Writing Goals: error writing to JSON file at ", path)
+    }
   }
   
   async saveCsv(path: string, data: string): Promise<void> {

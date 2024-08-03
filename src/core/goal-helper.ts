@@ -107,7 +107,6 @@ export class GoalHelper {
             notes[folderGoal.path] = goal;
         }
         noteGoals.set(notes);
-        goalHistory.set(await this.goalHistoryHelper.loadHistory());
     }
 
     private async getWordCountRecursive(fileOrFolder: TAbstractFile) {
