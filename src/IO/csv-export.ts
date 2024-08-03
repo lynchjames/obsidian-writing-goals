@@ -1,17 +1,21 @@
-import { GoalHistory } from "../core/goal-history/history";
+import { GoalHistoryHelper } from "../core/goal-history/history";
 import { WritingGoalsFile } from "./file";
 import { WritingGoalsSettings } from "../core/settings/settings";
+import { App } from "obsidian";
 
 export class CsvExport {
     settings: WritingGoalsSettings;
     file: WritingGoalsFile;
+    goalHistoryHelper: GoalHistoryHelper;
     
-    constructor(settings: WritingGoalsSettings, goalFile: WritingGoalsFile) {
+    constructor(app: App, settings: WritingGoalsSettings, goalHistoryHelper: GoalHistoryHelper) {
         this.settings = settings;
-        this.file = goalFile;
+        this.file = new WritingGoalsFile(app);
+        this.goalHistoryHelper = goalHistoryHelper;
     }
 
-    async exportGoalHistory(history:GoalHistory) {
+    async exportGoalHistory() {
+        const history = await this.goalHistoryHelper.loadHistory();
         const preparedData = [];
         preparedData.push(["Path", "Folder", "File", "Date", "Daily Goal", "Goal", "Start Count", "End Count"]);
         for (let historyPath in history) {
@@ -26,7 +30,6 @@ export class CsvExport {
         if(csvContent.length === 0) {
             return;
         }
-        console.log("Exporting csv")
         await this.file.saveCsv("writing-goals-history.csv", csvContent);
     }
 

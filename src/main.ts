@@ -22,6 +22,7 @@ import { FrontmatterHelper } from "./IO/frontmapper-helper";
 import StatsDetaillView from "./UI/stats/stats-detail-view";
 import SprintGoalView from "./UI/sprint-goal/sprint-goal-view";
 import { SprintGoalHelper } from "./core/sprint-goal-helper";
+import { CsvExport } from "./IO/csv-export";
 
 export default class WritingGoals extends Plugin {
   settings: WritingGoalsSettings = new WritingGoalsSettings;
@@ -31,6 +32,7 @@ export default class WritingGoals extends Plugin {
   goalHistoryHelper: GoalHistoryHelper;
   noteGoalHelper: GoalHelper;
   sprintGoalHelper: SprintGoalHelper;
+  csvExporter: CsvExport;
   goalLeaves: string[];
 
   async onload() {
@@ -40,6 +42,7 @@ export default class WritingGoals extends Plugin {
     this.goalHistoryHelper = new GoalHistoryHelper(this.app, this.settings, this.manifest);
     this.noteGoalHelper = new GoalHelper(this.app, this.settings, this.goalHistoryHelper);
     this.sprintGoalHelper = new SprintGoalHelper(this.app, this.noteGoalHelper);
+    this.csvExporter = new CsvExport(this.app, this.settings, this.goalHistoryHelper)
     this.goalLeaves = this.settings.goalLeaves.map(x => x).reverse();
     this.fileLabels = new FileLabels(this.app, this.settings);
     this.setupCommands();
@@ -149,6 +152,7 @@ export default class WritingGoals extends Plugin {
       }
       await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile)
       await this.loadNoteGoalData(false);
+      console.log("Modify");
       await this.sprintGoalHelper.updateSprintGoal(file);
     }));
 
@@ -158,6 +162,7 @@ export default class WritingGoals extends Plugin {
       }
       await this.frontmatterHelper.updateNoteGoalsFromFrontmatter(this, file as TFile);
       await this.loadNoteGoalData(true);
+      console.log("Changed");
     }));
 
     this.registerEvent(
@@ -260,6 +265,13 @@ export default class WritingGoals extends Plugin {
           this.saveData(this.settings);
         }
       }, 5000)
+    );
+
+    this.csvExporter.exportGoalHistory();
+    this.registerInterval(
+      window.setInterval(() => {
+        this.csvExporter.exportGoalHistory();
+      }, 30000)
     );
   }
 
