@@ -1,5 +1,5 @@
 import { TFile } from "obsidian";
-import { CanvasData } from "obsidian/canvas";
+import type { CanvasData } from "obsidian/canvas";
 
 export class CanvasHelper {
 
