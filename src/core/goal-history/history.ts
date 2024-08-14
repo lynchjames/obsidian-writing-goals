@@ -35,9 +35,7 @@ export class GoalHistoryHelper {
     async init() {
         const historyExists = await this.historyExists();
         if (!historyExists) {
-            if (this.app.vault.adapter instanceof FileSystemAdapter) {
-                await this.goalFile.saveJson(this.historyPath(), new GoalHistory);
-            }
+            await this.goalFile.saveJson(this.historyPath(), new GoalHistory);
         }
     }
 
