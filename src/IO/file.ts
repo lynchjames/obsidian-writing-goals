@@ -1,4 +1,5 @@
-import type { App, Notice} from "obsidian";
+import type { App } from "obsidian";
+import { Notice } from "obsidian";
 
 export class WritingGoalsFile {
   app: App;
@@ -7,9 +8,9 @@ export class WritingGoalsFile {
   constructor(app: App) {
     this.app = app;
   }
+
   async exists(path: string): Promise<boolean> {
     return await this.app.vault.adapter.exists(path);
-    return await this.app.vault.adapter.
   }
 
   async loadFile(path: string): Promise<string> {
@@ -19,8 +20,8 @@ export class WritingGoalsFile {
     try {
       return await this.app.vault.adapter.read(path);
     } catch (error) {
-      const errorMsg = "Writing Goals: error reading file - file may be in use by another process"
-      console.log(errorMsg)
+      const errorMsg = "Writing Goals: error reading file - file may be in use by another process";
+      console.log(errorMsg);
       new Notice(errorMsg);
     }
   }
