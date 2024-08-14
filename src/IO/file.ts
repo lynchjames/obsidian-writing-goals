@@ -1,4 +1,4 @@
-import type { App } from "obsidian";
+import type { App, Notice} from "obsidian";
 
 export class WritingGoalsFile {
   app: App;
@@ -9,6 +9,7 @@ export class WritingGoalsFile {
   }
   async exists(path: string): Promise<boolean> {
     return await this.app.vault.adapter.exists(path);
+    return await this.app.vault.adapter.
   }
 
   async loadFile(path: string): Promise<string> {
@@ -18,7 +19,9 @@ export class WritingGoalsFile {
     try {
       return await this.app.vault.adapter.read(path);
     } catch (error) {
-      console.log("Writing Goals: error reading file - file may be in use by another process")
+      const errorMsg = "Writing Goals: error reading file - file may be in use by another process"
+      console.log(errorMsg)
+      new Notice(errorMsg);
     }
   }
 
@@ -26,7 +29,10 @@ export class WritingGoalsFile {
     try {
       return JSON.parse(await this.loadFile(path)) as T;
     } catch (error) {
-        console.log("Writing Goals: error reading JSON file at ", path)
+      const errorMsg = "Writing Goals: error reading JSON file at " + path;
+      console.log(errorMsg);
+      new Notice(errorMsg);
+
     }
   }
 
@@ -35,7 +41,10 @@ export class WritingGoalsFile {
     try {
       await this.app.vault.adapter.write(path, dataToSave);
     } catch (error) {
-        console.log("Writing Goals: error writing to JSON file at ", path)
+	const errorMsg = "Writing Goals: error writing to JSON file at " + path;
+	console.log(errorMsg);
+        new Notice(errorMsg);
+
     }
   }
   
@@ -43,7 +52,10 @@ export class WritingGoalsFile {
     try {
       await this.app.vault.adapter.write(path, data);
     } catch (error) {
-      console.log("Writing Goals: error accessing csv file for history export - file may be in use")
+      const errorMsg = "Writing Goals: error accessing csv file for history export - file may be in use";
+      console.log(errorMsg);
+      new Notice(errorMsg);
+
     }
   }
 
