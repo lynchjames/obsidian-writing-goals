@@ -1,5 +1,5 @@
 import type { App } from "obsidian";
-import { Notice, normalizePath } from "obsidian";
+import { normalizePath } from "obsidian";
 
 export class WritingGoalsFile {
   app: App;
@@ -23,7 +23,6 @@ export class WritingGoalsFile {
     } catch (error) {
       const errorMsg = "Writing Goals: error reading file - file may be in use by another process";
       console.log(errorMsg);
-      new Notice(errorMsg);
     }
   }
 
@@ -33,7 +32,6 @@ export class WritingGoalsFile {
     } catch (error) {
       const errorMsg = "Writing Goals: error reading JSON file at " + path;
       console.log(errorMsg);
-      new Notice(errorMsg);
 
     }
   }
@@ -43,9 +41,8 @@ export class WritingGoalsFile {
     try {
       await this.app.vault.adapter.write(normalizePath(path), dataToSave);
     } catch (error) {
-	const errorMsg = "Writing Goals: error writing to JSON file at " + path;
-	console.log(errorMsg);
-        new Notice(errorMsg);
+      const errorMsg = "Writing Goals: error writing to JSON file at " + path;
+      console.log(errorMsg);
 
     }
   }
@@ -56,7 +53,6 @@ export class WritingGoalsFile {
     } catch (error) {
       const errorMsg = "Writing Goals: error accessing csv file for history export - file may be in use";
       console.log(errorMsg);
-      new Notice(errorMsg);
     }
   }
 
