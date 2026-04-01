@@ -1,133 +1,123 @@
 <script lang="ts">
-    import GoalProgress from "./components/goal-progress.svelte";
-    import Nav from "../nav/components/nav.svelte";
-    import  GoalSummary from "./components/goal-summary.svelte";
-    import  Stats from "../stats/components/stats.svelte";
-    import { onDestroy, onMount } from "svelte";
-	  import { wgcolors, goalHistory, noteGoals } from "../stores/goal-store";
-	  import type { GoalHistory } from "../../core/goal-history/history";
-	  import type { HistoryStatsItem, HistoryStatsItems } from "../../core/goal-history/history-stats";
-  	import { loadGoal } from "./progress-helper.js";
-	  import type { WritingGoalColors } from "../../core/settings/colors";
-	  import { WritingGoals } from "../../core/goal-entities";
-	  import type { WritingGoal } from "../../core/goal-entity-types";
-    
-    export let path: string;
-    export let isMobile: boolean;
-    export let colors: WritingGoalColors;
-    export let linkedChartData: HistoryStatsItems;
-    export let showProgressChart: boolean;
-    export let onGoalClick: (path:string) => void;
-    export let onNavClick: (path:string) => void;
-    export let onHistoryUpdate: (val:GoalHistory) => any;
+	import GoalProgress from './components/goal-progress.svelte';
+	import Nav from '../nav/components/nav.svelte';
+	import GoalSummary from './components/goal-summary.svelte';
+	import Stats from '../stats/components/stats.svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import { wgcolors, goalHistory, noteGoals } from '../stores/goal-store';
+	import type { GoalHistory } from '../../core/goal-history/history';
+	import type { HistoryStatsItem, HistoryStatsItems } from '../../core/goal-history/history-stats';
+	import { loadGoal } from './progress-helper.js';
+	import type { WritingGoalColors } from '../../core/settings/colors';
+	import { WritingGoals } from '../../core/goal-entities';
+	import type { WritingGoal } from '../../core/goal-entity-types';
 
-    let goals: WritingGoals;
-    let keys: string[];
-    let goal: WritingGoal;
-    let chartData: any;
-    let currentIndex: number;
-    let goalColors: WritingGoalColors;
+	export let path: string;
+	export let isMobile: boolean;
+	export let colors: WritingGoalColors;
+	export let linkedChartData: HistoryStatsItems;
+	export let showProgressChart: boolean;
+	export let onGoalClick: (path: string) => void;
+	export let onNavClick: (path: string) => void;
+	export let onHistoryUpdate: (val: GoalHistory) => any;
 
-    onMount(() => {
-      goalColors = colors;
-    })
+	let goals: WritingGoals;
+	let keys: string[];
+	let goal: WritingGoal;
+	let chartData: any;
+	let currentIndex: number;
+	let goalColors: WritingGoalColors;
 
-    $: transform(linkedChartData[path]);
+	onMount(() => {
+		goalColors = colors;
+	});
 
-    const unsubNoteGoals = noteGoals.subscribe(val => {
-        if(!val[path]){
-          return;
-        }
-        goals = val;
-        keys = Object.keys(goals).sort((a, b) => goals[a].title.localeCompare(goals[b].title));
-        currentIndex = keys.indexOf(path);
-        updateGoal();
-    });
+	$: transform(linkedChartData[path]);
 
-    const unsubHistory = goalHistory.subscribe(val => {
-      if(val) {
-        linkedChartData = onHistoryUpdate(val);
-      }
-    });
+	const unsubNoteGoals = noteGoals.subscribe((val) => {
+		if (!val[path]) {
+			return;
+		}
+		goals = val;
+		keys = Object.keys(goals)
+			.filter((k) => goals[k] != null)
+			.sort((a, b) => goals[a].title.localeCompare(goals[b].title));
+		currentIndex = keys.indexOf(path);
+		updateGoal();
+	});
 
-    const unsubColors = wgcolors.subscribe(val => {
-      goalColors = val;
-    });
+	const unsubHistory = goalHistory.subscribe((val) => {
+		if (val) {
+			linkedChartData = onHistoryUpdate(val);
+		}
+	});
 
-    onDestroy(unsubNoteGoals);
-    onDestroy(unsubHistory);
-    onDestroy(unsubColors);
+	const unsubColors = wgcolors.subscribe((val) => {
+		goalColors = val;
+	});
 
-    function transform(stats) {
-      chartData = stats ? Object.fromEntries(stats.map(s => [s.date, s.value])) : {};
-    }
-    
-    function updateGoal(cursor?:number) {
-      if(cursor){
-        currentIndex += cursor;
-        if(currentIndex < 0){
-          currentIndex = keys.length - 1;
-        }
-        if(currentIndex > keys.length - 1) {
-          currentIndex = 0;
-        }
-      }
-      path = keys[currentIndex];
-      goal = goals[path];     
-    }
+	onDestroy(unsubNoteGoals);
+	onDestroy(unsubHistory);
+	onDestroy(unsubColors);
 
-    function onNextClick() {
-      updateGoal(1);
-      onNavClick(path)
-    }
+	function transform(stats) {
+		chartData = stats ? Object.fromEntries(stats.map((s) => [s.date, s.value])) : {};
+	}
 
-    function onPreviousClick() {
-      updateGoal(-1);
-      onNavClick(path)
-    }
+	function updateGoal(cursor?: number) {
+		if (cursor) {
+			currentIndex += cursor;
+			if (currentIndex < 0) {
+				currentIndex = keys.length - 1;
+			}
+			if (currentIndex > keys.length - 1) {
+				currentIndex = 0;
+			}
+		}
+		path = keys[currentIndex];
+		goal = goals[path];
+	}
 
+	function onNextClick() {
+		updateGoal(1);
+		onNavClick(path);
+	}
+
+	function onPreviousClick() {
+		updateGoal(-1);
+		onNavClick(path);
+	}
 </script>
 
 {#if goal && (goal.goalCount > 0 || goal.dailyGoalCount > 0)}
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<div class="writing-goals-container {goal.dailyGoalCount > 0 ? 'wg-daily-goal' : ''}">
+		<Nav {isMobile} showArrows={keys.length > 1} {goal} {onNextClick} {onPreviousClick} />
 
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <div class="writing-goals-container {goal.dailyGoalCount > 0 ? "wg-daily-goal" : ""}">
-      <Nav 
-        {isMobile}
-        showArrows={keys.length > 1} goal={goal} 
-        onNextClick={onNextClick} 
-        onPreviousClick={onPreviousClick}
-      />
+		<GoalProgress
+			{path}
+			goal={goals[path]}
+			goalData={loadGoal(goal)}
+			colors={goalColors}
+			{onGoalClick}
+		/>
 
-      <GoalProgress
-        {path}
-        goal={goals[path]}
-        goalData={loadGoal(goal)}
-        colors={goalColors}
-        {onGoalClick}
-      />
+		<GoalSummary {goal} goalData={loadGoal(goal)} colors={goalColors} />
 
-      <GoalSummary 
-        goal={goal} 
-        goalData={loadGoal(goal)}
-        colors={goalColors} 
-      />
-
-      <Stats 
-        {path}
-        showProgress={showProgressChart}
-        color={goal.dailyGoalCount > 0 ? goalColors.dailyGoalColor : goalColors.goalColor}
-        chartData={chartData}
-      />
-    </div>
+		<Stats
+			{path}
+			showProgress={showProgressChart}
+			color={goal.dailyGoalCount > 0 ? goalColors.dailyGoalColor : goalColors.goalColor}
+			{chartData}
+		/>
+	</div>
 {/if}
 
 <style>
-  .writing-goals-container {
-      margin: auto;
-      max-width: 400px;
-      cursor: pointer;
-  }
-
+	.writing-goals-container {
+		margin: auto;
+		max-width: 400px;
+		cursor: pointer;
+	}
 </style>

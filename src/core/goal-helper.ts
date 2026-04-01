@@ -124,14 +124,16 @@ export class GoalHelper {
         for (let index = 0; index < this.settings.noteGoals.length; index++) {
             const noteGoal = this.settings.noteGoals[index];
             const file = this.app.vault.getAbstractFileByPath(noteGoal);
+            if (file == null) continue;
             const goal = await this.createGoal(this.settings, file);
-            notes[noteGoal] = goal;
+            if (goal != null) { notes[noteGoal] = goal; }
         }
         for (let index = 0; index < this.settings.folderGoals.length; index++) {
             const folderGoal = this.settings.folderGoals[index];
             const folder = this.app.vault.getAbstractFileByPath(folderGoal.path);
+            if (folder == null) continue;
             const goal = await this.createGoal(this.settings, folder, folderGoal.goalCount, folderGoal.dailyGoalCount);
-            notes[folderGoal.path] = goal;
+            if (goal != null) { notes[folderGoal.path] = goal; }
         }
         noteGoals.set(notes);
     }
