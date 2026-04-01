@@ -26,7 +26,7 @@ export class WritingGoalsSettings {
   customGoalBarColor: string;
   //Deprecated
   customDailyGoalBarColor: string;
-  additionalFileTypes: string[];
+  additionalFileTypes: string[] = [];
   defaultSprintGoalCount: number = 500;
   defaultSprintMinutes: number = 25;
 
